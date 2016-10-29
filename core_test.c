@@ -18,6 +18,7 @@ static void core_init_test(void **state) {
     assert_int_equal(e_cpu_context.s, 0);
     assert_int_equal(e_cpu_context.pc, 0);
     assert_int_equal(e_cpu_context.d.d, 0);
+    assert_int_equal(e_cpu_context.dp, 0);
 }
 
 int main(void) {

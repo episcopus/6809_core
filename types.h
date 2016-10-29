@@ -16,4 +16,5 @@ struct cpu_state {
     uint16 s;
     uint16 pc;
     d_register d;
+    uint8 dp;
 };
