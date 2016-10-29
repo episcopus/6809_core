@@ -1,6 +1,9 @@
 typedef unsigned short int uint16;
 typedef unsigned char uint8;
 
+#define FALSE 0
+#define TRUE 1
+
 typedef union {
     uint16 d;
     struct {

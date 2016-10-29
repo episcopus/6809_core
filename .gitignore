@@ -1,4 +1,5 @@
 build/
+scripts/opcode_table.c
 
 # Object files
 *.o
