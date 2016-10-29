@@ -23,3 +23,6 @@ $(TARGET): $(OBJECTS)
 clean:
 	rm -f $(OBJECTS)
 	rm -f $(TARGET)
+
+test: all
+	$(TARGET)
