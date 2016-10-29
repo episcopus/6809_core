@@ -13,6 +13,11 @@ static void core_init_test(void **state) {
 
     core_init();
     assert_int_equal(e_cpu_context.x, 0);
+    assert_int_equal(e_cpu_context.y, 0);
+    assert_int_equal(e_cpu_context.u, 0);
+    assert_int_equal(e_cpu_context.s, 0);
+    assert_int_equal(e_cpu_context.pc, 0);
+    assert_int_equal(e_cpu_context.d.d, 0);
 }
 
 int main(void) {
