@@ -1,4 +1,5 @@
-TARGET = 6809_core
+BUILD_DIR = ./build/
+TARGET = $(BUILD_DIR)6809_core
 LIBS = cmocka
 CC = gcc
 CFLAGS = -I. -Wall
@@ -8,10 +9,10 @@ CFLAGS = -I. -Wall
 default: $(TARGET)
 all: default
 
-OBJECTS = $(patsubst %.c, %.o, $(wildcard *.c))
+OBJECTS = $(patsubst %.c, $(BUILD_DIR)%.o, $(wildcard *.c))
 HEADERS = $(wildcard *.h)
 
-%.o: %.c $(HEADERS)
+$(BUILD_DIR)%.o: %.c $(HEADERS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 .PRECIOUS: $(TARGET) $(OBJECTS)
