@@ -4,7 +4,7 @@
 #include <cmocka.h>
 
 #include "functions.h"
-#include "types.h"
+#include "functions_test.h"
 
 extern struct cpu_state e_cpu_context;
 
@@ -23,7 +23,8 @@ static void core_init_test(void **state) {
 
 int main(void) {
     const struct CMUnitTest tests[] = {
-        cmocka_unit_test(core_init_test)
+        cmocka_unit_test(core_init_test),
+        cmocka_unit_test(nop_test)
     };
     return cmocka_run_group_tests(tests, NULL, NULL);
 }
