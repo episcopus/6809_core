@@ -1,0 +1,1 @@
+void core_init();
