@@ -16,6 +16,19 @@ typedef union {
     } byte_acc;
 } d_register;
 
+/* This bit field is arranged from low order bit (c) to high
+   order bit (e) on Intel little endian CPU's. */
+struct condition_code {
+    unsigned int c : 1;
+    unsigned int v : 1;
+    unsigned int z : 1;
+    unsigned int n : 1;
+    unsigned int i : 1;
+    unsigned int h : 1;
+    unsigned int f : 1;
+    unsigned int e : 1;
+};
+
 struct cpu_state {
     uint16 x;
     uint16 y;
@@ -24,6 +37,7 @@ struct cpu_state {
     uint16 pc;
     d_register d;
     uint8 dp;
+    struct condition_code cc;
 };
 
 enum addressing_mode {
