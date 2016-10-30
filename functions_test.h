@@ -12,3 +12,7 @@ void asrb_test(void **state);
 void asrb_flags_test(void **state);
 void clra_flags_test(void **state);
 void clrb_flags_test(void **state);
+void coma_test(void **state);
+void comb_test(void **state);
+void coma_zero_test(void **state);
+void comb_zero_test(void **state);

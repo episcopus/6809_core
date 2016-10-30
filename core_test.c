@@ -153,7 +153,11 @@ int main(void) {
         cmocka_unit_test_setup(asrb_test, test_setup),
         cmocka_unit_test_setup(asrb_flags_test, test_setup),
         cmocka_unit_test_setup(clra_flags_test, test_setup),
-        cmocka_unit_test_setup(clrb_flags_test, test_setup)
+        cmocka_unit_test_setup(clrb_flags_test, test_setup),
+        cmocka_unit_test_setup(coma_test, test_setup),
+        cmocka_unit_test_setup(comb_test, test_setup),
+        cmocka_unit_test_setup(coma_zero_test, test_setup),
+        cmocka_unit_test_setup(comb_zero_test, test_setup)
     };
     return cmocka_run_group_tests(tests, NULL, NULL);
 }
