@@ -34,13 +34,18 @@ int asl(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
 
     uint8 reg_val = *p_reg;
 
+    /*The Carry flag receives the value shifted out of bit 7. */
     e_cpu_context.cc.c = (reg_val & 0x80) > 0;
     /* The Overflow flag is set to the Exclusive-OR of the original
        values of bits 6 and 7. */
     e_cpu_context.cc.v = ((reg_val & 0x80) ^
         (reg_val & 0x40) << 1) > 0;
     reg_val <<= 1;
+    /* The Negative flag is set equal to the new value of bit 7; previously
+       bit 6. */
     e_cpu_context.cc.n = (reg_val & 0x80) > 0;
+    /* The Zero flag is set if the new 8-bit value is zero; cleared
+       otherwise. */
     e_cpu_context.cc.z = reg_val == 0;
 
     *p_reg = reg_val;
