@@ -52,6 +52,39 @@ int asl(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     return opcode_table[opcode].cycle_count;
 }
 
+/* Arithmetic Shift Right of 8-Bit Accumulator or Memory Byte */
+int asr(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
+    (void) a_m; /* unused */
+
+    e_cpu_context.pc++;
+    uint8* p_reg = 0;
+    switch (t_r) {
+    case REG_A:
+        p_reg = &e_cpu_context.d.byte_acc.a;
+        break;
+    case REG_B:
+        p_reg = &e_cpu_context.d.byte_acc.b;
+        break;
+    default:
+        assert(FALSE);
+        return 0;
+    }
+
+    uint8 reg_val = *p_reg;
+
+    /* The Carry flag receives the value shifted out of bit 0. */
+    e_cpu_context.cc.c = (reg_val & 0x1) > 0;
+    reg_val >>= 1;
+    /* The Negative flag is set equal to the value of bit 7. */
+    e_cpu_context.cc.n = (reg_val & 0x80) > 0;
+    /* The Zero flag is set if the new 8-bit value is zero; cleared
+       otherwise. */
+    e_cpu_context.cc.z = reg_val == 0;
+
+    *p_reg = reg_val;
+    return opcode_table[opcode].cycle_count;
+}
+
 /* No Operation */
 int nop(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     (void) t_r; /* unused */

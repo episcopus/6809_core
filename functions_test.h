@@ -6,3 +6,7 @@ void asla_test(void **state);
 void asla_flags_test(void **state);
 void aslb_test(void **state);
 void aslb_flags_test(void **state);
+void asra_test(void **state);
+void asra_flags_test(void **state);
+void asrb_test(void **state);
+void asrb_flags_test(void **state);
