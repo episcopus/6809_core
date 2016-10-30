@@ -4,12 +4,16 @@ typedef unsigned char uint8;
 #define FALSE 0
 #define TRUE 1
 
+/* This union manages the differing endinaness of the Intel
+   CPU (little endian) vs the emulated MC6809E (big endian).
+   Setting a value to the b register will end up flipping it to
+   the lower part of the d register as it should be. */
 typedef union {
     uint16 d;
     struct {
         uint8 b;
         uint8 a;
-    } b;
+    } byte_acc;
 } d_register;
 
 struct cpu_state {
