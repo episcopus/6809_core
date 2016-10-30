@@ -1,8 +1,7 @@
+#include "consts.h"
+
 typedef unsigned short int uint16;
 typedef unsigned char uint8;
-
-#define FALSE 0
-#define TRUE 1
 
 /* This union manages the differing endinaness of the Intel
    CPU (little endian) vs the emulated MC6809E (big endian).

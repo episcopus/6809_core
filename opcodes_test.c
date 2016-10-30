@@ -12,10 +12,10 @@ void abx_test(void **state) {
     (void) state; /* unused */
 
     int pre_pc = e_cpu_context.pc;
-    int cycles = abx(0x12, REG_NONE, INHERENT);
+    int cycles = abx(OP_NOP, REG_NONE, INHERENT);
     int post_pc = e_cpu_context.pc;
 
-    assert_int_equal(cycles, opcode_table[0x12].cycle_count);
+    assert_int_equal(cycles, opcode_table[OP_NOP].cycle_count);
     assert_true(post_pc > pre_pc);
 }
 
@@ -25,10 +25,10 @@ void abx_test_add(void **state) {
     int pre_pc = e_cpu_context.pc;
     e_cpu_context.x = 1;
     e_cpu_context.d.byte_acc.b = 2;
-    int cycles = abx(0x12, REG_NONE, INHERENT);
+    int cycles = abx(OP_ABX, REG_NONE, INHERENT);
     int post_pc = e_cpu_context.pc;
 
-    assert_int_equal(cycles, opcode_table[0x12].cycle_count);
+    assert_int_equal(cycles, opcode_table[OP_ABX].cycle_count);
     assert_int_equal(e_cpu_context.x, 3);
     assert_true(post_pc > pre_pc);
 }
@@ -41,10 +41,10 @@ void abx_test_unsigned(void **state) {
     /* Were this 0xFF be treated as signed, it would result as
        a -1 - but this case the operation is unsigned. */
     e_cpu_context.d.byte_acc.b = 0xFF;
-    int cycles = abx(0x12, REG_NONE, INHERENT);
+    int cycles = abx(OP_ABX, REG_NONE, INHERENT);
     int post_pc = e_cpu_context.pc;
 
-    assert_int_equal(cycles, opcode_table[0x12].cycle_count);
+    assert_int_equal(cycles, opcode_table[OP_ABX].cycle_count);
     assert_int_equal(e_cpu_context.x, 0x311A);
     assert_true(post_pc > pre_pc);
 }
@@ -57,10 +57,10 @@ void asla_test(void **state) {
     e_cpu_context.d.byte_acc.a = 2;
     /* b shouldn't be messed with */
     e_cpu_context.d.byte_acc.b = 8;
-    int cycles = asl(0x48, REG_A, INHERENT);
+    int cycles = asl(OP_ASLA, REG_A, INHERENT);
     int post_pc = e_cpu_context.pc;
 
-    assert_int_equal(cycles, opcode_table[0x48].cycle_count);
+    assert_int_equal(cycles, opcode_table[OP_ASLA].cycle_count);
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0x4);
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0x8);
     assert_int_equal(e_cpu_context.cc.c, 0);
@@ -78,10 +78,10 @@ void asla_flags_test(void **state) {
     e_cpu_context.d.byte_acc.a = 0x80;
     /* b shouldn't be messed with */
     e_cpu_context.d.byte_acc.b = 8;
-    int cycles = asl(0x48, REG_A, INHERENT);
+    int cycles = asl(OP_ASLA, REG_A, INHERENT);
     int post_pc = e_cpu_context.pc;
 
-    assert_int_equal(cycles, opcode_table[0x48].cycle_count);
+    assert_int_equal(cycles, opcode_table[OP_ASLA].cycle_count);
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0);
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0x8);
     assert_int_equal(e_cpu_context.cc.c, 1);
@@ -99,10 +99,10 @@ void aslb_test(void **state) {
     e_cpu_context.d.byte_acc.b = 2;
     /* b shouldn't be messed with */
     e_cpu_context.d.byte_acc.a = 8;
-    int cycles = asl(0x58, REG_B, INHERENT);
+    int cycles = asl(OP_ASLB, REG_B, INHERENT);
     int post_pc = e_cpu_context.pc;
 
-    assert_int_equal(cycles, opcode_table[0x58].cycle_count);
+    assert_int_equal(cycles, opcode_table[OP_ASLB].cycle_count);
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0x4);
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0x8);
     assert_int_equal(e_cpu_context.cc.c, 0);
@@ -120,10 +120,10 @@ void aslb_flags_test(void **state) {
     e_cpu_context.d.byte_acc.b = 0x80;
     /* b shouldn't be messed with */
     e_cpu_context.d.byte_acc.a = 8;
-    int cycles = asl(0x58, REG_B, INHERENT);
+    int cycles = asl(OP_ASLB, REG_B, INHERENT);
     int post_pc = e_cpu_context.pc;
 
-    assert_int_equal(cycles, opcode_table[0x58].cycle_count);
+    assert_int_equal(cycles, opcode_table[OP_ASLB].cycle_count);
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0);
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0x8);
     assert_int_equal(e_cpu_context.cc.c, 1);
@@ -137,9 +137,9 @@ void nop_test(void **state) {
     (void) state; /* unused */
 
     int pre_pc = e_cpu_context.pc;
-    int cycles = nop(0x12, REG_NONE, INHERENT);
+    int cycles = nop(OP_NOP, REG_NONE, INHERENT);
     int post_pc = e_cpu_context.pc;
 
-    assert_int_equal(cycles, opcode_table[0x12].cycle_count);
+    assert_int_equal(cycles, opcode_table[OP_NOP].cycle_count);
     assert_true(post_pc > pre_pc);
 }
