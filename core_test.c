@@ -40,7 +40,7 @@ static void test_e_flag(void **state) {
     (void) state; /* unused */
 
     e_cpu_context.cc.e = 1;
-    printf("The cc register is 0x%X\n", (unsigned int) *((unsigned int*) &e_cpu_context.cc));
+    /* printf("The cc register is 0x%X\n", (unsigned int) *((unsigned int*) &e_cpu_context.cc)); */
     unsigned int raw_cc = (unsigned int) *((unsigned int*) &e_cpu_context.cc);
     assert_int_equal(raw_cc, 0x80);
 }
@@ -49,7 +49,7 @@ static void test_f_flag(void **state) {
     (void) state; /* unused */
 
     e_cpu_context.cc.f = 1;
-    printf("The cc register is 0x%X\n", (unsigned int) *((unsigned int*) &e_cpu_context.cc));
+    /* printf("The cc register is 0x%X\n", (unsigned int) *((unsigned int*) &e_cpu_context.cc)); */
     unsigned int raw_cc = (unsigned int) *((unsigned int*) &e_cpu_context.cc);
     assert_int_equal(raw_cc, 0x40);
 }
@@ -58,7 +58,7 @@ static void test_h_flag(void **state) {
     (void) state; /* unused */
 
     e_cpu_context.cc.h = 1;
-    printf("The cc register is 0x%X\n", (unsigned int) *((unsigned int*) &e_cpu_context.cc));
+    /* printf("The cc register is 0x%X\n", (unsigned int) *((unsigned int*) &e_cpu_context.cc)); */
     unsigned int raw_cc = (unsigned int) *((unsigned int*) &e_cpu_context.cc);
     assert_int_equal(raw_cc, 0x20);
 }
@@ -67,7 +67,7 @@ static void test_i_flag(void **state) {
     (void) state; /* unused */
 
     e_cpu_context.cc.i = 1;
-    printf("The cc register is 0x%X\n", (unsigned int) *((unsigned int*) &e_cpu_context.cc));
+    /* printf("The cc register is 0x%X\n", (unsigned int) *((unsigned int*) &e_cpu_context.cc)); */
     unsigned int raw_cc = (unsigned int) *((unsigned int*) &e_cpu_context.cc);
     assert_int_equal(raw_cc, 0x10);
 }
@@ -76,7 +76,7 @@ static void test_n_flag(void **state) {
     (void) state; /* unused */
 
     e_cpu_context.cc.n = 1;
-    printf("The cc register is 0x%X\n", (unsigned int) *((unsigned int*) &e_cpu_context.cc));
+    /* printf("The cc register is 0x%X\n", (unsigned int) *((unsigned int*) &e_cpu_context.cc)); */
     unsigned int raw_cc = (unsigned int) *((unsigned int*) &e_cpu_context.cc);
     assert_int_equal(raw_cc, 0x8);
 }
@@ -85,7 +85,7 @@ static void test_z_flag(void **state) {
     (void) state; /* unused */
 
     e_cpu_context.cc.z = 1;
-    printf("The cc register is 0x%X\n", (unsigned int) *((unsigned int*) &e_cpu_context.cc));
+    /* printf("The cc register is 0x%X\n", (unsigned int) *((unsigned int*) &e_cpu_context.cc)); */
     unsigned int raw_cc = (unsigned int) *((unsigned int*) &e_cpu_context.cc);
     assert_int_equal(raw_cc, 0x4);
 }
@@ -94,7 +94,7 @@ static void test_v_flag(void **state) {
     (void) state; /* unused */
 
     e_cpu_context.cc.v = 1;
-    printf("The cc register is 0x%X\n", (unsigned int) *((unsigned int*) &e_cpu_context.cc));
+    /* printf("The cc register is 0x%X\n", (unsigned int) *((unsigned int*) &e_cpu_context.cc)); */
     unsigned int raw_cc = (unsigned int) *((unsigned int*) &e_cpu_context.cc);
     assert_int_equal(raw_cc, 0x2);
 }
@@ -103,7 +103,7 @@ static void test_c_flag(void **state) {
     (void) state; /* unused */
 
     e_cpu_context.cc.c = 1;
-    printf("The cc register is 0x%X\n", (unsigned int) *((unsigned int*) &e_cpu_context.cc));
+    /* printf("The cc register is 0x%X\n", (unsigned int) *((unsigned int*) &e_cpu_context.cc)); */
     unsigned int raw_cc = (unsigned int) *((unsigned int*) &e_cpu_context.cc);
     assert_int_equal(raw_cc, 0x1);
 }

@@ -67,6 +67,7 @@ struct opcode_def {
     char* instruction;
     uint8 opcode;
     uint8 cycle_count;
+    enum target_register t_r;
     enum addressing_mode mode;
     opcode_func func;
 };
