@@ -225,3 +225,43 @@ void asrb_flags_test(void **state) {
     assert_int_equal(e_cpu_context.cc.z, 1);
     assert_true(post_pc > pre_pc);
 }
+
+void clra_flags_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    e_cpu_context.d.byte_acc.a = 0x1;
+    /* b shouldn't be messed with */
+    e_cpu_context.d.byte_acc.b = 8;
+    int cycles = clr(OP_CLRA, REG_A, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_CLRA].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x8);
+    assert_int_equal(e_cpu_context.cc.c, 0);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.z, 1);
+    assert_true(post_pc > pre_pc);
+}
+
+void clrb_flags_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    e_cpu_context.d.byte_acc.b = 0x1;
+    /* a shouldn't be messed with */
+    e_cpu_context.d.byte_acc.a = 8;
+    int cycles = clr(OP_CLRB, REG_B, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_CLRB].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x8);
+    assert_int_equal(e_cpu_context.cc.c, 0);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.z, 1);
+    assert_true(post_pc > pre_pc);
+}

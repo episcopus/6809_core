@@ -10,3 +10,5 @@ void asra_test(void **state);
 void asra_flags_test(void **state);
 void asrb_test(void **state);
 void asrb_flags_test(void **state);
+void clra_flags_test(void **state);
+void clrb_flags_test(void **state);

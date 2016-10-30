@@ -151,7 +151,9 @@ int main(void) {
         cmocka_unit_test_setup(asra_test, test_setup),
         cmocka_unit_test_setup(asra_flags_test, test_setup),
         cmocka_unit_test_setup(asrb_test, test_setup),
-        cmocka_unit_test_setup(asrb_flags_test, test_setup)
+        cmocka_unit_test_setup(asrb_flags_test, test_setup),
+        cmocka_unit_test_setup(clra_flags_test, test_setup),
+        cmocka_unit_test_setup(clrb_flags_test, test_setup)
     };
     return cmocka_run_group_tests(tests, NULL, NULL);
 }

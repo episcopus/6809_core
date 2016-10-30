@@ -85,6 +85,36 @@ int asr(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     return opcode_table[opcode].cycle_count;
 }
 
+/* Load Zero into Accumulator */
+int clr(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
+    (void) a_m; /* unused */
+
+    e_cpu_context.pc++;
+
+    switch (t_r) {
+    case REG_A:
+        e_cpu_context.d.byte_acc.a = 0;
+        break;
+    case REG_B:
+        e_cpu_context.d.byte_acc.b = 0;
+        break;
+    default:
+        assert(FALSE);
+        return 0;
+    }
+
+    /* The Carry flag is cleared. */
+    e_cpu_context.cc.c = 0;
+    /* The Overflow flag is cleared. */
+    e_cpu_context.cc.v = 0;
+    /* The Zero flag is set. */
+    e_cpu_context.cc.z = 1;
+    /* The Negative flag is cleared. */
+    e_cpu_context.cc.n = 0;
+
+    return opcode_table[opcode].cycle_count;
+}
+
 /* No Operation */
 int nop(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     (void) t_r; /* unused */
