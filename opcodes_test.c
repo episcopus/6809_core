@@ -345,3 +345,43 @@ void comb_zero_test(void **state) {
     assert_int_equal(e_cpu_context.cc.z, 1);
     assert_true(post_pc > pre_pc);
 }
+
+void daa_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    /* 0x8B should be adjusted to 0x91 per BCD logic. */
+    e_cpu_context.d.byte_acc.a = 0x8B;
+    /* b shouldn't be messed with */
+    e_cpu_context.d.byte_acc.b = 8;
+    int cycles = daa(OP_DAA, REG_NONE, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_DAA].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x8);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x91);
+    assert_int_equal(e_cpu_context.cc.c, 0);
+    assert_int_equal(e_cpu_context.cc.n, 1);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_true(post_pc > pre_pc);
+}
+
+void daa_not_adjusted_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    /* 0x45 is already compliant with BCD, shouldn't get adjusted. */
+    e_cpu_context.d.byte_acc.a = 0x45;
+    /* b shouldn't be messed with */
+    e_cpu_context.d.byte_acc.b = 8;
+    int cycles = daa(OP_DAA, REG_NONE, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_DAA].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x8);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x45);
+    assert_int_equal(e_cpu_context.cc.c, 0);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_true(post_pc > pre_pc);
+}

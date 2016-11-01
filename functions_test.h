@@ -16,3 +16,5 @@ void coma_test(void **state);
 void comb_test(void **state);
 void coma_zero_test(void **state);
 void comb_zero_test(void **state);
+void daa_test(void **state);
+void daa_not_adjusted_test(void **state);

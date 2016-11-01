@@ -154,6 +154,39 @@ int com(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     return opcode_table[opcode].cycle_count;
 }
 
+/* Decimal Addition Adjust */
+int daa(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
+    (void) t_r; /* unused */
+    (void) a_m; /* unused */
+
+    e_cpu_context.pc++;
+
+    /* Previous BCD operation >= 100? */
+    uint16 output = e_cpu_context.d.byte_acc.a;
+    uint8 upper_nibble = (e_cpu_context.d.byte_acc.a & 0xF0) >> 4;
+    uint8 lower_nibble = e_cpu_context.d.byte_acc.a & 0x0F;
+    if (e_cpu_context.cc.c || upper_nibble > 9 ||
+        (upper_nibble > 8 && lower_nibble > 9)) {
+        output += 0x60;
+    }
+    if (e_cpu_context.cc.h || lower_nibble > 9) {
+        output += 0x6;
+    }
+
+    e_cpu_context.d.byte_acc.a = (uint8) output & 0xFF;
+    /* The Carry flag is set if the BCD addition produced a carry; cleared
+       otherwise. */
+    e_cpu_context.cc.c = (output & 0x100) > 0;
+    /* The Negative flag is set equal to the new value of bit 7 in Accumulator
+       A. */
+    e_cpu_context.cc.n = (e_cpu_context.d.byte_acc.a & 0x80) > 0;
+    /* The Zero flag is set if the new value of Accumulator A is zero; cleared
+       otherwise. */
+    e_cpu_context.cc.z = e_cpu_context.d.byte_acc.a == 0;
+
+    return opcode_table[opcode].cycle_count;
+}
+
 /* No Operation */
 int nop(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     (void) t_r; /* unused */

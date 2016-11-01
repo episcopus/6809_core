@@ -2,6 +2,7 @@
 #define TRUE 1
 
 #define OP_NOP 0x12
+#define OP_DAA 0x19
 #define OP_ABX 0x3A
 #define OP_COMA 0x43
 #define OP_ASRA 0x47
