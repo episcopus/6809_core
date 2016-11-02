@@ -385,3 +385,117 @@ void daa_not_adjusted_test(void **state) {
     assert_int_equal(e_cpu_context.cc.z, 0);
     assert_true(post_pc > pre_pc);
 }
+
+void deca_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    e_cpu_context.d.byte_acc.a = 0x45;
+    /* b shouldn't be messed with */
+    e_cpu_context.d.byte_acc.b = 8;
+    int cycles = dec(OP_DECA, REG_A, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_DECA].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x8);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x44);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_true(post_pc > pre_pc);
+}
+
+void decb_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    e_cpu_context.d.byte_acc.b = 0x45;
+    /* a shouldn't be messed with */
+    e_cpu_context.d.byte_acc.a = 8;
+    int cycles = dec(OP_DECB, REG_B, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_DECB].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x8);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x44);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_true(post_pc > pre_pc);
+}
+
+void deca_zero_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    e_cpu_context.d.byte_acc.a = 0x1;
+    /* b shouldn't be messed with */
+    e_cpu_context.d.byte_acc.b = 8;
+    int cycles = dec(OP_DECA, REG_A, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_DECA].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x8);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x0);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.z, 1);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_true(post_pc > pre_pc);
+}
+
+void decb_zero_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    e_cpu_context.d.byte_acc.b = 0x1;
+    /* a shouldn't be messed with */
+    e_cpu_context.d.byte_acc.a = 8;
+    int cycles = dec(OP_DECB, REG_B, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_DECB].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x8);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x0);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.z, 1);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_true(post_pc > pre_pc);
+}
+
+void deca_negative_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    e_cpu_context.d.byte_acc.a = 0;
+    /* b shouldn't be messed with */
+    e_cpu_context.d.byte_acc.b = 8;
+    int cycles = dec(OP_DECA, REG_A, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_DECA].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x8);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF);
+    assert_int_equal(e_cpu_context.cc.n, 1);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_true(post_pc > pre_pc);
+}
+
+void decb_negative_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    e_cpu_context.d.byte_acc.b = 0;
+    /* a shouldn't be messed with */
+    e_cpu_context.d.byte_acc.a = 8;
+    int cycles = dec(OP_DECB, REG_B, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_DECB].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x8);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF);
+    assert_int_equal(e_cpu_context.cc.n, 1);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_true(post_pc > pre_pc);
+}
