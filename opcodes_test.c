@@ -185,11 +185,32 @@ void asra_flags_test(void **state) {
     assert_true(post_pc > pre_pc);
 }
 
+void asra_negative_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    /* Basic shift right by one bit, the most significant bit (sign)
+       should be preserved. */
+    e_cpu_context.d.byte_acc.a = 0x81;
+    /* b shouldn't be messed with */
+    e_cpu_context.d.byte_acc.b = 8;
+    int cycles = asr(OP_ASRA, REG_A, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_ASRA].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x80);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x8);
+    assert_int_equal(e_cpu_context.cc.c, 1);
+    assert_int_equal(e_cpu_context.cc.n, 1);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_true(post_pc > pre_pc);
+}
+
 void asrb_test(void **state) {
     (void) state; /* unused */
 
     int pre_pc = e_cpu_context.pc;
-    /* Basic shift left by one bit */
+    /* Basic shift right by one bit */
     e_cpu_context.d.byte_acc.b = 4;
     /* b shouldn't be messed with */
     e_cpu_context.d.byte_acc.a = 8;
@@ -210,7 +231,7 @@ void asrb_flags_test(void **state) {
     (void) state; /* unused */
 
     int pre_pc = e_cpu_context.pc;
-    /* Basic shift left by one bit */
+    /* Basic shift right by one bit */
     e_cpu_context.d.byte_acc.b = 0x1;
     /* b shouldn't be messed with */
     e_cpu_context.d.byte_acc.a = 8;
@@ -223,6 +244,27 @@ void asrb_flags_test(void **state) {
     assert_int_equal(e_cpu_context.cc.c, 1);
     assert_int_equal(e_cpu_context.cc.n, 0);
     assert_int_equal(e_cpu_context.cc.z, 1);
+    assert_true(post_pc > pre_pc);
+}
+
+void asrb_negative_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    /* Basic shift right by one bit, the most significant bit (sign)
+       should be preserved. */
+    e_cpu_context.d.byte_acc.b = 0x81;
+    /* b shouldn't be messed with */
+    e_cpu_context.d.byte_acc.a = 8;
+    int cycles = asr(OP_ASRB, REG_B, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_ASRB].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x80);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x8);
+    assert_int_equal(e_cpu_context.cc.c, 1);
+    assert_int_equal(e_cpu_context.cc.n, 1);
+    assert_int_equal(e_cpu_context.cc.z, 0);
     assert_true(post_pc > pre_pc);
 }
 
@@ -613,5 +655,129 @@ void incb_zero_test(void **state) {
     assert_int_equal(e_cpu_context.cc.n, 0);
     assert_int_equal(e_cpu_context.cc.z, 1);
     assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_true(post_pc > pre_pc);
+}
+
+void lsra_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    /* Basic shift right by one bit */
+    e_cpu_context.d.byte_acc.a = 2;
+    /* b shouldn't be messed with */
+    e_cpu_context.d.byte_acc.b = 8;
+    int cycles = lsr(OP_LSRA, REG_A, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_LSRA].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x1);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x8);
+    assert_int_equal(e_cpu_context.cc.c, 0);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_true(post_pc > pre_pc);
+}
+
+void lsra_flags_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    /* Basic shift right by one bit */
+    e_cpu_context.d.byte_acc.a = 0x1;
+    /* b shouldn't be messed with */
+    e_cpu_context.d.byte_acc.b = 8;
+    int cycles = lsr(OP_LSRA, REG_A, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_LSRA].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x8);
+    assert_int_equal(e_cpu_context.cc.c, 1);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.z, 1);
+    assert_true(post_pc > pre_pc);
+}
+
+void lsra_negative_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    /* Basic shift right by one bit, the most significant bit (sign)
+       should not be preserved. */
+    e_cpu_context.d.byte_acc.a = 0x81;
+    /* b shouldn't be messed with */
+    e_cpu_context.d.byte_acc.b = 8;
+    int cycles = lsr(OP_LSRA, REG_A, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_LSRA].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x40);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x8);
+    assert_int_equal(e_cpu_context.cc.c, 1);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_true(post_pc > pre_pc);
+}
+
+void lsrb_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    /* Basic shift right by one bit */
+    e_cpu_context.d.byte_acc.b = 4;
+    /* b shouldn't be messed with */
+    e_cpu_context.d.byte_acc.a = 8;
+    int cycles = lsr(OP_LSRB, REG_B, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_LSRB].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x2);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x8);
+    assert_int_equal(e_cpu_context.cc.c, 0);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_true(post_pc > pre_pc);
+}
+
+void lsrb_flags_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    /* Basic shift right by one bit */
+    e_cpu_context.d.byte_acc.b = 0x1;
+    /* b shouldn't be messed with */
+    e_cpu_context.d.byte_acc.a = 8;
+    int cycles = lsr(OP_LSRB, REG_B, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_LSRB].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x8);
+    assert_int_equal(e_cpu_context.cc.c, 1);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.z, 1);
+    assert_true(post_pc > pre_pc);
+}
+
+void lsrb_negative_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    /* Basic shift right by one bit, the most significant bit (sign)
+       should not be preserved. */
+    e_cpu_context.d.byte_acc.b = 0x81;
+    /* b shouldn't be messed with */
+    e_cpu_context.d.byte_acc.a = 8;
+    int cycles = lsr(OP_LSRB, REG_B, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_LSRB].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x40);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x8);
+    assert_int_equal(e_cpu_context.cc.c, 1);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.z, 0);
     assert_true(post_pc > pre_pc);
 }

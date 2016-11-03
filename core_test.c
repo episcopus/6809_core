@@ -150,8 +150,10 @@ int main(void) {
         cmocka_unit_test_setup(aslb_flags_test, test_setup),
         cmocka_unit_test_setup(asra_test, test_setup),
         cmocka_unit_test_setup(asra_flags_test, test_setup),
+        cmocka_unit_test_setup(asra_negative_test, test_setup),
         cmocka_unit_test_setup(asrb_test, test_setup),
         cmocka_unit_test_setup(asrb_flags_test, test_setup),
+        cmocka_unit_test_setup(asrb_negative_test, test_setup),
         cmocka_unit_test_setup(clra_flags_test, test_setup),
         cmocka_unit_test_setup(clrb_flags_test, test_setup),
         cmocka_unit_test_setup(coma_test, test_setup),
@@ -171,7 +173,13 @@ int main(void) {
         cmocka_unit_test_setup(inca_overflow_test, test_setup),
         cmocka_unit_test_setup(incb_overflow_test, test_setup),
         cmocka_unit_test_setup(inca_zero_test, test_setup),
-        cmocka_unit_test_setup(incb_zero_test, test_setup)
+        cmocka_unit_test_setup(incb_zero_test, test_setup),
+        cmocka_unit_test_setup(lsra_test, test_setup),
+        cmocka_unit_test_setup(lsra_flags_test, test_setup),
+        cmocka_unit_test_setup(lsra_negative_test, test_setup),
+        cmocka_unit_test_setup(lsrb_test, test_setup),
+        cmocka_unit_test_setup(lsrb_flags_test, test_setup),
+        cmocka_unit_test_setup(lsrb_negative_test, test_setup)
     };
     return cmocka_run_group_tests(tests, NULL, NULL);
 }
