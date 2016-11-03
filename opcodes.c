@@ -187,7 +187,7 @@ int daa(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     return opcode_table[opcode].cycle_count;
 }
 
-/* Load Zero into Accumulator */
+/* Decrement Accumulator */
 int dec(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     (void) a_m; /* unused */
 
@@ -212,6 +212,43 @@ int dec(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.cc.v = reg_val == 0x80;
 
     reg_val--;
+
+    /* The Negative flag is set equal to the new value of the accumulators
+       high-order bit. */
+    e_cpu_context.cc.n = (reg_val & 0x80) > 0;
+    /* The Zero flag is set if the new value of the accumulator is zero; cleared
+       otherwise. */
+    e_cpu_context.cc.z = (reg_val == 0);
+    *p_reg = reg_val;
+
+    return opcode_table[opcode].cycle_count;
+}
+
+/* Increment Accumulator */
+int inc(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
+    (void) a_m; /* unused */
+
+    e_cpu_context.pc++;
+
+    uint8* p_reg = 0;
+    switch (t_r) {
+    case REG_A:
+        p_reg = &e_cpu_context.d.byte_acc.a;
+        break;
+    case REG_B:
+        p_reg = &e_cpu_context.d.byte_acc.b;
+        break;
+    default:
+        assert(FALSE);
+        return 0;
+    }
+
+    uint8 reg_val = *p_reg;
+    /* The Overflow flag is set if the original value was $7F (8-bit) or $7FFF
+       (16-bit); cleared otherwise. */
+    e_cpu_context.cc.v = reg_val == 0x7F;
+
+    reg_val++;
 
     /* The Negative flag is set equal to the new value of the accumulators
        high-order bit. */

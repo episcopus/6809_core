@@ -499,3 +499,119 @@ void decb_negative_test(void **state) {
     assert_int_equal(e_cpu_context.cc.v, 0);
     assert_true(post_pc > pre_pc);
 }
+
+void inca_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    e_cpu_context.d.byte_acc.a = 0x45;
+    /* b shouldn't be messed with */
+    e_cpu_context.d.byte_acc.b = 8;
+    int cycles = inc(OP_INCA, REG_A, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_INCA].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x8);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x46);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_true(post_pc > pre_pc);
+}
+
+void incb_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    e_cpu_context.d.byte_acc.b = 0x45;
+    /* a shouldn't be messed with */
+    e_cpu_context.d.byte_acc.a = 8;
+    int cycles = inc(OP_INCB, REG_B, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_INCB].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x8);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x46);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_true(post_pc > pre_pc);
+}
+
+void inca_overflow_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    /* This value will overflow signed byte capacity, should set flag. */
+    e_cpu_context.d.byte_acc.a = 0x7F;
+    /* b shouldn't be messed with */
+    e_cpu_context.d.byte_acc.b = 8;
+    int cycles = inc(OP_INCA, REG_A, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_INCA].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x8);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x80);
+    assert_int_equal(e_cpu_context.cc.n, 1);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 1);
+    assert_true(post_pc > pre_pc);
+}
+
+void incb_overflow_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    /* This value will overflow signed byte capacity, should set flag. */
+    e_cpu_context.d.byte_acc.b = 0x7F;
+    /* a shouldn't be messed with */
+    e_cpu_context.d.byte_acc.a = 8;
+    int cycles = inc(OP_INCB, REG_B, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_INCB].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x8);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x80);
+    assert_int_equal(e_cpu_context.cc.n, 1);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 1);
+    assert_true(post_pc > pre_pc);
+}
+
+void inca_zero_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    e_cpu_context.d.byte_acc.a = 0xFF;
+    /* b shouldn't be messed with */
+    e_cpu_context.d.byte_acc.b = 8;
+    int cycles = inc(OP_INCA, REG_A, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_INCA].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x8);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x0);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.z, 1);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_true(post_pc > pre_pc);
+}
+
+void incb_zero_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    e_cpu_context.d.byte_acc.b = 0xFF;
+    /* a shouldn't be messed with */
+    e_cpu_context.d.byte_acc.a = 8;
+    int cycles = inc(OP_INCB, REG_B, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_INCB].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x8);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x0);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.z, 1);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_true(post_pc > pre_pc);
+}
