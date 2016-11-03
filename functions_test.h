@@ -38,3 +38,6 @@ void lsra_negative_test(void **state);
 void lsrb_test(void **state);
 void lsrb_flags_test(void **state);
 void lsrb_negative_test(void **state);
+void mul_test(void **state);
+void mul_signed_test(void **state);
+void mul_zero_test(void **state);

@@ -302,6 +302,23 @@ int lsr(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     return opcode_table[opcode].cycle_count;
 }
 
+/* Unsigned Multiply of Accumulator A and Accumulator B */
+int mul(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
+    (void) t_r; /* unused */
+    (void) a_m; /* unused */
+
+    e_cpu_context.pc++;
+
+    e_cpu_context.d.d = e_cpu_context.d.byte_acc.a * e_cpu_context.d.byte_acc.b;
+
+    /*The Carry flag is set equal to the new value of bit 7 in Accumulator B. */
+    e_cpu_context.cc.c = (e_cpu_context.d.byte_acc.b & 0x80) > 0;
+    /*The Zero flag is set if the 16-bit result is zero; cleared otherwise. */
+    e_cpu_context.cc.z = e_cpu_context.d.d == 0;
+
+    return opcode_table[opcode].cycle_count;
+}
+
 /* No Operation */
 int nop(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     (void) t_r; /* unused */

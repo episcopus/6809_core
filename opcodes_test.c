@@ -781,3 +781,57 @@ void lsrb_negative_test(void **state) {
     assert_int_equal(e_cpu_context.cc.z, 0);
     assert_true(post_pc > pre_pc);
 }
+
+void mul_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    e_cpu_context.d.byte_acc.a = 8;
+    e_cpu_context.d.byte_acc.b = 8;
+    int cycles = mul(OP_MUL, REG_NONE, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_MUL].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x40);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x0);
+    assert_int_equal(e_cpu_context.d.d, 0x40 /* 64 */);
+    assert_int_equal(e_cpu_context.cc.c, 0);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_true(post_pc > pre_pc);
+}
+
+void mul_signed_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    e_cpu_context.d.byte_acc.a = 0xFF;
+    e_cpu_context.d.byte_acc.b = 0xFF;
+    int cycles = mul(OP_MUL, REG_NONE, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_MUL].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x01);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFE);
+    assert_int_equal(e_cpu_context.d.d, 0xFE01 /* 64 */);
+    assert_int_equal(e_cpu_context.cc.c, 0);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_true(post_pc > pre_pc);
+}
+
+void mul_zero_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    e_cpu_context.d.byte_acc.a = 0xFF;
+    e_cpu_context.d.byte_acc.b = 0x0;
+    int cycles = mul(OP_MUL, REG_NONE, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_MUL].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x0);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x0);
+    assert_int_equal(e_cpu_context.d.d, 0x0 /* 64 */);
+    assert_int_equal(e_cpu_context.cc.c, 0);
+    assert_int_equal(e_cpu_context.cc.z, 1);
+    assert_true(post_pc > pre_pc);
+}
