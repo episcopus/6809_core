@@ -1173,3 +1173,63 @@ void rorb_rotate_test(void **state) {
     assert_int_equal(e_cpu_context.cc.z, 0);
     assert_true(post_pc > pre_pc);
 }
+
+void sex_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    /* this should extend to the whole d register */
+    e_cpu_context.d.byte_acc.b = 0x1;
+    /* this should be zeroed out */
+    e_cpu_context.d.byte_acc.a = 8;
+    int cycles = sex(OP_SEX, REG_NONE, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_SEX].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x1);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x0);
+    assert_int_equal(e_cpu_context.d.d, 0x1);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_true(post_pc > pre_pc);
+}
+
+void sex_negative_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    /* this should extend to the whole d register */
+    e_cpu_context.d.byte_acc.b = 0xFF;
+    /* this should be F'd out */
+    e_cpu_context.d.byte_acc.a = 8;
+    int cycles = sex(OP_SEX, REG_NONE, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_SEX].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF);
+    assert_int_equal(e_cpu_context.d.d, 0xFFFF);
+    assert_int_equal(e_cpu_context.cc.n, 1);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_true(post_pc > pre_pc);
+}
+
+void sex_zero_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    /* this should extend to the whole d register */
+    e_cpu_context.d.byte_acc.b = 0;
+    /* this should be zeroed out */
+    e_cpu_context.d.byte_acc.a = 8;
+    int cycles = sex(OP_SEX, REG_NONE, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_SEX].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x0);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x0);
+    assert_int_equal(e_cpu_context.d.d, 0x0);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.z, 1);
+    assert_true(post_pc > pre_pc);
+}

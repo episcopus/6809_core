@@ -17,3 +17,4 @@ int nop(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int notimpl(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int rol(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int ror(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
+int sex(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);

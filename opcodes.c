@@ -464,3 +464,19 @@ int ror(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     *p_reg = reg_val;
     return opcode_table[opcode].cycle_count;
 }
+
+/* Sign Extend the 8-bit Value in B to a 16-bit Value in D */
+int sex(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
+    (void) a_m; /* unused */
+    (void) t_r; /* unused */
+
+    e_cpu_context.pc++;
+    e_cpu_context.cc.n = (e_cpu_context.d.byte_acc.b & 0x80) > 0;
+    e_cpu_context.d.byte_acc.a = e_cpu_context.cc.n ? 0xFF : 0x0;
+
+    /* The Zero flag is set if the new value of Accumulator D is zero
+       (B was zero); cleared otherwise. */
+    e_cpu_context.cc.z = e_cpu_context.d.d == 0;
+
+    return opcode_table[opcode].cycle_count;
+}

@@ -198,7 +198,10 @@ int main(void) {
         cmocka_unit_test_setup(rora_carry_test, test_setup),
         cmocka_unit_test_setup(rorb_carry_test, test_setup),
         cmocka_unit_test_setup(rora_rotate_test, test_setup),
-        cmocka_unit_test_setup(rorb_rotate_test, test_setup)
+        cmocka_unit_test_setup(rorb_rotate_test, test_setup),
+        cmocka_unit_test_setup(sex_test, test_setup),
+        cmocka_unit_test_setup(sex_negative_test, test_setup),
+        cmocka_unit_test_setup(sex_zero_test, test_setup)
     };
     return cmocka_run_group_tests(tests, NULL, NULL);
 }

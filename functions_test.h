@@ -57,3 +57,6 @@ void rora_carry_test(void **state);
 void rorb_carry_test(void **state);
 void rora_rotate_test(void **state);
 void rorb_rotate_test(void **state);
+void sex_test(void **state);
+void sex_negative_test(void **state);
+void sex_zero_test(void **state);

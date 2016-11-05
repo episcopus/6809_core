@@ -3,6 +3,7 @@
 
 #define OP_NOP 0x12
 #define OP_DAA 0x19
+#define OP_SEX 0x1D
 #define OP_ABX 0x3A
 #define OP_MUL 0x3D
 #define OP_NEGA 0x40
