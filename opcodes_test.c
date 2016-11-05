@@ -945,10 +945,10 @@ void rolb_test(void **state) {
     e_cpu_context.d.byte_acc.b = 2;
     /* b shouldn't be messed with */
     e_cpu_context.d.byte_acc.a = 8;
-    int cycles = rol(OP_ROLA, REG_B, INHERENT);
+    int cycles = rol(OP_ROLB, REG_B, INHERENT);
     int post_pc = e_cpu_context.pc;
 
-    assert_int_equal(cycles, opcode_table[OP_ROLA].cycle_count);
+    assert_int_equal(cycles, opcode_table[OP_ROLB].cycle_count);
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0x4);
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0x8);
     assert_int_equal(e_cpu_context.cc.c, 0);
@@ -987,7 +987,7 @@ void rolb_carry_test(void **state) {
     e_cpu_context.d.byte_acc.b = 0x80;
     /* b shouldn't be messed with */
     e_cpu_context.d.byte_acc.a = 8;
-    int cycles = rol(OP_ROLA, REG_B, INHERENT);
+    int cycles = rol(OP_ROLB, REG_B, INHERENT);
     int post_pc = e_cpu_context.pc;
 
     assert_int_equal(cycles, opcode_table[OP_ROLB].cycle_count);
@@ -1043,5 +1043,133 @@ void rolb_rotate_test(void **state) {
     assert_int_equal(e_cpu_context.cc.n, 0);
     assert_int_equal(e_cpu_context.cc.z, 0);
     assert_int_equal(e_cpu_context.cc.v, 1);
+    assert_true(post_pc > pre_pc);
+}
+
+void rora_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    /* Basic shift right by one bit */
+    e_cpu_context.d.byte_acc.a = 0x2;
+    /* b shouldn't be messed with */
+    e_cpu_context.d.byte_acc.b = 8;
+    int cycles = ror(OP_RORA, REG_A, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_RORA].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x1);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x8);
+    assert_int_equal(e_cpu_context.cc.c, 0);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_true(post_pc > pre_pc);
+}
+
+void rorb_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    /* Basic shift right by one bit */
+    e_cpu_context.d.byte_acc.b = 2;
+    /* a shouldn't be messed with */
+    e_cpu_context.d.byte_acc.a = 8;
+    int cycles = ror(OP_RORB, REG_B, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_RORB].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x1);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x8);
+    assert_int_equal(e_cpu_context.cc.c, 0);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_true(post_pc > pre_pc);
+}
+
+void rora_carry_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    /* this bit should end up in carry */
+    e_cpu_context.d.byte_acc.a = 0x1;
+    /* b shouldn't be messed with */
+    e_cpu_context.d.byte_acc.b = 8;
+    int cycles = ror(OP_RORA, REG_A, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_RORA].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x0);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x8);
+    assert_int_equal(e_cpu_context.cc.c, 1);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.z, 1);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_true(post_pc > pre_pc);
+}
+
+void rorb_carry_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    /* this bit should end up in carry */
+    e_cpu_context.d.byte_acc.b = 1;
+    /* a shouldn't be messed with */
+    e_cpu_context.d.byte_acc.a = 8;
+    int cycles = ror(OP_RORB, REG_B, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_RORB].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x0);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x8);
+    assert_int_equal(e_cpu_context.cc.c, 1);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.z, 1);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_true(post_pc > pre_pc);
+}
+
+void rora_rotate_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    /* this bit should end up in carry  */
+    e_cpu_context.d.byte_acc.a = 0x1;
+    /* b shouldn't be messed with */
+    e_cpu_context.d.byte_acc.b = 8;
+    /* this carry flag should end up in bit seven */
+    e_cpu_context.cc.c = 1;
+    int cycles = ror(OP_RORB, REG_A, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_RORB].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x80);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x8);
+    assert_int_equal(e_cpu_context.cc.c, 1);
+    assert_int_equal(e_cpu_context.cc.n, 1);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_true(post_pc > pre_pc);
+}
+
+void rorb_rotate_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    /* this bit should end up in carry */
+    e_cpu_context.d.byte_acc.b = 0x1;
+    /* b shouldn't be messed with */
+    e_cpu_context.d.byte_acc.a = 8;
+    /* this carry flag should end up in bit seven */
+    e_cpu_context.cc.c = 1;
+    int cycles = ror(OP_RORB, REG_B, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_RORB].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x80);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x8);
+    assert_int_equal(e_cpu_context.cc.c, 1);
+    assert_int_equal(e_cpu_context.cc.n, 1);
+    assert_int_equal(e_cpu_context.cc.z, 0);
     assert_true(post_pc > pre_pc);
 }

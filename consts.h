@@ -8,6 +8,7 @@
 #define OP_NEGA 0x40
 #define OP_COMA 0x43
 #define OP_LSRA 0x44
+#define OP_RORA 0x46
 #define OP_ASRA 0x47
 #define OP_ASLA 0x48
 #define OP_ROLA 0x49
@@ -17,6 +18,7 @@
 #define OP_NEGB 0x50
 #define OP_COMB 0x53
 #define OP_LSRB 0x54
+#define OP_RORB 0x56
 #define OP_ASRB 0x57
 #define OP_ASLB 0x58
 #define OP_ROLB 0x59
