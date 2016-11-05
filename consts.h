@@ -15,6 +15,7 @@
 #define OP_ROLA 0x49
 #define OP_DECA 0x4A
 #define OP_INCA 0x4C
+#define OP_TSTA 0x4D
 #define OP_CLRA 0x4F
 #define OP_NEGB 0x50
 #define OP_COMB 0x53
@@ -25,4 +26,5 @@
 #define OP_ROLB 0x59
 #define OP_DECB 0x5A
 #define OP_INCB 0x5C
+#define OP_TSTB 0x5D
 #define OP_CLRB 0x5F
