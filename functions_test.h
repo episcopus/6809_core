@@ -41,3 +41,7 @@ void lsrb_negative_test(void **state);
 void mul_test(void **state);
 void mul_signed_test(void **state);
 void mul_zero_test(void **state);
+void nega_test(void **state);
+void negb_test(void **state);
+void nega_minusone_test(void **state);
+void negb_minusone_test(void **state);

@@ -12,5 +12,6 @@ int dec(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int inc(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int lsr(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int mul(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
+int neg(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int nop(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int notimpl(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);

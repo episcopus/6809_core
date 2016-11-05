@@ -835,3 +835,83 @@ void mul_zero_test(void **state) {
     assert_int_equal(e_cpu_context.cc.z, 1);
     assert_true(post_pc > pre_pc);
 }
+
+void nega_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    e_cpu_context.d.byte_acc.a = 0x1;
+    /* b shouldn't be messed with */
+    e_cpu_context.d.byte_acc.b = 8;
+    int cycles = neg(OP_NEGA, REG_A, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_NEGA].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x8);
+    assert_int_equal(e_cpu_context.cc.c, 1);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_int_equal(e_cpu_context.cc.n, 1);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_true(post_pc > pre_pc);
+}
+
+void negb_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    e_cpu_context.d.byte_acc.b = 0x1;
+    /* b shouldn't be messed with */
+    e_cpu_context.d.byte_acc.a = 8;
+    int cycles = neg(OP_NEGB, REG_B, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_NEGB].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x8);
+    assert_int_equal(e_cpu_context.cc.c, 1);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_int_equal(e_cpu_context.cc.n, 1);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_true(post_pc > pre_pc);
+}
+
+void nega_minusone_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    e_cpu_context.d.byte_acc.a = 0xFF;
+    /* a shouldn't be messed with */
+    e_cpu_context.d.byte_acc.b = 8;
+    int cycles = neg(OP_NEGA, REG_A, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_NEGA].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x01);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x8);
+    assert_int_equal(e_cpu_context.cc.c, 1);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_true(post_pc > pre_pc);
+}
+
+void negb_minusone_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    e_cpu_context.d.byte_acc.b = 0xFF;
+    /* b shouldn't be messed with */
+    e_cpu_context.d.byte_acc.a = 8;
+    int cycles = neg(OP_NEGB, REG_B, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_NEGB].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x01);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x08);
+    assert_int_equal(e_cpu_context.cc.c, 1);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_true(post_pc > pre_pc);
+}
