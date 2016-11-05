@@ -186,7 +186,13 @@ int main(void) {
         cmocka_unit_test_setup(nega_test, test_setup),
         cmocka_unit_test_setup(negb_test, test_setup),
         cmocka_unit_test_setup(nega_minusone_test, test_setup),
-        cmocka_unit_test_setup(negb_minusone_test, test_setup)
+        cmocka_unit_test_setup(negb_minusone_test, test_setup),
+        cmocka_unit_test_setup(rola_test, test_setup),
+        cmocka_unit_test_setup(rolb_test, test_setup),
+        cmocka_unit_test_setup(rola_carry_test, test_setup),
+        cmocka_unit_test_setup(rolb_carry_test, test_setup),
+        cmocka_unit_test_setup(rola_rotate_test, test_setup),
+        cmocka_unit_test_setup(rolb_rotate_test, test_setup)
     };
     return cmocka_run_group_tests(tests, NULL, NULL);
 }
