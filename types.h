@@ -18,25 +18,25 @@ typedef union {
 /* This bit field is arranged from low order bit (c) to high
    order bit (e) on Intel little endian CPU's. */
 struct condition_code {
-    unsigned int c : 1;
-    unsigned int v : 1;
-    unsigned int z : 1;
-    unsigned int n : 1;
-    unsigned int i : 1;
-    unsigned int h : 1;
-    unsigned int f : 1;
-    unsigned int e : 1;
+    unsigned int c : 1; /* Carry (or borrow) */
+    unsigned int v : 1; /* Overflow */
+    unsigned int z : 1; /* Zero result */
+    unsigned int n : 1; /* Negative result (twos complement) */
+    unsigned int i : 1; /* IRQ interrupt masked */
+    unsigned int h : 1; /* Half-Carry */
+    unsigned int f : 1; /* FIRQ interrupt masked */
+    unsigned int e : 1; /* Entire register state stacked */
 };
 
 struct cpu_state {
-    uint16 x;
-    uint16 y;
-    uint16 u;
-    uint16 s;
-    uint16 pc;
-    d_register d;
-    uint8 dp;
-    struct condition_code cc;
+    uint16 x; /* Index Register */
+    uint16 y; /* Index Register */
+    uint16 u; /* User Stack Pointer */
+    uint16 s; /* System Stack Pointer */
+    uint16 pc; /* Program Counter */
+    d_register d; /* Accumulator */
+    uint8 dp; /* Direct Page Register */
+    struct condition_code cc; /* Condition Codes Register */
 };
 
 enum addressing_mode {
@@ -62,6 +62,7 @@ enum target_register {
 
 typedef int (*opcode_func)(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 
+/* Opcode structure definition for opcode_table.c */
 struct opcode_def {
     char* instruction;
     uint8 opcode;
