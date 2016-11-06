@@ -37,6 +37,8 @@ struct cpu_state {
     d_register d; /* Accumulator */
     uint8 dp; /* Direct Page Register */
     struct condition_code cc; /* Condition Codes Register */
+
+    uint8* memory; /* Memory map */
 };
 
 enum addressing_mode {

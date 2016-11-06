@@ -1,6 +1,8 @@
 #define FALSE 0
 #define TRUE 1
 
+#define MEMORY_SIZE 0x10000
+
 #define OP_NOP 0x12
 #define OP_DAA 0x19
 #define OP_SEX 0x1D

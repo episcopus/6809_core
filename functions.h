@@ -1,6 +1,7 @@
 #include "types.h"
 
 void core_init();
+void core_destroy();
 
 int abx(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int asl(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
