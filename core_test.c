@@ -135,6 +135,51 @@ static void test_all_flags(void **state) {
     assert_int_equal(raw_cc, 0xFF);
 }
 
+static void test_load_memory(void **state) {
+    (void) state; /* unused */
+
+    uint8 test_bytes[] = {
+        0x12, 0x34
+    };
+
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, test_bytes, 2}
+    };
+
+    load_memory(test_memory, 1);
+
+    assert_int_equal(e_cpu_context.memory[USER_SPACE_ROOT], 0x12);
+    assert_int_equal(e_cpu_context.memory[USER_SPACE_ROOT + 1], 0x34);
+}
+
+static void test_load_memory_too_big(void **state) {
+    (void) state; /* unused */
+
+    uint8 test_bytes[] = {
+        0x12, 0x34
+    };
+
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT + 0xA000, test_bytes, MEMORY_SIZE / 2 }
+    };
+
+    expect_assert_failure(load_memory(test_memory, 1));
+}
+
+static void test_load_memory_too_far(void **state) {
+    (void) state; /* unused */
+
+    uint8 test_bytes[] = {
+        0x12, 0x34
+    };
+
+    struct mem_loader_def test_memory[] = {
+        { MEMORY_SIZE - 1, test_bytes, 2 }
+    };
+
+    expect_assert_failure(load_memory(test_memory, 1));
+}
+
 int main(void) {
     const struct CMUnitTest tests[] = {
         cmocka_unit_test_setup_teardown(core_init_test, test_setup, test_teardown),
@@ -146,7 +191,10 @@ int main(void) {
         cmocka_unit_test_setup_teardown(test_z_flag, test_setup, test_teardown),
         cmocka_unit_test_setup_teardown(test_v_flag, test_setup, test_teardown),
         cmocka_unit_test_setup_teardown(test_c_flag, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(test_all_flags, test_setup, test_teardown)
+        cmocka_unit_test_setup_teardown(test_all_flags, test_setup, test_teardown),
+        cmocka_unit_test_setup_teardown(test_load_memory, test_setup, test_teardown),
+        cmocka_unit_test_setup_teardown(test_load_memory_too_big, test_setup, test_teardown),
+        cmocka_unit_test_setup_teardown(test_load_memory_too_far, test_setup, test_teardown)
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL) +

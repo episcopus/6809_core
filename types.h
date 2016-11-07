@@ -73,3 +73,9 @@ struct opcode_def {
     enum addressing_mode mode;
     opcode_func func;
 };
+
+struct mem_loader_def {
+    uint16 root_address;
+    uint8* byte_payload;
+    uint16 byte_size;
+};

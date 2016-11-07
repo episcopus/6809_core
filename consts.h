@@ -8,6 +8,17 @@
    memory map before it. This leaves 24K of usable user space under 0x7FFF. */
 #define USER_SPACE_ROOT 0x2000
 
+/* For cmocka, replace regular assert with mock_assert() which allows us to
+   test for assert()'s in tests. */
+/* #ifdef UNIT_TESTING */
+extern void mock_assert(const int result, const char* const expression,
+                        const char * const file, const int line);
+
+#undef assert
+#define assert(expression) \
+    mock_assert((int)(expression), #expression, __FILE__, __LINE__);
+/* #endif */
+
 #define OP_NOP 0x12
 #define OP_DAA 0x19
 #define OP_SEX 0x1D
