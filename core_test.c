@@ -194,10 +194,11 @@ static void run_cycles_test(void **state) {
 
     load_memory(test_memory, 1);
 
-    uint32 completed_cycles = run_cycles(1);
+    uint32 completed_cycles = run_cycles(opcode_table[OP_NOP].cycle_count);
 
     assert_int_equal(completed_cycles, opcode_table[OP_NOP].cycle_count);
     assert_int_equal(e_cpu_context.cycle_count, opcode_table[OP_NOP].cycle_count);
+    assert_int_equal(e_cpu_context.pc, USER_SPACE_ROOT + 1);
 }
 
 /* Run two NOP instructions which should yield 4 cycles */
@@ -212,11 +213,12 @@ static void run_cycles_multiple_test(void **state) {
 
     load_memory(test_memory, 1);
 
-    uint32 completed_cycles = run_cycles(4);
+    uint32 completed_cycles = run_cycles(opcode_table[OP_NOP].cycle_count * 2);
 
     assert_int_equal(completed_cycles, opcode_table[OP_NOP].cycle_count * 2);
     assert_int_equal(e_cpu_context.cycle_count,
                      opcode_table[OP_NOP].cycle_count * 2);
+    assert_int_equal(e_cpu_context.pc, USER_SPACE_ROOT + 2);
 }
 
 /* 0x1 on the 6809 is an invalid exception and we'll use it for this NOTIMPL

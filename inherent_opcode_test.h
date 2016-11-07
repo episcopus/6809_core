@@ -41,6 +41,7 @@ void inca_overflow_test(void **state);
 void incb_overflow_test(void **state);
 void inca_zero_test(void **state);
 void incb_zero_test(void **state);
+void inca_multiple_pc_test(void **state);
 void lsra_test(void **state);
 void lsra_flags_test(void **state);
 void lsra_negative_test(void **state);
@@ -78,6 +79,7 @@ void tstb_zero_test(void **state);
 
 const struct CMUnitTest inherent_tests[] = {
     cmocka_unit_test_setup_teardown(nop_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(nop_pc_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(abx_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(abx_test_add, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(abx_test_unsigned, test_setup, test_teardown),
@@ -111,6 +113,7 @@ const struct CMUnitTest inherent_tests[] = {
     cmocka_unit_test_setup_teardown(incb_overflow_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(inca_zero_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(incb_zero_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(inca_multiple_pc_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(lsra_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(lsra_flags_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(lsra_negative_test, test_setup, test_teardown),

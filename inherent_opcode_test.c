@@ -679,6 +679,35 @@ void incb_zero_test(void **state) {
     assert_true(post_pc > pre_pc);
 }
 
+void inca_multiple_pc_test(void **state) {
+    (void) state; /* unused */
+
+    /* b shouldn't be messed with */
+    e_cpu_context.d.byte_acc.b = 0xFF;
+
+    /* This should yield 3 in register a */
+    uint8 code_bytes[] = {
+        OP_INCA,
+        OP_INCA,
+        OP_INCA
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 3 }
+    };
+    load_memory(test_memory, 1);
+
+    int cycles = run_cycles(opcode_table[OP_INCA].cycle_count * 3);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_INCA].cycle_count * 3);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x3);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_int_equal(post_pc, USER_SPACE_ROOT + 3);
+}
+
 void lsra_test(void **state) {
     (void) state; /* unused */
 
