@@ -1,0 +1,147 @@
+#include <stdarg.h>
+#include <stddef.h>
+#include <setjmp.h>
+#include <cmocka.h>
+
+extern int test_setup(void ** state);
+extern int test_teardown(void **state);
+
+void nop_test(void **state);
+void abx_test(void **state);
+void abx_test_add(void **state);
+void abx_test_unsigned(void **state);
+void asla_test(void **state);
+void asla_flags_test(void **state);
+void aslb_test(void **state);
+void aslb_flags_test(void **state);
+void asra_test(void **state);
+void asra_flags_test(void **state);
+void asra_negative_test(void **state);
+void asrb_test(void **state);
+void asrb_flags_test(void **state);
+void asrb_negative_test(void **state);
+void clra_flags_test(void **state);
+void clrb_flags_test(void **state);
+void coma_test(void **state);
+void comb_test(void **state);
+void coma_zero_test(void **state);
+void comb_zero_test(void **state);
+void daa_test(void **state);
+void daa_not_adjusted_test(void **state);
+void deca_test(void **state);
+void decb_test(void **state);
+void deca_zero_test(void **state);
+void decb_zero_test(void **state);
+void deca_negative_test(void **state);
+void decb_negative_test(void **state);
+void inca_test(void **state);
+void incb_test(void **state);
+void inca_overflow_test(void **state);
+void incb_overflow_test(void **state);
+void inca_zero_test(void **state);
+void incb_zero_test(void **state);
+void lsra_test(void **state);
+void lsra_flags_test(void **state);
+void lsra_negative_test(void **state);
+void lsrb_test(void **state);
+void lsrb_flags_test(void **state);
+void lsrb_negative_test(void **state);
+void mul_test(void **state);
+void mul_signed_test(void **state);
+void mul_zero_test(void **state);
+void nega_test(void **state);
+void negb_test(void **state);
+void nega_minusone_test(void **state);
+void negb_minusone_test(void **state);
+void rola_test(void **state);
+void rolb_test(void **state);
+void rola_carry_test(void **state);
+void rolb_carry_test(void **state);
+void rola_rotate_test(void **state);
+void rolb_rotate_test(void **state);
+void rora_test(void **state);
+void rorb_test(void **state);
+void rora_carry_test(void **state);
+void rorb_carry_test(void **state);
+void rora_rotate_test(void **state);
+void rorb_rotate_test(void **state);
+void sex_test(void **state);
+void sex_negative_test(void **state);
+void sex_zero_test(void **state);
+void tsta_test(void **state);
+void tstb_test(void **state);
+void tsta_negative_test(void **state);
+void tstb_negative_test(void **state);
+void tsta_zero_test(void **state);
+void tstb_zero_test(void **state);
+
+const struct CMUnitTest inherent_tests[] = {
+    cmocka_unit_test_setup_teardown(nop_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(abx_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(abx_test_add, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(abx_test_unsigned, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(asla_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(asla_flags_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(aslb_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(aslb_flags_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(asra_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(asra_flags_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(asra_negative_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(asrb_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(asrb_flags_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(asrb_negative_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(clra_flags_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(clrb_flags_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(coma_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(comb_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(coma_zero_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(comb_zero_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(daa_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(daa_not_adjusted_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(deca_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(decb_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(deca_zero_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(decb_zero_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(deca_negative_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(decb_negative_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(inca_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(incb_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(inca_overflow_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(incb_overflow_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(inca_zero_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(incb_zero_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(lsra_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(lsra_flags_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(lsra_negative_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(lsrb_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(lsrb_flags_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(lsrb_negative_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(mul_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(mul_signed_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(mul_zero_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(nega_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(negb_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(nega_minusone_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(negb_minusone_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(rola_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(rolb_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(rola_carry_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(rolb_carry_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(rola_rotate_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(rolb_rotate_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(rora_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(rorb_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(rora_carry_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(rorb_carry_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(rora_rotate_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(rorb_rotate_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(sex_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(sex_negative_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(sex_zero_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(tsta_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(tstb_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(tsta_negative_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(tstb_negative_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(tsta_zero_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(tstb_zero_test, test_setup, test_teardown)
+};

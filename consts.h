@@ -1,7 +1,12 @@
 #define FALSE 0
 #define TRUE 1
 
+/* Allocate 64K of memory by default */
 #define MEMORY_SIZE 0x10000
+
+/* Start user space at 0x2000 given other reserved things in the CoCo
+   memory map before it. This leaves 24K of usable user space under 0x7FFF. */
+#define USER_SPACE_ROOT 0x2000
 
 #define OP_NOP 0x12
 #define OP_DAA 0x19

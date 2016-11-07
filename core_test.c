@@ -5,18 +5,18 @@
 #include <stdio.h>
 
 #include "functions.h"
-#include "functions_test.h"
+#include "inherent_opcode_test.h"
 
 extern struct cpu_state e_cpu_context;
 
-static int test_setup(void **state) {
+int test_setup(void **state) {
     (void) state; /* unused */
 
     core_init();
     return 0;
 }
 
-static int test_teardown(void **state) {
+int test_teardown(void **state) {
     (void) state; /* unused */
 
     core_destroy();
@@ -146,75 +146,9 @@ int main(void) {
         cmocka_unit_test_setup_teardown(test_z_flag, test_setup, test_teardown),
         cmocka_unit_test_setup_teardown(test_v_flag, test_setup, test_teardown),
         cmocka_unit_test_setup_teardown(test_c_flag, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(test_all_flags, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(nop_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(abx_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(abx_test_add, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(abx_test_unsigned, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(asla_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(asla_flags_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(aslb_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(aslb_flags_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(asra_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(asra_flags_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(asra_negative_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(asrb_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(asrb_flags_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(asrb_negative_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(clra_flags_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(clrb_flags_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(coma_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(comb_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(coma_zero_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(comb_zero_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(daa_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(daa_not_adjusted_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(deca_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(decb_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(deca_zero_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(decb_zero_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(deca_negative_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(decb_negative_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(inca_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(incb_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(inca_overflow_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(incb_overflow_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(inca_zero_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(incb_zero_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(lsra_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(lsra_flags_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(lsra_negative_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(lsrb_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(lsrb_flags_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(lsrb_negative_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(mul_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(mul_signed_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(mul_zero_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(nega_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(negb_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(nega_minusone_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(negb_minusone_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(rola_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(rolb_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(rola_carry_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(rolb_carry_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(rola_rotate_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(rolb_rotate_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(rora_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(rorb_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(rora_carry_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(rorb_carry_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(rora_rotate_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(rorb_rotate_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(sex_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(sex_negative_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(sex_zero_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(tsta_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(tstb_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(tsta_negative_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(tstb_negative_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(tsta_zero_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(tstb_zero_test, test_setup, test_teardown)
+        cmocka_unit_test_setup_teardown(test_all_flags, test_setup, test_teardown)
     };
-    return cmocka_run_group_tests(tests, NULL, NULL);
+
+    return cmocka_run_group_tests(tests, NULL, NULL) +
+        cmocka_run_group_tests(inherent_tests, NULL, NULL);
 }
