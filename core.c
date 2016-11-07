@@ -6,13 +6,14 @@
 #include "consts.h"
 
 struct cpu_state e_cpu_context;
+extern struct opcode_def opcode_table[];
 
 void core_init() {
     e_cpu_context.x = 0;
     e_cpu_context.y = 0;
     e_cpu_context.u = 0;
     e_cpu_context.s = 0;
-    e_cpu_context.pc = 0;
+    e_cpu_context.pc = USER_SPACE_ROOT;
     e_cpu_context.d.d = 0;
     e_cpu_context.dp = 0;
     e_cpu_context.cc.e = 0;
@@ -28,6 +29,7 @@ void core_init() {
     if (e_cpu_context.memory == NULL) {
         assert(FALSE);
     }
+    e_cpu_context.cycle_count = 0;
 
     return;
 }
@@ -70,4 +72,20 @@ int load_memory(struct mem_loader_def* defs, uint8 num_defs) {
     }
 
     return loaded;
+}
+
+uint32 run_cycles(uint32 wanted_cycles) {
+    uint32 completed_cycles = 0;
+    while (completed_cycles < wanted_cycles) {
+        uint8 opcode = e_cpu_context.memory[e_cpu_context.pc];
+        struct opcode_def this_opcode = opcode_table[opcode];
+        assert(strncmp("NOTIMPL", this_opcode.instruction, 7) != 0);
+
+        int this_completed_cycles = this_opcode.func(opcode, this_opcode.t_r,
+                                             this_opcode.mode);
+        e_cpu_context.cycle_count += this_completed_cycles;
+        completed_cycles += this_completed_cycles;
+    }
+
+    return completed_cycles;
 }

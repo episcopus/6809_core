@@ -3,6 +3,7 @@
 void core_init();
 void core_destroy();
 int load_memory(struct mem_loader_def* defs, uint8 num_defs);
+uint32 run_cycles(uint32 wanted_cycles);
 
 int abx(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int asl(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);

@@ -7,6 +7,7 @@ extern int test_setup(void ** state);
 extern int test_teardown(void **state);
 
 void nop_test(void **state);
+void nop_pc_test(void **state);
 void abx_test(void **state);
 void abx_test_add(void **state);
 void abx_test_unsigned(void **state);

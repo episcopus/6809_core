@@ -144,6 +144,27 @@ void nop_test(void **state) {
     assert_true(post_pc > pre_pc);
 }
 
+void nop_pc_test(void **state) {
+    (void) state; /* unused */
+
+    uint8 code_bytes[] = {
+        0x12
+    };
+
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 1}
+    };
+
+    load_memory(test_memory, 1);
+
+    int pre_pc = e_cpu_context.pc;
+    int cycles = nop(OP_NOP, REG_NONE, INHERENT);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_NOP].cycle_count);
+    assert_true(post_pc > pre_pc);
+}
+
 void asra_test(void **state) {
     (void) state; /* unused */
 

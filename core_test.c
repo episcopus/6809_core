@@ -30,7 +30,7 @@ static void core_init_test(void **state) {
     assert_int_equal(e_cpu_context.y, 0);
     assert_int_equal(e_cpu_context.u, 0);
     assert_int_equal(e_cpu_context.s, 0);
-    assert_int_equal(e_cpu_context.pc, 0);
+    assert_int_equal(e_cpu_context.pc, USER_SPACE_ROOT);
     assert_int_equal(e_cpu_context.d.d, 0);
     assert_int_equal(e_cpu_context.dp, 0);
     assert_int_equal(e_cpu_context.cc.e, 0);
@@ -41,6 +41,7 @@ static void core_init_test(void **state) {
     assert_int_equal(e_cpu_context.cc.z, 0);
     assert_int_equal(e_cpu_context.cc.v, 0);
     assert_int_equal(e_cpu_context.cc.c, 0);
+    assert_int_equal(e_cpu_context.cycle_count, 0);
 }
 
 static void test_e_flag(void **state) {
@@ -180,6 +181,58 @@ static void test_load_memory_too_far(void **state) {
     expect_assert_failure(load_memory(test_memory, 1));
 }
 
+/* Run a single NOP instruction which should yield 2 cycles */
+static void run_cycles_test(void **state) {
+    uint8 code_bytes[] = {
+        0x12
+    };
+
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 1}
+    };
+
+    load_memory(test_memory, 1);
+
+    uint32 completed_cycles = run_cycles(1);
+
+    assert_int_equal(completed_cycles, 2);
+    assert_int_equal(e_cpu_context.cycle_count, 2);
+}
+
+/* Run two NOP instructions which should yield 4 cycles */
+static void run_cycles_multiple_test(void **state) {
+    uint8 code_bytes[] = {
+        0x12, 0x12
+    };
+
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2}
+    };
+
+    load_memory(test_memory, 1);
+
+    uint32 completed_cycles = run_cycles(4);
+
+    assert_int_equal(completed_cycles, 4);
+    assert_int_equal(e_cpu_context.cycle_count, 4);
+}
+
+/* 0x1 on the 6809 is an invalid exception and we'll use it for this NOTIMPL
+   assert test */
+static void run_cycles_notimpl_test(void **state) {
+    uint8 code_bytes[] = {
+        0x1
+    };
+
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 1}
+    };
+
+    load_memory(test_memory, 1);
+
+    expect_assert_failure(run_cycles(1));
+}
+
 int main(void) {
     const struct CMUnitTest tests[] = {
         cmocka_unit_test_setup_teardown(core_init_test, test_setup, test_teardown),
@@ -194,7 +247,10 @@ int main(void) {
         cmocka_unit_test_setup_teardown(test_all_flags, test_setup, test_teardown),
         cmocka_unit_test_setup_teardown(test_load_memory, test_setup, test_teardown),
         cmocka_unit_test_setup_teardown(test_load_memory_too_big, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(test_load_memory_too_far, test_setup, test_teardown)
+        cmocka_unit_test_setup_teardown(test_load_memory_too_far, test_setup, test_teardown),
+        cmocka_unit_test_setup_teardown(run_cycles_test, test_setup, test_teardown),
+        cmocka_unit_test_setup_teardown(run_cycles_multiple_test, test_setup, test_teardown),
+        cmocka_unit_test_setup_teardown(run_cycles_notimpl_test, test_setup, test_teardown)
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL) +

@@ -2,6 +2,7 @@
 
 typedef unsigned short int uint16;
 typedef unsigned char uint8;
+typedef unsigned int uint32;
 
 /* This union manages the differing endinaness of the Intel
    CPU (little endian) vs the emulated MC6809E (big endian).
@@ -39,6 +40,8 @@ struct cpu_state {
     struct condition_code cc; /* Condition Codes Register */
 
     uint8* memory; /* Memory map */
+
+    uint32 cycle_count;
 };
 
 enum addressing_mode {
