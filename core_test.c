@@ -8,6 +8,7 @@
 #include "inherent_opcode_test.h"
 
 extern struct cpu_state e_cpu_context;
+extern struct opcode_def opcode_table[];
 
 int test_setup(void **state) {
     (void) state; /* unused */
@@ -184,7 +185,7 @@ static void test_load_memory_too_far(void **state) {
 /* Run a single NOP instruction which should yield 2 cycles */
 static void run_cycles_test(void **state) {
     uint8 code_bytes[] = {
-        0x12
+        OP_NOP
     };
 
     struct mem_loader_def test_memory[] = {
@@ -195,14 +196,14 @@ static void run_cycles_test(void **state) {
 
     uint32 completed_cycles = run_cycles(1);
 
-    assert_int_equal(completed_cycles, 2);
-    assert_int_equal(e_cpu_context.cycle_count, 2);
+    assert_int_equal(completed_cycles, opcode_table[OP_NOP].cycle_count);
+    assert_int_equal(e_cpu_context.cycle_count, opcode_table[OP_NOP].cycle_count);
 }
 
 /* Run two NOP instructions which should yield 4 cycles */
 static void run_cycles_multiple_test(void **state) {
     uint8 code_bytes[] = {
-        0x12, 0x12
+        OP_NOP, OP_NOP
     };
 
     struct mem_loader_def test_memory[] = {
@@ -213,8 +214,9 @@ static void run_cycles_multiple_test(void **state) {
 
     uint32 completed_cycles = run_cycles(4);
 
-    assert_int_equal(completed_cycles, 4);
-    assert_int_equal(e_cpu_context.cycle_count, 4);
+    assert_int_equal(completed_cycles, opcode_table[OP_NOP].cycle_count * 2);
+    assert_int_equal(e_cpu_context.cycle_count,
+                     opcode_table[OP_NOP].cycle_count * 2);
 }
 
 /* 0x1 on the 6809 is an invalid exception and we'll use it for this NOTIMPL
