@@ -29,6 +29,11 @@ void core_init() {
     if (e_cpu_context.memory == NULL) {
         assert(FALSE);
     }
+    /* Clear out the memory to since consecutive core_init() calls may
+       resurface prior core memory */
+    for (int i = 0; i < MEMORY_SIZE; i++) {
+        e_cpu_context.memory[i++] = 0;
+    }
     e_cpu_context.cycle_count = 0;
 
     return;
@@ -92,6 +97,21 @@ void write_byte_to_memory(uint16 address, uint8 byte) {
 
     e_cpu_context.memory[address] = byte;
     return;
+}
+
+uint8 read_byte_handler(enum addressing_mode am) {
+    uint8 return_byte = 0;
+    switch (am) {
+    case IMMEDIATE:
+        /* byte is located right at the pc */
+        return_byte = read_byte_from_memory(e_cpu_context.pc);
+        break;
+    default:
+        assert(FALSE);
+        break;
+    }
+
+    return return_byte;
 }
 
 uint32 run_cycles(uint32 wanted_cycles) {

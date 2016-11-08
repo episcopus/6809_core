@@ -194,6 +194,38 @@ static void read_byte_from_memory_test(void **state) {
     assert_int_equal(post_value, test_value);
 }
 
+static void read_byte_handler_immedidate_test(void **state) {
+    (void) state; /* unused */
+
+    uint8 test_value = 0x7F;
+    /* IMMEDIATE mode reads data right from the pc register location */
+    e_cpu_context.pc = 0x1234;
+    uint8 pre_value = read_byte_handler(IMMEDIATE);
+    write_byte_to_memory(e_cpu_context.pc, test_value);
+    uint8 post_value = read_byte_handler(IMMEDIATE);
+
+    assert_int_equal(pre_value, 0);
+    assert_int_equal(post_value, test_value);
+}
+
+static void memory_clear_test(void **state) {
+    (void) state; /* unused */
+
+    uint8 test_value = 0x7F;
+    e_cpu_context.pc = 0x1234;
+    write_byte_to_memory(e_cpu_context.pc, test_value);
+    uint8 pre_value = read_byte_handler(IMMEDIATE);
+
+    /* this should clear out my memory */
+    core_destroy();
+    core_init();
+
+    uint8 post_value = read_byte_handler(IMMEDIATE);
+
+    assert_int_equal(pre_value, test_value);
+    assert_int_equal(post_value, 0);
+}
+
 /* Run a single NOP instruction which should yield 2 cycles */
 static void run_cycles_test(void **state) {
     uint8 code_bytes[] = {
@@ -267,7 +299,9 @@ int main(void) {
         cmocka_unit_test_setup_teardown(run_cycles_test, test_setup, test_teardown),
         cmocka_unit_test_setup_teardown(run_cycles_multiple_test, test_setup, test_teardown),
         cmocka_unit_test_setup_teardown(run_cycles_notimpl_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(read_byte_from_memory_test, test_setup, test_teardown)
+        cmocka_unit_test_setup_teardown(read_byte_from_memory_test, test_setup, test_teardown),
+        cmocka_unit_test_setup_teardown(read_byte_handler_immedidate_test, test_setup, test_teardown),
+        cmocka_unit_test_setup_teardown(memory_clear_test, test_setup, test_teardown)
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL) +
