@@ -74,6 +74,26 @@ int load_memory(struct mem_loader_def* defs, uint8 num_defs) {
     return loaded;
 }
 
+uint8 read_byte_from_memory(uint16 address) {
+    if (address > MEMORY_SIZE - 1) {
+        assert(FALSE);
+        return 0;
+    }
+
+    uint8 return_byte = e_cpu_context.memory[address];
+    return return_byte;
+}
+
+void write_byte_to_memory(uint16 address, uint8 byte) {
+    if (address > MEMORY_SIZE - 1) {
+        assert(FALSE);
+        return;
+    }
+
+    e_cpu_context.memory[address] = byte;
+    return;
+}
+
 uint32 run_cycles(uint32 wanted_cycles) {
     uint32 completed_cycles = 0;
     while (completed_cycles < wanted_cycles) {

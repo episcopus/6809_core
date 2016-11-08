@@ -182,6 +182,18 @@ static void test_load_memory_too_far(void **state) {
     expect_assert_failure(load_memory(test_memory, 1));
 }
 
+static void read_byte_from_memory_test(void **state) {
+    (void) state; /* unused */
+
+    uint8 test_value = 0x7F;
+    uint8 pre_value = read_byte_from_memory(0x1234);
+    write_byte_to_memory(0x1234, test_value);
+    uint8 post_value = read_byte_from_memory(0x1234);
+
+    assert_int_equal(pre_value, 0);
+    assert_int_equal(post_value, test_value);
+}
+
 /* Run a single NOP instruction which should yield 2 cycles */
 static void run_cycles_test(void **state) {
     uint8 code_bytes[] = {
@@ -254,7 +266,8 @@ int main(void) {
         cmocka_unit_test_setup_teardown(test_load_memory_too_far, test_setup, test_teardown),
         cmocka_unit_test_setup_teardown(run_cycles_test, test_setup, test_teardown),
         cmocka_unit_test_setup_teardown(run_cycles_multiple_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(run_cycles_notimpl_test, test_setup, test_teardown)
+        cmocka_unit_test_setup_teardown(run_cycles_notimpl_test, test_setup, test_teardown),
+        cmocka_unit_test_setup_teardown(read_byte_from_memory_test, test_setup, test_teardown)
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL) +
