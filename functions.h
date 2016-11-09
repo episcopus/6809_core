@@ -9,6 +9,7 @@ uint8 read_byte_handler(enum addressing_mode am);
 uint32 run_cycles(uint32 wanted_cycles);
 
 int abx(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
+int adc(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int asl(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int asr(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int clr(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);

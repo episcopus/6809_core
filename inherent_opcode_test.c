@@ -12,10 +12,10 @@ void abx_test(void **state) {
     (void) state; /* unused */
 
     int pre_pc = e_cpu_context.pc;
-    int cycles = abx(OP_NOP, REG_NONE, INHERENT);
+    int cycles = abx(OP_ABX, REG_NONE, INHERENT);
     int post_pc = e_cpu_context.pc;
 
-    assert_int_equal(cycles, opcode_table[OP_NOP].cycle_count);
+    assert_int_equal(cycles, opcode_table[OP_ABX].cycle_count);
     assert_true(post_pc > pre_pc);
 }
 

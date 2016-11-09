@@ -6,6 +6,7 @@
 
 #include "functions.h"
 #include "inherent_opcode_test.h"
+#include "immediate_opcode_test.h"
 
 extern struct cpu_state e_cpu_context;
 extern struct opcode_def opcode_table[];
@@ -198,14 +199,17 @@ static void read_byte_handler_immedidate_test(void **state) {
     (void) state; /* unused */
 
     uint8 test_value = 0x7F;
-    /* IMMEDIATE mode reads data right from the pc register location */
+    /* IMMEDIATE mode reads data right from the pc register location
+       and moves the pc forward */
     e_cpu_context.pc = 0x1234;
     uint8 pre_value = read_byte_handler(IMMEDIATE);
+    e_cpu_context.pc--;
     write_byte_to_memory(e_cpu_context.pc, test_value);
     uint8 post_value = read_byte_handler(IMMEDIATE);
 
     assert_int_equal(pre_value, 0);
     assert_int_equal(post_value, test_value);
+    assert_int_equal(e_cpu_context.pc, 0x1235);
 }
 
 static void memory_clear_test(void **state) {
@@ -305,5 +309,6 @@ int main(void) {
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL) +
-        cmocka_run_group_tests(inherent_tests, NULL, NULL);
+        cmocka_run_group_tests(inherent_tests, NULL, NULL) +
+        cmocka_run_group_tests(immediate_tests, NULL, NULL);
 }

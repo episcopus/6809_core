@@ -99,12 +99,15 @@ void write_byte_to_memory(uint16 address, uint8 byte) {
     return;
 }
 
+/* This memory accessor reads a byte from the appropriate location
+   in memory based on the addressing mode. Will move the pc
+   appropriately based on the addressing mode and postbyte opcode. */
 uint8 read_byte_handler(enum addressing_mode am) {
     uint8 return_byte = 0;
     switch (am) {
     case IMMEDIATE:
         /* byte is located right at the pc */
-        return_byte = read_byte_from_memory(e_cpu_context.pc);
+        return_byte = read_byte_from_memory(e_cpu_context.pc++);
         break;
     default:
         assert(FALSE);
