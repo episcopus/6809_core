@@ -5,6 +5,8 @@ void core_destroy();
 int load_memory(struct mem_loader_def* defs, uint8 num_defs);
 uint8 read_byte_from_memory(uint16 address);
 void write_byte_to_memory(uint16 address, uint8 byte);
+uint16 read_word_from_memory(uint16 address);
+void write_word_to_memory(uint16 address, uint16 word);
 uint8 read_byte_handler(enum addressing_mode am);
 uint32 run_cycles(uint32 wanted_cycles);
 

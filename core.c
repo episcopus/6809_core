@@ -99,6 +99,32 @@ void write_byte_to_memory(uint16 address, uint8 byte) {
     return;
 }
 
+uint16 read_word_from_memory(uint16 address) {
+    if (address > MEMORY_SIZE - 2) {
+        assert(FALSE);
+        return 0;
+    }
+
+    uint16 return_word = 0;
+    /* data is stored big endian, needs to be flipped for little
+       endian host emulator */
+    return_word |= e_cpu_context.memory[address + 1];
+    return_word |= (uint16) e_cpu_context.memory[address] << 8;
+    return return_word;
+}
+
+void write_word_to_memory(uint16 address, uint16 word) {
+    if (address > MEMORY_SIZE - 2) {
+        assert(FALSE);
+        return;
+    }
+
+    /* flip bytes due to differing endianess of CPU being emulated */
+    e_cpu_context.memory[address + 1] = (uint8) word & 0xFF;
+    e_cpu_context.memory[address] = (uint8) ((word >> 8) & 0xFF);
+    return;
+}
+
 /* This memory accessor reads a byte from the appropriate location
    in memory based on the addressing mode. Will move the pc
    appropriately based on the addressing mode and postbyte opcode. */

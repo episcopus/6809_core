@@ -187,9 +187,23 @@ static void read_byte_from_memory_test(void **state) {
     (void) state; /* unused */
 
     uint8 test_value = 0x7F;
-    uint8 pre_value = read_byte_from_memory(0x1234);
-    write_byte_to_memory(0x1234, test_value);
-    uint8 post_value = read_byte_from_memory(0x1234);
+    uint16 test_address = 0x5678;
+    uint8 pre_value = read_byte_from_memory(test_address);
+    write_byte_to_memory(test_address, test_value);
+    uint8 post_value = read_byte_from_memory(test_address);
+
+    assert_int_equal(pre_value, 0);
+    assert_int_equal(post_value, test_value);
+}
+
+static void read_word_from_memory_test(void **state) {
+    (void) state; /* unused */
+
+    uint16 test_value = 0x1234;
+    uint16 test_address = 0x5678;
+    uint16 pre_value = read_word_from_memory(test_address);
+    write_word_to_memory(test_address, test_value);
+    uint16 post_value = read_word_from_memory(test_address);
 
     assert_int_equal(pre_value, 0);
     assert_int_equal(post_value, test_value);
@@ -304,6 +318,7 @@ int main(void) {
         cmocka_unit_test_setup_teardown(run_cycles_multiple_test, test_setup, test_teardown),
         cmocka_unit_test_setup_teardown(run_cycles_notimpl_test, test_setup, test_teardown),
         cmocka_unit_test_setup_teardown(read_byte_from_memory_test, test_setup, test_teardown),
+        cmocka_unit_test_setup_teardown(read_word_from_memory_test, test_setup, test_teardown),
         cmocka_unit_test_setup_teardown(read_byte_handler_immedidate_test, test_setup, test_teardown),
         cmocka_unit_test_setup_teardown(memory_clear_test, test_setup, test_teardown)
     };
