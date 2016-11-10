@@ -105,3 +105,48 @@ int add(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     *p_reg = output_val;
     return opcode_table[opcode].cycle_count;
 }
+
+/* Add Memory Word to 16-Bit Accumulator */
+int addd(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
+    e_cpu_context.pc++;
+
+    uint16* p_reg = 0;
+    switch (t_r) {
+    case REG_D:
+        p_reg = &e_cpu_context.d.d;
+        break;
+    default:
+        assert(FALSE);
+        return 0;
+    }
+
+    uint16 reg_val = *p_reg;
+    uint16 memory_val = read_word_handler(a_m);
+    uint32 total_val = reg_val + memory_val;
+    uint16 output_val = total_val & 0xFFFF;
+
+    /* The Carry flag is set if a carry out of bit 15 occurred; cleared
+       otherwise. */
+    e_cpu_context.cc.c = (total_val & 0x10000) > 0 ? 1 : 0;
+    /* The Negative flag is set equal to the new value of bit 15 of
+       the accumulator. */
+    e_cpu_context.cc.n = (output_val & 0x8000) > 1;
+    /* The Zero flag is set if the new accumulator value is zero;
+       cleared otherwise. */
+    e_cpu_context.cc.z = output_val == 0;
+    /* The Overflow flag is set if an overflow occurred; cleared otherwise. */
+    /* If the sum of two positive numbers yields a negative result, the sum
+       has overflowed. */
+    uint8 pos_overflow = (reg_val & 0x8000) == 0 &&
+        (memory_val & 0x8000) == 0 &&
+        e_cpu_context.cc.n;
+    /* If the sum of two negative numbers yields a positive result, the sum
+       has overflowed. */
+    uint8 neg_overflow = (reg_val & 0x8000) > 0 &&
+        (memory_val & 0x8000) > 0 &&
+        (output_val & 0x80) == 0;
+    e_cpu_context.cc.v = pos_overflow || neg_overflow;
+
+    *p_reg = output_val;
+    return opcode_table[opcode].cycle_count;
+}

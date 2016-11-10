@@ -143,6 +143,25 @@ uint8 read_byte_handler(enum addressing_mode am) {
     return return_byte;
 }
 
+/* This memory accessor reads a word from the appropriate location
+   in memory based on the addressing mode. Will move the pc
+   appropriately based on the addressing mode and postbyte opcode. */
+uint16 read_word_handler(enum addressing_mode am) {
+    uint16 return_word = 0;
+    switch (am) {
+    case IMMEDIATE:
+        /* word is located right at the pc */
+        return_word = read_word_from_memory(e_cpu_context.pc);
+        e_cpu_context.pc += 2;
+        break;
+    default:
+        assert(FALSE);
+        break;
+    }
+
+    return return_word;
+}
+
 uint32 run_cycles(uint32 wanted_cycles) {
     uint32 completed_cycles = 0;
     while (completed_cycles < wanted_cycles) {

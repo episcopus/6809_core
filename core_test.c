@@ -226,6 +226,23 @@ static void read_byte_handler_immedidate_test(void **state) {
     assert_int_equal(e_cpu_context.pc, 0x1235);
 }
 
+static void read_word_handler_immedidate_test(void **state) {
+    (void) state; /* unused */
+
+    uint16 test_value = 0x7FFF;
+    /* IMMEDIATE mode reads data right from the pc register location
+       and moves the pc forward */
+    e_cpu_context.pc = 0x1234;
+    uint16 pre_value = read_word_handler(IMMEDIATE);
+    e_cpu_context.pc -= 2;
+    write_word_to_memory(e_cpu_context.pc, test_value);
+    uint16 post_value = read_word_handler(IMMEDIATE);
+
+    assert_int_equal(pre_value, 0);
+    assert_int_equal(post_value, test_value);
+    assert_int_equal(e_cpu_context.pc, 0x1236);
+}
+
 static void memory_clear_test(void **state) {
     (void) state; /* unused */
 
@@ -320,6 +337,7 @@ int main(void) {
         cmocka_unit_test_setup_teardown(read_byte_from_memory_test, test_setup, test_teardown),
         cmocka_unit_test_setup_teardown(read_word_from_memory_test, test_setup, test_teardown),
         cmocka_unit_test_setup_teardown(read_byte_handler_immedidate_test, test_setup, test_teardown),
+        cmocka_unit_test_setup_teardown(read_word_handler_immedidate_test, test_setup, test_teardown),
         cmocka_unit_test_setup_teardown(memory_clear_test, test_setup, test_teardown)
     };
 

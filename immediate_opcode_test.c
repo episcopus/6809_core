@@ -757,3 +757,117 @@ void addb_immediate_zero_test(void **state) {
     assert_int_equal(cycles, opcode_table[OP_ADDB].cycle_count);
     assert_true(post_pc == pre_pc + 2);
 }
+
+void addd_immediate_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+
+    uint8 code_bytes[] = {
+        OP_ADDD,
+        0x12,
+        0x34
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 3 }
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.d.d = 1;
+
+    int cycles = run_cycles(opcode_table[OP_ADDD].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.d.d, 0x1235);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.c, 0);
+    assert_int_equal(e_cpu_context.cc.h, 0);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_int_equal(cycles, opcode_table[OP_ADDD].cycle_count);
+    assert_true(post_pc == pre_pc + 3);
+}
+
+void addd_immediate_overflow_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+
+    /* 0x7FFF is the maximum signed value that a word can handle hence
+       the sum will overflow. */
+    uint8 code_bytes[] = {
+        OP_ADDD,
+        0x7F,
+        0xFF
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 3 }
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.d.d = 0x7FFF;
+
+    int cycles = run_cycles(opcode_table[OP_ADDD].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.d.d, 0xFFFE);
+    assert_int_equal(e_cpu_context.cc.n, 1);
+    assert_int_equal(e_cpu_context.cc.c, 0);
+    assert_int_equal(e_cpu_context.cc.h, 0);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 1);
+    assert_int_equal(cycles, opcode_table[OP_ADDD].cycle_count);
+    assert_true(post_pc == pre_pc + 3);
+}
+
+void addd_immediate_carry_flag_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    /* 0xAAAA and 0xBBBB are both negative number and their sum will both
+       overflow and set carry. */
+    uint8 code_bytes[] = {
+        OP_ADDD,
+        0xAA,
+        0xAA
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 3 }
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.d.d = 0xBBBB;
+
+    int cycles = run_cycles(opcode_table[OP_ADDD].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.d.d, 0x6665);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.c, 1);
+    assert_int_equal(e_cpu_context.cc.h, 0);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 1);
+    assert_int_equal(cycles, opcode_table[OP_ADDD].cycle_count);
+    assert_true(post_pc == pre_pc + 3);
+}
+
+void addd_immediate_zero_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    uint8 code_bytes[] = {
+        OP_ADDD,
+        0,
+        0
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 3 }
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.d.d = 0;
+
+    int cycles = run_cycles(opcode_table[OP_ADDD].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.d.d, 0);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.c, 0);
+    assert_int_equal(e_cpu_context.cc.h, 0);
+    assert_int_equal(e_cpu_context.cc.z, 1);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_int_equal(cycles, opcode_table[OP_ADDD].cycle_count);
+    assert_true(post_pc == pre_pc + 3);
+}
