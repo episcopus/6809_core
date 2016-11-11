@@ -1221,7 +1221,7 @@ void cmpa_immediate_nocarry(void **state) {
 
     int cycles = run_cycles(opcode_table[OP_CMPA].cycle_count * 1);
     int post_pc = e_cpu_context.pc;
-    assert_int_equal(e_cpu_context.d.byte_acc.a, 0xEE);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF);
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF);
     assert_int_equal(e_cpu_context.cc.n, 1);
     assert_int_equal(e_cpu_context.cc.c, 0);
@@ -1250,7 +1250,7 @@ void cmpb_immediate_nocarry(void **state) {
 
     int cycles = run_cycles(opcode_table[OP_CMPB].cycle_count * 1);
     int post_pc = e_cpu_context.pc;
-    assert_int_equal(e_cpu_context.d.byte_acc.b, 0xEE);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF);
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF);
     assert_int_equal(e_cpu_context.cc.n, 1);
     assert_int_equal(e_cpu_context.cc.c, 0);
@@ -1279,7 +1279,7 @@ void cmpa_immediate_carry(void **state) {
 
     int cycles = run_cycles(opcode_table[OP_CMPA].cycle_count * 1);
     int post_pc = e_cpu_context.pc;
-    assert_int_equal(e_cpu_context.d.byte_acc.a, 0xAD);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x27);
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF);
     assert_int_equal(e_cpu_context.cc.n, 1);
     assert_int_equal(e_cpu_context.cc.c, 1);
@@ -1309,7 +1309,7 @@ void cmpb_immediate_carry(void **state) {
     int cycles = run_cycles(opcode_table[OP_CMPB].cycle_count * 1);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF);
-    assert_int_equal(e_cpu_context.d.byte_acc.b, 0xAD);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x27);
     assert_int_equal(e_cpu_context.cc.n, 1);
     assert_int_equal(e_cpu_context.cc.c, 1);
     assert_int_equal(e_cpu_context.cc.z, 0);
@@ -1337,7 +1337,7 @@ void cmpa_immediate_overflow(void **state) {
 
     int cycles = run_cycles(opcode_table[OP_CMPA].cycle_count * 1);
     int post_pc = e_cpu_context.pc;
-    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x11);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF);
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF);
     assert_int_equal(e_cpu_context.cc.n, 0);
     assert_int_equal(e_cpu_context.cc.c, 0);
@@ -1367,7 +1367,7 @@ void cmpb_immediate_overflow(void **state) {
     int cycles = run_cycles(opcode_table[OP_CMPB].cycle_count * 1);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF);
-    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x11);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF);
     assert_int_equal(e_cpu_context.cc.n, 0);
     assert_int_equal(e_cpu_context.cc.c, 0);
     assert_int_equal(e_cpu_context.cc.z, 0);
@@ -1395,7 +1395,7 @@ void cmpa_immediate_zero(void **state) {
 
     int cycles = run_cycles(opcode_table[OP_CMPA].cycle_count * 1);
     int post_pc = e_cpu_context.pc;
-    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x0);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x69);
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF);
     assert_int_equal(e_cpu_context.cc.n, 0);
     assert_int_equal(e_cpu_context.cc.c, 0);
@@ -1425,7 +1425,7 @@ void cmpb_immediate_zero(void **state) {
     int cycles = run_cycles(opcode_table[OP_CMPB].cycle_count * 1);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF);
-    assert_int_equal(e_cpu_context.d.byte_acc.b, 0);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x69);
     assert_int_equal(e_cpu_context.cc.n, 0);
     assert_int_equal(e_cpu_context.cc.c, 0);
     assert_int_equal(e_cpu_context.cc.z, 1);

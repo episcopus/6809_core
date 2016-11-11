@@ -277,6 +277,5 @@ int cmp(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
         (output_val & 0x80) == 0;
     e_cpu_context.cc.v = pos_overflow || neg_overflow;
 
-    *p_reg = output_val;
     return opcode_table[opcode].cycle_count;
 }
