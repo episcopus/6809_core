@@ -36,8 +36,10 @@ void addd_immediate_carry_flag_test(void **state);
 void addd_immediate_zero_test(void **state);
 void anda_immediate_test(void **state);
 void andb_immediate_test(void **state);
-void anda_zero_test(void **state);
-void andb_zero_test(void **state);
+void anda_immediate_zero_test(void **state);
+void andb_immediate_zero_test(void **state);
+void andcc_immediate_test(void **state);
+void andcc_immediate_e_test(void **state);
 
 const struct CMUnitTest immediate_tests[] = {
     cmocka_unit_test_setup_teardown(adca_immediate_test, test_setup, test_teardown),
@@ -70,7 +72,9 @@ const struct CMUnitTest immediate_tests[] = {
     cmocka_unit_test_setup_teardown(addd_immediate_zero_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(anda_immediate_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(andb_immediate_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(anda_zero_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(andb_zero_test, test_setup, test_teardown)
+    cmocka_unit_test_setup_teardown(anda_immediate_zero_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(andb_immediate_zero_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(andcc_immediate_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(andcc_immediate_e_test, test_setup, test_teardown)
 }
 ;

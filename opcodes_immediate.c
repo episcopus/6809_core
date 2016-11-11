@@ -185,3 +185,17 @@ int and(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     *p_reg = reg_val;
     return opcode_table[opcode].cycle_count;
 }
+
+/* Logically AND Memory Byte with Accumulator A or B */
+int andcc(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
+    (void) t_r; /* unused */
+
+    e_cpu_context.pc++;
+    uint8 reg_val = (uint8) *((uint8*) &e_cpu_context.cc);
+    uint8 memory_val = read_byte_handler(a_m);
+
+    reg_val &= memory_val;
+    *((uint8*) &e_cpu_context.cc) = reg_val;
+
+    return opcode_table[opcode].cycle_count;
+}

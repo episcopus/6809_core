@@ -926,7 +926,7 @@ void andb_immediate_test(void **state) {
     assert_true(post_pc == pre_pc + 2);
 }
 
-void anda_zero_test(void **state) {
+void anda_immediate_zero_test(void **state) {
     (void) state; /* unused */
 
     /* b shouldn't be messed with */
@@ -953,7 +953,7 @@ void anda_zero_test(void **state) {
     assert_true(post_pc == pre_pc + 2);
 }
 
-void andb_zero_test(void **state) {
+void andb_immediate_zero_test(void **state) {
     (void) state; /* unused */
 
     /* a shouldn't be messed with */
@@ -977,5 +977,59 @@ void andb_zero_test(void **state) {
     assert_int_equal(e_cpu_context.cc.z, 1);
     assert_int_equal(e_cpu_context.cc.v, 0);
     assert_int_equal(cycles, opcode_table[OP_ANDB].cycle_count);
+    assert_true(post_pc == pre_pc + 2);
+}
+
+void andcc_immediate_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    /* We're looking to clear all but the carry flag */
+    uint8 code_bytes[] = {
+        OP_ANDCC,
+        1
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 }
+    };
+    load_memory(test_memory, 1);
+
+    e_cpu_context.cc.n = 1;
+    e_cpu_context.cc.e = 1;
+    e_cpu_context.cc.c = 1;
+
+    int cycles = run_cycles(opcode_table[OP_ANDCC].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.e, 0);
+    assert_int_equal(e_cpu_context.cc.c, 1);
+    assert_int_equal(cycles, opcode_table[OP_ANDCC].cycle_count);
+    assert_true(post_pc == pre_pc + 2);
+}
+
+void andcc_immediate_e_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    /* We're looking to clear all but the entire flag */
+    uint8 code_bytes[] = {
+        OP_ANDCC,
+        0x80
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 }
+    };
+    load_memory(test_memory, 1);
+
+    e_cpu_context.cc.n = 1;
+    e_cpu_context.cc.e = 1;
+    e_cpu_context.cc.c = 1;
+
+    int cycles = run_cycles(opcode_table[OP_ANDCC].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.e, 1);
+    assert_int_equal(e_cpu_context.cc.c, 0);
+    assert_int_equal(cycles, opcode_table[OP_ANDCC].cycle_count);
     assert_true(post_pc == pre_pc + 2);
 }

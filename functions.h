@@ -14,6 +14,7 @@ uint32 run_cycles(uint32 wanted_cycles);
 int abx(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int adc(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int add(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
+int andcc(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int addd(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int and(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int asl(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
