@@ -40,6 +40,12 @@ void anda_immediate_zero_test(void **state);
 void andb_immediate_zero_test(void **state);
 void andcc_immediate_test(void **state);
 void andcc_immediate_e_test(void **state);
+void bita_immediate_test(void **state);
+void bitb_immediate_test(void **state);
+void bita_immediate_zero_test(void **state);
+void bitb_immediate_zero_test(void **state);
+void bita_immediate_negative_test(void **state);
+void bitb_immediate_negative_test(void **state);
 
 const struct CMUnitTest immediate_tests[] = {
     cmocka_unit_test_setup_teardown(adca_immediate_test, test_setup, test_teardown),
@@ -75,6 +81,11 @@ const struct CMUnitTest immediate_tests[] = {
     cmocka_unit_test_setup_teardown(anda_immediate_zero_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(andb_immediate_zero_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(andcc_immediate_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(andcc_immediate_e_test, test_setup, test_teardown)
-}
-;
+    cmocka_unit_test_setup_teardown(andcc_immediate_e_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(bita_immediate_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(bitb_immediate_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(bita_immediate_zero_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(bitb_immediate_zero_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(bita_immediate_negative_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(bitb_immediate_negative_test, test_setup, test_teardown)
+};

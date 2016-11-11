@@ -186,7 +186,7 @@ int and(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     return opcode_table[opcode].cycle_count;
 }
 
-/* Logically AND Memory Byte with Accumulator A or B */
+/* Logically AND Immediate Value with the CC Register */
 int andcc(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     (void) t_r; /* unused */
 
@@ -196,6 +196,40 @@ int andcc(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
 
     reg_val &= memory_val;
     *((uint8*) &e_cpu_context.cc) = reg_val;
+
+    return opcode_table[opcode].cycle_count;
+}
+
+/* Bit Test Accumulator A or B with Memory Byte Value */
+int bit(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
+    e_cpu_context.pc++;
+
+    uint8* p_reg = 0;
+    switch (t_r) {
+    case REG_A:
+        p_reg = &e_cpu_context.d.byte_acc.a;
+        break;
+    case REG_B:
+        p_reg = &e_cpu_context.d.byte_acc.b;
+        break;
+    default:
+        assert(FALSE);
+        return 0;
+    }
+
+    uint8 reg_val = *p_reg;
+    uint8 memory_val = read_byte_handler(a_m);
+
+    reg_val &= memory_val;
+
+    /* The Negative flag is set equal to the new value of bit 7 of
+       the accumulator. */
+    e_cpu_context.cc.n = (reg_val & 0x80) > 1;
+    /* The Zero flag is set if the new accumulator value is zero;
+       cleared otherwise. */
+    e_cpu_context.cc.z = reg_val == 0;
+    /* The Overflow flag is cleared by this instruction. */
+    e_cpu_context.cc.v = 0;
 
     return opcode_table[opcode].cycle_count;
 }
