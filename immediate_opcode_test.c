@@ -871,3 +871,111 @@ void addd_immediate_zero_test(void **state) {
     assert_int_equal(cycles, opcode_table[OP_ADDD].cycle_count);
     assert_true(post_pc == pre_pc + 3);
 }
+
+void anda_immediate_test(void **state) {
+    (void) state; /* unused */
+
+    /* b shouldn't be messed with */
+    e_cpu_context.d.byte_acc.b = 0xFF;
+    int pre_pc = e_cpu_context.pc;
+    uint8 code_bytes[] = {
+        OP_ANDA,
+        0x5
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 }
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.d.byte_acc.a = 6;
+
+    int cycles = run_cycles(opcode_table[OP_ANDA].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 4);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_int_equal(cycles, opcode_table[OP_ANDA].cycle_count);
+    assert_true(post_pc == pre_pc + 2);
+}
+
+void andb_immediate_test(void **state) {
+    (void) state; /* unused */
+
+    /* a shouldn't be messed with */
+    e_cpu_context.d.byte_acc.a = 0xFF;
+    int pre_pc = e_cpu_context.pc;
+    uint8 code_bytes[] = {
+        OP_ANDB,
+        0x5
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 }
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.d.byte_acc.b = 6;
+
+    int cycles = run_cycles(opcode_table[OP_ANDB].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 4);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_int_equal(cycles, opcode_table[OP_ANDB].cycle_count);
+    assert_true(post_pc == pre_pc + 2);
+}
+
+void anda_zero_test(void **state) {
+    (void) state; /* unused */
+
+    /* b shouldn't be messed with */
+    e_cpu_context.d.byte_acc.b = 0xFF;
+    int pre_pc = e_cpu_context.pc;
+    uint8 code_bytes[] = {
+        OP_ANDA,
+        0
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 }
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.d.byte_acc.a = 6;
+
+    int cycles = run_cycles(opcode_table[OP_ANDA].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF);
+    assert_int_equal(e_cpu_context.cc.z, 1);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_int_equal(cycles, opcode_table[OP_ANDA].cycle_count);
+    assert_true(post_pc == pre_pc + 2);
+}
+
+void andb_zero_test(void **state) {
+    (void) state; /* unused */
+
+    /* a shouldn't be messed with */
+    e_cpu_context.d.byte_acc.a = 0xFF;
+    int pre_pc = e_cpu_context.pc;
+    uint8 code_bytes[] = {
+        OP_ANDB,
+        0
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 }
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.d.byte_acc.b = 6;
+
+    int cycles = run_cycles(opcode_table[OP_ANDB].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF);
+    assert_int_equal(e_cpu_context.cc.z, 1);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_int_equal(cycles, opcode_table[OP_ANDB].cycle_count);
+    assert_true(post_pc == pre_pc + 2);
+}
