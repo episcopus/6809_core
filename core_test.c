@@ -344,4 +344,5 @@ int main(void) {
     return cmocka_run_group_tests(tests, NULL, NULL) +
         cmocka_run_group_tests(inherent_tests, NULL, NULL) +
         cmocka_run_group_tests(immediate_tests, NULL, NULL);
+
 }

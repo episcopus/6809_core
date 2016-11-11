@@ -1201,3 +1201,235 @@ void bitb_immediate_negative_test(void **state) {
     assert_int_equal(cycles, opcode_table[OP_BITB].cycle_count);
     assert_true(post_pc == pre_pc + 2);
 }
+
+void cmpa_immediate_nocarry(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    /* b shouldn't be messed with */
+    e_cpu_context.d.byte_acc.b = 0xFF;
+
+    uint8 code_bytes[] = {
+        OP_CMPA,
+        0x11
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 }
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.d.byte_acc.a = 0xFF;
+
+    int cycles = run_cycles(opcode_table[OP_CMPA].cycle_count * 1);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0xEE);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF);
+    assert_int_equal(e_cpu_context.cc.n, 1);
+    assert_int_equal(e_cpu_context.cc.c, 0);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_int_equal(cycles, opcode_table[OP_CMPA].cycle_count);
+    assert_true(post_pc == pre_pc + 2);
+}
+
+void cmpb_immediate_nocarry(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    /* a shouldn't be messed with */
+    e_cpu_context.d.byte_acc.a = 0xFF;
+
+    uint8 code_bytes[] = {
+        OP_CMPB,
+        0x11
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 }
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.d.byte_acc.b = 0xFF;
+
+    int cycles = run_cycles(opcode_table[OP_CMPB].cycle_count * 1);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0xEE);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF);
+    assert_int_equal(e_cpu_context.cc.n, 1);
+    assert_int_equal(e_cpu_context.cc.c, 0);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_int_equal(cycles, opcode_table[OP_CMPB].cycle_count);
+    assert_true(post_pc == pre_pc + 2);
+}
+
+void cmpa_immediate_carry(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    /* b shouldn't be messed with */
+    e_cpu_context.d.byte_acc.b = 0xFF;
+
+    uint8 code_bytes[] = {
+        OP_CMPA,
+        0x7A
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 }
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.d.byte_acc.a = 0x27;
+
+    int cycles = run_cycles(opcode_table[OP_CMPA].cycle_count * 1);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0xAD);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF);
+    assert_int_equal(e_cpu_context.cc.n, 1);
+    assert_int_equal(e_cpu_context.cc.c, 1);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 1);
+    assert_int_equal(cycles, opcode_table[OP_CMPA].cycle_count);
+    assert_true(post_pc == pre_pc + 2);
+}
+
+void cmpb_immediate_carry(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    /* a shouldn't be messed with */
+    e_cpu_context.d.byte_acc.a = 0xFF;
+
+    uint8 code_bytes[] = {
+        OP_CMPB,
+        0x7A
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 }
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.d.byte_acc.b = 0x27;
+
+    int cycles = run_cycles(opcode_table[OP_CMPB].cycle_count * 1);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0xAD);
+    assert_int_equal(e_cpu_context.cc.n, 1);
+    assert_int_equal(e_cpu_context.cc.c, 1);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 1);
+    assert_int_equal(cycles, opcode_table[OP_CMPB].cycle_count);
+    assert_true(post_pc == pre_pc + 2);
+}
+
+void cmpa_immediate_overflow(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    /* b shouldn't be messed with */
+    e_cpu_context.d.byte_acc.b = 0xFF;
+
+    uint8 code_bytes[] = {
+        OP_CMPA,
+        0xEE
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 }
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.d.byte_acc.a = 0xFF;
+
+    int cycles = run_cycles(opcode_table[OP_CMPA].cycle_count * 1);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x11);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.c, 0);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 1);
+    assert_int_equal(cycles, opcode_table[OP_CMPA].cycle_count);
+    assert_true(post_pc == pre_pc + 2);
+}
+
+void cmpb_immediate_overflow(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    /* a shouldn't be messed with */
+    e_cpu_context.d.byte_acc.a = 0xFF;
+
+    uint8 code_bytes[] = {
+        OP_CMPB,
+        0xEE
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 }
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.d.byte_acc.b = 0xFF;
+
+    int cycles = run_cycles(opcode_table[OP_CMPB].cycle_count * 1);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x11);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.c, 0);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 1);
+    assert_int_equal(cycles, opcode_table[OP_CMPB].cycle_count);
+    assert_true(post_pc == pre_pc + 2);
+}
+
+void cmpa_immediate_zero(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    /* b shouldn't be messed with */
+    e_cpu_context.d.byte_acc.b = 0xFF;
+
+    uint8 code_bytes[] = {
+        OP_CMPA,
+        0x69
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 }
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.d.byte_acc.a = 0x69;
+
+    int cycles = run_cycles(opcode_table[OP_CMPA].cycle_count * 1);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x0);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.c, 0);
+    assert_int_equal(e_cpu_context.cc.z, 1);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_int_equal(cycles, opcode_table[OP_CMPA].cycle_count);
+    assert_true(post_pc == pre_pc + 2);
+}
+
+void cmpb_immediate_zero(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    /* a shouldn't be messed with */
+    e_cpu_context.d.byte_acc.a = 0xFF;
+
+    uint8 code_bytes[] = {
+        OP_CMPB,
+        0x69
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 }
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.d.byte_acc.b = 0x69;
+
+    int cycles = run_cycles(opcode_table[OP_CMPB].cycle_count * 1);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.c, 0);
+    assert_int_equal(e_cpu_context.cc.z, 1);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_int_equal(cycles, opcode_table[OP_CMPB].cycle_count);
+    assert_true(post_pc == pre_pc + 2);
+}

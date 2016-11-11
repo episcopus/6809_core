@@ -46,6 +46,14 @@ void bita_immediate_zero_test(void **state);
 void bitb_immediate_zero_test(void **state);
 void bita_immediate_negative_test(void **state);
 void bitb_immediate_negative_test(void **state);
+void cmpa_immediate_nocarry(void **state);
+void cmpb_immediate_nocarry(void **state);
+void cmpa_immediate_carry(void **state);
+void cmpb_immediate_carry(void **state);
+void cmpa_immediate_overflow(void **state);
+void cmpb_immediate_overflow(void **state);
+void cmpa_immediate_zero(void **state);
+void cmpb_immediate_zero(void **state);
 
 const struct CMUnitTest immediate_tests[] = {
     cmocka_unit_test_setup_teardown(adca_immediate_test, test_setup, test_teardown),
@@ -87,5 +95,13 @@ const struct CMUnitTest immediate_tests[] = {
     cmocka_unit_test_setup_teardown(bita_immediate_zero_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(bitb_immediate_zero_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(bita_immediate_negative_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(bitb_immediate_negative_test, test_setup, test_teardown)
+    cmocka_unit_test_setup_teardown(bitb_immediate_negative_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(cmpa_immediate_nocarry, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(cmpb_immediate_nocarry, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(cmpa_immediate_carry, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(cmpb_immediate_carry, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(cmpa_immediate_overflow, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(cmpb_immediate_overflow, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(cmpa_immediate_zero, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(cmpb_immediate_zero, test_setup, test_teardown)
 };
