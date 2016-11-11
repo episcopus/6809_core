@@ -7,6 +7,7 @@
 
 struct cpu_state e_cpu_context;
 extern struct opcode_def opcode_table[];
+extern struct opcode_def opcode_ext_table[];
 
 void core_init() {
     e_cpu_context.x = 0;
@@ -174,6 +175,27 @@ uint32 run_cycles(uint32 wanted_cycles) {
         e_cpu_context.cycle_count += this_completed_cycles;
         completed_cycles += this_completed_cycles;
     }
+
+    return completed_cycles;
+}
+
+int extended(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
+    /* Look up appropriate operation by dereferencing second byte */
+    (void) opcode; /* unused */
+    (void) a_m; /* unused */
+    (void) t_r; /* unused */
+
+    e_cpu_context.pc++;
+    uint32 completed_cycles = 0;
+
+    uint8 cur_opcode = e_cpu_context.memory[e_cpu_context.pc];
+    struct opcode_def this_opcode = opcode_ext_table[cur_opcode];
+    assert(strncmp("NOTIMPL", this_opcode.instruction, 7) != 0);
+
+    int this_completed_cycles = this_opcode.func(opcode, this_opcode.t_r,
+                                                 this_opcode.mode);
+    e_cpu_context.cycle_count += this_completed_cycles;
+    completed_cycles += this_completed_cycles;
 
     return completed_cycles;
 }

@@ -11,6 +11,8 @@ uint8 read_byte_handler(enum addressing_mode am);
 uint16 read_word_handler(enum addressing_mode am);
 uint32 run_cycles(uint32 wanted_cycles);
 
+int extended(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
+
 int abx(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int adc(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int add(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
@@ -23,6 +25,7 @@ int asr(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int bit(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int clr(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int cmp(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
+int cmp16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int com(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int daa(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int dec(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);

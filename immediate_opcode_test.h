@@ -54,6 +54,10 @@ void cmpa_immediate_overflow(void **state);
 void cmpb_immediate_overflow(void **state);
 void cmpa_immediate_zero(void **state);
 void cmpb_immediate_zero(void **state);
+void cmpd_immediate_nocarry(void **state);
+void cmpd_immediate_carry(void **state);
+void cmpd_immediate_overflow(void **state);
+void cmpd_immediate_zero(void **state);
 
 const struct CMUnitTest immediate_tests[] = {
     cmocka_unit_test_setup_teardown(adca_immediate_test, test_setup, test_teardown),
@@ -103,5 +107,9 @@ const struct CMUnitTest immediate_tests[] = {
     cmocka_unit_test_setup_teardown(cmpa_immediate_overflow, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(cmpb_immediate_overflow, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(cmpa_immediate_zero, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(cmpb_immediate_zero, test_setup, test_teardown)
+    cmocka_unit_test_setup_teardown(cmpb_immediate_zero, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(cmpd_immediate_nocarry, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(cmpd_immediate_carry, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(cmpd_immediate_overflow, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(cmpd_immediate_zero, test_setup, test_teardown)
 };

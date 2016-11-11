@@ -3,6 +3,7 @@
 #include "functions.h"
 
 extern struct opcode_def opcode_table[];
+extern struct opcode_def opcode_ext_table[];
 extern struct cpu_state e_cpu_context;
 
 /* Add Memory Byte plus Carry with Accumulator A or B */
@@ -278,4 +279,59 @@ int cmp(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.cc.v = pos_overflow || neg_overflow;
 
     return opcode_table[opcode].cycle_count;
+}
+
+/* Compare Memory Word from 16-Bit Register */
+int cmp16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
+    e_cpu_context.pc++;
+
+    uint16* p_reg = 0;
+    switch (t_r) {
+    case REG_D:
+        p_reg = &e_cpu_context.d.d;
+        break;
+    case REG_S:
+        p_reg = &e_cpu_context.s;
+        break;
+    case REG_U:
+        p_reg = &e_cpu_context.u;
+        break;
+    case REG_X:
+        p_reg = &e_cpu_context.x;
+        break;
+    case REG_Y:
+        p_reg = &e_cpu_context.y;
+        break;
+    default:
+        assert(FALSE);
+        return 0;
+    }
+
+    uint16 reg_val = *p_reg;
+    uint16 memory_val = read_word_handler(a_m);
+
+    uint16 output_val = reg_val - memory_val;
+
+    /* The Negative flag is set equal to the value of bit 7 of the result. */
+    e_cpu_context.cc.n = (output_val & 0x8000) > 1;
+    /* The Zero flag is set if the resulting value is zero; cleared
+       otherwise. */
+    e_cpu_context.cc.z = output_val == 0;
+    /* The Carry flag is set if a borrow into bit 7 was needed; cleared
+       otherwise. */
+    e_cpu_context.cc.c = reg_val < memory_val;
+    /* The Overflow flag is set if an overflow occurred; cleared otherwise. */
+    /* If the sum of two positive numbers yields a negative result, the sum
+       has overflowed. */
+    uint16 pos_overflow = (reg_val & 0x8000) == 0 &&
+        (memory_val & 0x8000) == 0 &&
+        e_cpu_context.cc.n;
+    /* If the sum of two negative numbers yields a positive result, the sum
+       has overflowed. */
+    uint16 neg_overflow = (reg_val & 0x8000) > 0 &&
+        (memory_val & 0x8000) > 0 &&
+        (output_val & 0x8000) == 0;
+    e_cpu_context.cc.v = pos_overflow || neg_overflow;
+
+    return opcode_ext_table[opcode].cycle_count;
 }
