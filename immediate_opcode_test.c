@@ -1991,3 +1991,111 @@ void cmpy_immediate_zero(void **state) {
     assert_int_equal(cycles, opcode_ext_x10_table[OP_CMPY].cycle_count);
     assert_true(post_pc == pre_pc + 4);
 }
+
+void eora_immediate_test(void **state) {
+    (void) state; /* unused */
+
+    /* b shouldn't be messed with */
+    e_cpu_context.d.byte_acc.b = 0xFF;
+    int pre_pc = e_cpu_context.pc;
+    uint8 code_bytes[] = {
+        OP_EORA,
+        0x5
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 }
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.d.byte_acc.a = 4;
+
+    int cycles = run_cycles(opcode_table[OP_EORA].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 1);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_int_equal(cycles, opcode_table[OP_EORA].cycle_count);
+    assert_true(post_pc == pre_pc + 2);
+}
+
+void eorb_immediate_test(void **state) {
+    (void) state; /* unused */
+
+    /* a shouldn't be messed with */
+    e_cpu_context.d.byte_acc.a = 0xFF;
+    int pre_pc = e_cpu_context.pc;
+    uint8 code_bytes[] = {
+        OP_EORB,
+        0x5
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 }
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.d.byte_acc.b = 4;
+
+    int cycles = run_cycles(opcode_table[OP_EORB].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 1);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_int_equal(cycles, opcode_table[OP_EORB].cycle_count);
+    assert_true(post_pc == pre_pc + 2);
+}
+
+void eora_immediate_zero_test(void **state) {
+    (void) state; /* unused */
+
+    /* b shouldn't be messed with */
+    e_cpu_context.d.byte_acc.b = 0xFF;
+    int pre_pc = e_cpu_context.pc;
+    uint8 code_bytes[] = {
+        OP_EORA,
+        0xEE
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 }
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.d.byte_acc.a = 0xEE;
+
+    int cycles = run_cycles(opcode_table[OP_EORA].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.z, 1);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_int_equal(cycles, opcode_table[OP_EORA].cycle_count);
+    assert_true(post_pc == pre_pc + 2);
+}
+
+void eorb_immediate_zero_test(void **state) {
+    (void) state; /* unused */
+
+    /* a shouldn't be messed with */
+    e_cpu_context.d.byte_acc.a = 0xFF;
+    int pre_pc = e_cpu_context.pc;
+    uint8 code_bytes[] = {
+        OP_EORB,
+        0xEE
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 }
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.d.byte_acc.b = 0xEE;
+
+    int cycles = run_cycles(opcode_table[OP_EORB].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.z, 1);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_int_equal(cycles, opcode_table[OP_EORB].cycle_count);
+    assert_true(post_pc == pre_pc + 2);
+}

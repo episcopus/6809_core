@@ -2,7 +2,7 @@ BUILD_DIR = ./build/
 TARGET = $(BUILD_DIR)6809_core
 LIBS = cmocka
 CC = gcc
-CFLAGS = -I. -Wall
+CFLAGS = -I. -Wall -g
 
 .PHONY: default all clean
 

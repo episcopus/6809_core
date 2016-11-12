@@ -74,6 +74,10 @@ void cmpy_immediate_nocarry(void **state);
 void cmpy_immediate_carry(void **state);
 void cmpy_immediate_overflow(void **state);
 void cmpy_immediate_zero(void **state);
+void eora_immediate_test(void **state);
+void eorb_immediate_test(void **state);
+void eora_immediate_zero_test(void **state);
+void eorb_immediate_zero_test(void **state);
 
 const struct CMUnitTest immediate_tests[] = {
     cmocka_unit_test_setup_teardown(adca_immediate_test, test_setup, test_teardown),
@@ -143,5 +147,9 @@ const struct CMUnitTest immediate_tests[] = {
     cmocka_unit_test_setup_teardown(cmpy_immediate_nocarry, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(cmpy_immediate_carry, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(cmpy_immediate_overflow, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(cmpy_immediate_zero, test_setup, test_teardown)
+    cmocka_unit_test_setup_teardown(cmpy_immediate_zero, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(eora_immediate_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(eorb_immediate_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(eora_immediate_zero_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(eorb_immediate_zero_test, test_setup, test_teardown)
 };

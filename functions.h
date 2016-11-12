@@ -29,6 +29,7 @@ int cmp16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int com(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int daa(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int dec(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
+int eor(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int inc(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int lsr(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int mul(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
