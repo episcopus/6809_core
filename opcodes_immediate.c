@@ -4,6 +4,7 @@
 
 extern struct opcode_def opcode_table[];
 extern struct opcode_def opcode_ext_x10_table[];
+extern struct opcode_def opcode_ext_x11_table[];
 extern struct cpu_state e_cpu_context;
 
 /* Add Memory Byte plus Carry with Accumulator A or B */
@@ -286,21 +287,29 @@ int cmp16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;
 
     uint16* p_reg = 0;
+    /* Need to reference the correct opcode table for the cycle lookup at the
+       end of the function. */
+    struct opcode_def* this_opcode_table = NULL;
     switch (t_r) {
     case REG_D:
         p_reg = &e_cpu_context.d.d;
+        this_opcode_table = opcode_ext_x10_table;
         break;
     case REG_S:
         p_reg = &e_cpu_context.s;
+        this_opcode_table = opcode_ext_x11_table;
         break;
     case REG_U:
         p_reg = &e_cpu_context.u;
+        this_opcode_table = opcode_ext_x11_table;
         break;
     case REG_X:
         p_reg = &e_cpu_context.x;
+        this_opcode_table = opcode_table;
         break;
     case REG_Y:
         p_reg = &e_cpu_context.y;
+        this_opcode_table = opcode_ext_x10_table;
         break;
     default:
         assert(FALSE);
@@ -333,5 +342,5 @@ int cmp16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
         (output_val & 0x8000) == 0;
     e_cpu_context.cc.v = pos_overflow || neg_overflow;
 
-    return opcode_ext_x10_table[opcode].cycle_count;
+    return this_opcode_table[opcode].cycle_count;
 }

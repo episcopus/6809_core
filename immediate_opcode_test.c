@@ -7,6 +7,8 @@
 
 extern struct cpu_state e_cpu_context;
 extern struct opcode_def opcode_table[];
+extern struct opcode_def opcode_ext_x10_table[];
+extern struct opcode_def opcode_ext_x11_table[];
 
 void adca_immediate_test(void **state) {
     (void) state; /* unused */
@@ -25,7 +27,7 @@ void adca_immediate_test(void **state) {
     load_memory(test_memory, 1);
     e_cpu_context.d.byte_acc.a = 1;
 
-    int cycles = run_cycles(opcode_table[OP_ADCA].cycle_count * 1);
+    int cycles = run_cycles(opcode_table[OP_ADCA].cycle_count);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0x3);
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF);
@@ -55,7 +57,7 @@ void adcb_immediate_test(void **state) {
     load_memory(test_memory, 1);
     e_cpu_context.d.byte_acc.b = 1;
 
-    int cycles = run_cycles(opcode_table[OP_ADCB].cycle_count * 1);
+    int cycles = run_cycles(opcode_table[OP_ADCB].cycle_count);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0x3);
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF);
@@ -86,7 +88,7 @@ void adca_immediate_carry_test(void **state) {
     e_cpu_context.d.byte_acc.a = 1;
     e_cpu_context.cc.c = 1;
 
-    int cycles = run_cycles(opcode_table[OP_ADCA].cycle_count * 1);
+    int cycles = run_cycles(opcode_table[OP_ADCA].cycle_count);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0x4);
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF);
@@ -117,7 +119,7 @@ void adcb_immediate_carry_test(void **state) {
     e_cpu_context.d.byte_acc.b = 1;
     e_cpu_context.cc.c = 1;
 
-    int cycles = run_cycles(opcode_table[OP_ADCB].cycle_count * 1);
+    int cycles = run_cycles(opcode_table[OP_ADCB].cycle_count);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0x4);
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF);
@@ -149,7 +151,7 @@ void adca_immediate_overflow_test(void **state) {
     load_memory(test_memory, 1);
     e_cpu_context.d.byte_acc.a = 0x7F;
 
-    int cycles = run_cycles(opcode_table[OP_ADCA].cycle_count * 1);
+    int cycles = run_cycles(opcode_table[OP_ADCA].cycle_count);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFE);
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF);
@@ -181,7 +183,7 @@ void adcb_immediate_overflow_test(void **state) {
     load_memory(test_memory, 1);
     e_cpu_context.d.byte_acc.b = 0x7F;
 
-    int cycles = run_cycles(opcode_table[OP_ADCB].cycle_count * 1);
+    int cycles = run_cycles(opcode_table[OP_ADCB].cycle_count);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFE);
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF);
@@ -213,7 +215,7 @@ void adca_immediate_carry_flag_test(void **state) {
     load_memory(test_memory, 1);
     e_cpu_context.d.byte_acc.a = 0xBB;
 
-    int cycles = run_cycles(opcode_table[OP_ADCA].cycle_count * 1);
+    int cycles = run_cycles(opcode_table[OP_ADCA].cycle_count);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0x65);
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF);
@@ -245,7 +247,7 @@ void adcb_immediate_carry_flag_test(void **state) {
     load_memory(test_memory, 1);
     e_cpu_context.d.byte_acc.b = 0xBB;
 
-    int cycles = run_cycles(opcode_table[OP_ADCB].cycle_count * 1);
+    int cycles = run_cycles(opcode_table[OP_ADCB].cycle_count);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0x65);
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF);
@@ -277,7 +279,7 @@ void adca_immediate_half_carry_test(void **state) {
     load_memory(test_memory, 1);
     e_cpu_context.d.byte_acc.a = 0x9;
 
-    int cycles = run_cycles(opcode_table[OP_ADCA].cycle_count * 1);
+    int cycles = run_cycles(opcode_table[OP_ADCA].cycle_count);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0x11);
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF);
@@ -309,7 +311,7 @@ void adcb_immediate_half_carry_test(void **state) {
     load_memory(test_memory, 1);
     e_cpu_context.d.byte_acc.b = 0x9;
 
-    int cycles = run_cycles(opcode_table[OP_ADCB].cycle_count * 1);
+    int cycles = run_cycles(opcode_table[OP_ADCB].cycle_count);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0x11);
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF);
@@ -339,7 +341,7 @@ void adca_immediate_zero_test(void **state) {
     load_memory(test_memory, 1);
     e_cpu_context.d.byte_acc.a = 0;
 
-    int cycles = run_cycles(opcode_table[OP_ADCA].cycle_count * 1);
+    int cycles = run_cycles(opcode_table[OP_ADCA].cycle_count);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0);
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF);
@@ -369,7 +371,7 @@ void adcb_immediate_zero_test(void **state) {
     load_memory(test_memory, 1);
     e_cpu_context.d.byte_acc.b = 0;
 
-    int cycles = run_cycles(opcode_table[OP_ADCB].cycle_count * 1);
+    int cycles = run_cycles(opcode_table[OP_ADCB].cycle_count);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0);
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF);
@@ -399,7 +401,7 @@ void adda_immediate_test(void **state) {
     load_memory(test_memory, 1);
     e_cpu_context.d.byte_acc.a = 1;
 
-    int cycles = run_cycles(opcode_table[OP_ADDA].cycle_count * 1);
+    int cycles = run_cycles(opcode_table[OP_ADDA].cycle_count);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0x3);
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF);
@@ -429,7 +431,7 @@ void addb_immediate_test(void **state) {
     load_memory(test_memory, 1);
     e_cpu_context.d.byte_acc.b = 1;
 
-    int cycles = run_cycles(opcode_table[OP_ADDB].cycle_count * 1);
+    int cycles = run_cycles(opcode_table[OP_ADDB].cycle_count);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0x3);
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF);
@@ -461,7 +463,7 @@ void adda_immediate_carry_test(void **state) {
     /* The carry flag shouldn't impact the calculation for ADD */
     e_cpu_context.cc.c = 1;
 
-    int cycles = run_cycles(opcode_table[OP_ADDA].cycle_count * 1);
+    int cycles = run_cycles(opcode_table[OP_ADDA].cycle_count);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0x3);
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF);
@@ -493,7 +495,7 @@ void addb_immediate_carry_test(void **state) {
     /* The carry flag shouldn't impact the calculation for ADD */
     e_cpu_context.cc.c = 1;
 
-    int cycles = run_cycles(opcode_table[OP_ADDB].cycle_count * 1);
+    int cycles = run_cycles(opcode_table[OP_ADDB].cycle_count);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0x3);
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF);
@@ -525,7 +527,7 @@ void adda_immediate_overflow_test(void **state) {
     load_memory(test_memory, 1);
     e_cpu_context.d.byte_acc.a = 0x7F;
 
-    int cycles = run_cycles(opcode_table[OP_ADDA].cycle_count * 1);
+    int cycles = run_cycles(opcode_table[OP_ADDA].cycle_count);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFE);
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF);
@@ -557,7 +559,7 @@ void addb_immediate_overflow_test(void **state) {
     load_memory(test_memory, 1);
     e_cpu_context.d.byte_acc.b = 0x7F;
 
-    int cycles = run_cycles(opcode_table[OP_ADDB].cycle_count * 1);
+    int cycles = run_cycles(opcode_table[OP_ADDB].cycle_count);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFE);
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF);
@@ -589,7 +591,7 @@ void adda_immediate_carry_flag_test(void **state) {
     load_memory(test_memory, 1);
     e_cpu_context.d.byte_acc.a = 0xBB;
 
-    int cycles = run_cycles(opcode_table[OP_ADDA].cycle_count * 1);
+    int cycles = run_cycles(opcode_table[OP_ADDA].cycle_count);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0x65);
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF);
@@ -621,7 +623,7 @@ void addb_immediate_carry_flag_test(void **state) {
     load_memory(test_memory, 1);
     e_cpu_context.d.byte_acc.b = 0xBB;
 
-    int cycles = run_cycles(opcode_table[OP_ADDB].cycle_count * 1);
+    int cycles = run_cycles(opcode_table[OP_ADDB].cycle_count);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0x65);
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF);
@@ -653,7 +655,7 @@ void adda_immediate_half_carry_test(void **state) {
     load_memory(test_memory, 1);
     e_cpu_context.d.byte_acc.a = 0x9;
 
-    int cycles = run_cycles(opcode_table[OP_ADDA].cycle_count * 1);
+    int cycles = run_cycles(opcode_table[OP_ADDA].cycle_count);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0x11);
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF);
@@ -685,7 +687,7 @@ void addb_immediate_half_carry_test(void **state) {
     load_memory(test_memory, 1);
     e_cpu_context.d.byte_acc.b = 0x9;
 
-    int cycles = run_cycles(opcode_table[OP_ADDB].cycle_count * 1);
+    int cycles = run_cycles(opcode_table[OP_ADDB].cycle_count);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0x11);
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF);
@@ -715,7 +717,7 @@ void adda_immediate_zero_test(void **state) {
     load_memory(test_memory, 1);
     e_cpu_context.d.byte_acc.a = 0;
 
-    int cycles = run_cycles(opcode_table[OP_ADDA].cycle_count * 1);
+    int cycles = run_cycles(opcode_table[OP_ADDA].cycle_count);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0);
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF);
@@ -745,7 +747,7 @@ void addb_immediate_zero_test(void **state) {
     load_memory(test_memory, 1);
     e_cpu_context.d.byte_acc.b = 0;
 
-    int cycles = run_cycles(opcode_table[OP_ADDB].cycle_count * 1);
+    int cycles = run_cycles(opcode_table[OP_ADDB].cycle_count);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0);
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF);
@@ -1219,7 +1221,7 @@ void cmpa_immediate_nocarry(void **state) {
     load_memory(test_memory, 1);
     e_cpu_context.d.byte_acc.a = 0xFF;
 
-    int cycles = run_cycles(opcode_table[OP_CMPA].cycle_count * 1);
+    int cycles = run_cycles(opcode_table[OP_CMPA].cycle_count);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF);
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF);
@@ -1248,7 +1250,7 @@ void cmpb_immediate_nocarry(void **state) {
     load_memory(test_memory, 1);
     e_cpu_context.d.byte_acc.b = 0xFF;
 
-    int cycles = run_cycles(opcode_table[OP_CMPB].cycle_count * 1);
+    int cycles = run_cycles(opcode_table[OP_CMPB].cycle_count);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF);
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF);
@@ -1277,7 +1279,7 @@ void cmpa_immediate_carry(void **state) {
     load_memory(test_memory, 1);
     e_cpu_context.d.byte_acc.a = 0x27;
 
-    int cycles = run_cycles(opcode_table[OP_CMPA].cycle_count * 1);
+    int cycles = run_cycles(opcode_table[OP_CMPA].cycle_count);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0x27);
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF);
@@ -1306,7 +1308,7 @@ void cmpb_immediate_carry(void **state) {
     load_memory(test_memory, 1);
     e_cpu_context.d.byte_acc.b = 0x27;
 
-    int cycles = run_cycles(opcode_table[OP_CMPB].cycle_count * 1);
+    int cycles = run_cycles(opcode_table[OP_CMPB].cycle_count);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF);
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0x27);
@@ -1335,7 +1337,7 @@ void cmpa_immediate_overflow(void **state) {
     load_memory(test_memory, 1);
     e_cpu_context.d.byte_acc.a = 0xFF;
 
-    int cycles = run_cycles(opcode_table[OP_CMPA].cycle_count * 1);
+    int cycles = run_cycles(opcode_table[OP_CMPA].cycle_count);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF);
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF);
@@ -1364,7 +1366,7 @@ void cmpb_immediate_overflow(void **state) {
     load_memory(test_memory, 1);
     e_cpu_context.d.byte_acc.b = 0xFF;
 
-    int cycles = run_cycles(opcode_table[OP_CMPB].cycle_count * 1);
+    int cycles = run_cycles(opcode_table[OP_CMPB].cycle_count);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF);
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF);
@@ -1393,7 +1395,7 @@ void cmpa_immediate_zero(void **state) {
     load_memory(test_memory, 1);
     e_cpu_context.d.byte_acc.a = 0x69;
 
-    int cycles = run_cycles(opcode_table[OP_CMPA].cycle_count * 1);
+    int cycles = run_cycles(opcode_table[OP_CMPA].cycle_count);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0x69);
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF);
@@ -1422,7 +1424,7 @@ void cmpb_immediate_zero(void **state) {
     load_memory(test_memory, 1);
     e_cpu_context.d.byte_acc.b = 0x69;
 
-    int cycles = run_cycles(opcode_table[OP_CMPB].cycle_count * 1);
+    int cycles = run_cycles(opcode_table[OP_CMPB].cycle_count);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF);
     assert_int_equal(e_cpu_context.d.byte_acc.b, 0x69);
@@ -1458,7 +1460,7 @@ void cmpd_immediate_nocarry(void **state) {
     assert_int_equal(e_cpu_context.cc.c, 0);
     assert_int_equal(e_cpu_context.cc.z, 0);
     assert_int_equal(e_cpu_context.cc.v, 0);
-    assert_int_equal(cycles, opcode_table[OP_CMPD].cycle_count);
+    assert_int_equal(cycles, opcode_ext_x10_table[OP_CMPD].cycle_count);
     assert_true(post_pc == pre_pc + 4);
 }
 
@@ -1486,7 +1488,7 @@ void cmpd_immediate_carry(void **state) {
     assert_int_equal(e_cpu_context.cc.c, 1);
     assert_int_equal(e_cpu_context.cc.z, 0);
     assert_int_equal(e_cpu_context.cc.v, 1);
-    assert_int_equal(cycles, opcode_table[OP_CMPD].cycle_count);
+    assert_int_equal(cycles, opcode_ext_x10_table[OP_CMPD].cycle_count);
     assert_true(post_pc == pre_pc + 4);
 }
 
@@ -1507,14 +1509,14 @@ void cmpd_immediate_overflow(void **state) {
     load_memory(test_memory, 1);
     e_cpu_context.d.d = 0xFFFF;
 
-    int cycles = run_cycles(opcode_table[OP_CMPD].cycle_count * 1);
+    int cycles = run_cycles(opcode_table[OP_CMPD].cycle_count);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.d.d, 0xFFFF);
     assert_int_equal(e_cpu_context.cc.n, 0);
     assert_int_equal(e_cpu_context.cc.c, 0);
     assert_int_equal(e_cpu_context.cc.z, 0);
     assert_int_equal(e_cpu_context.cc.v, 1);
-    assert_int_equal(cycles, opcode_table[OP_CMPD].cycle_count);
+    assert_int_equal(cycles, opcode_ext_x10_table[OP_CMPD].cycle_count);
     assert_true(post_pc == pre_pc + 4);
 }
 
@@ -1535,14 +1537,14 @@ void cmpd_immediate_zero(void **state) {
     load_memory(test_memory, 1);
     e_cpu_context.d.d = 0x6969;
 
-    int cycles = run_cycles(opcode_table[OP_CMPD].cycle_count * 1);
+    int cycles = run_cycles(opcode_table[OP_CMPD].cycle_count);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.d.d, 0x6969);
     assert_int_equal(e_cpu_context.cc.n, 0);
     assert_int_equal(e_cpu_context.cc.c, 0);
     assert_int_equal(e_cpu_context.cc.z, 1);
     assert_int_equal(e_cpu_context.cc.v, 0);
-    assert_int_equal(cycles, opcode_table[OP_CMPD].cycle_count);
+    assert_int_equal(cycles, opcode_ext_x10_table[OP_CMPD].cycle_count);
     assert_true(post_pc == pre_pc + 4);
 }
 
@@ -1570,7 +1572,7 @@ void cmps_immediate_nocarry(void **state) {
     assert_int_equal(e_cpu_context.cc.c, 0);
     assert_int_equal(e_cpu_context.cc.z, 0);
     assert_int_equal(e_cpu_context.cc.v, 0);
-    assert_int_equal(cycles, opcode_table[OP_CMPS].cycle_count);
+    assert_int_equal(cycles, opcode_ext_x11_table[OP_CMPS].cycle_count);
     assert_true(post_pc == pre_pc + 4);
 }
 
@@ -1598,7 +1600,7 @@ void cmps_immediate_carry(void **state) {
     assert_int_equal(e_cpu_context.cc.c, 1);
     assert_int_equal(e_cpu_context.cc.z, 0);
     assert_int_equal(e_cpu_context.cc.v, 1);
-    assert_int_equal(cycles, opcode_table[OP_CMPS].cycle_count);
+    assert_int_equal(cycles, opcode_ext_x11_table[OP_CMPS].cycle_count);
     assert_true(post_pc == pre_pc + 4);
 }
 
@@ -1619,14 +1621,14 @@ void cmps_immediate_overflow(void **state) {
     load_memory(test_memory, 1);
     e_cpu_context.s = 0xFFFF;
 
-    int cycles = run_cycles(opcode_table[OP_CMPS].cycle_count * 1);
+    int cycles = run_cycles(opcode_table[OP_CMPS].cycle_count);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.s, 0xFFFF);
     assert_int_equal(e_cpu_context.cc.n, 0);
     assert_int_equal(e_cpu_context.cc.c, 0);
     assert_int_equal(e_cpu_context.cc.z, 0);
     assert_int_equal(e_cpu_context.cc.v, 1);
-    assert_int_equal(cycles, opcode_table[OP_CMPS].cycle_count);
+    assert_int_equal(cycles, opcode_ext_x11_table[OP_CMPS].cycle_count);
     assert_true(post_pc == pre_pc + 4);
 }
 
@@ -1647,13 +1649,125 @@ void cmps_immediate_zero(void **state) {
     load_memory(test_memory, 1);
     e_cpu_context.s = 0x6969;
 
-    int cycles = run_cycles(opcode_table[OP_CMPS].cycle_count * 1);
+    int cycles = run_cycles(opcode_table[OP_CMPS].cycle_count);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.s, 0x6969);
     assert_int_equal(e_cpu_context.cc.n, 0);
     assert_int_equal(e_cpu_context.cc.c, 0);
     assert_int_equal(e_cpu_context.cc.z, 1);
     assert_int_equal(e_cpu_context.cc.v, 0);
-    assert_int_equal(cycles, opcode_table[OP_CMPS].cycle_count);
+    assert_int_equal(cycles, opcode_ext_x11_table[OP_CMPS].cycle_count);
+    assert_true(post_pc == pre_pc + 4);
+}
+
+void cmpu_immediate_nocarry(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+
+    uint8 code_bytes[] = {
+        OP_EXTENDED_X11,
+        OP_CMPU,
+        0x12,
+        0x34
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 4 }
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.u = 0xFFFF;
+
+    int cycles = run_cycles(opcode_ext_x11_table[OP_CMPU].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.u, 0xFFFF);
+    assert_int_equal(e_cpu_context.cc.n, 1);
+    assert_int_equal(e_cpu_context.cc.c, 0);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_int_equal(cycles, opcode_ext_x11_table[OP_CMPU].cycle_count);
+    assert_true(post_pc == pre_pc + 4);
+}
+
+void cmpu_immediate_carry(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+
+    uint8 code_bytes[] = {
+        OP_EXTENDED_X11,
+        OP_CMPU,
+        0x7A,
+        0x7A
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 4 }
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.u = 0x2727;
+
+    int cycles = run_cycles(opcode_ext_x11_table[OP_CMPU].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.u, 0x2727);
+    assert_int_equal(e_cpu_context.cc.n, 1);
+    assert_int_equal(e_cpu_context.cc.c, 1);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 1);
+    assert_int_equal(cycles, opcode_ext_x11_table[OP_CMPU].cycle_count);
+    assert_true(post_pc == pre_pc + 4);
+}
+
+void cmpu_immediate_overflow(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+
+    uint8 code_bytes[] = {
+        OP_EXTENDED_X11,
+        OP_CMPU,
+        0xEE,
+        0xEE
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 4 }
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.u = 0xFFFF;
+
+    int cycles = run_cycles(opcode_ext_x11_table[OP_CMPU].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.u, 0xFFFF);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.c, 0);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 1);
+    assert_int_equal(cycles, opcode_ext_x11_table[OP_CMPU].cycle_count);
+    assert_true(post_pc == pre_pc + 4);
+}
+
+void cmpu_immediate_zero(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+
+    uint8 code_bytes[] = {
+        OP_EXTENDED_X11,
+        OP_CMPU,
+        0x69,
+        0x69
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 4 }
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.u = 0x6969;
+
+    int cycles = run_cycles(opcode_ext_x11_table[OP_CMPU].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.u, 0x6969);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.c, 0);
+    assert_int_equal(e_cpu_context.cc.z, 1);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_int_equal(cycles, opcode_ext_x11_table[OP_CMPU].cycle_count);
     assert_true(post_pc == pre_pc + 4);
 }

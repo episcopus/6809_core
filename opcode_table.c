@@ -652,7 +652,7 @@ const struct opcode_def opcode_ext_x11_table[] = {
     { "NOTIMPL", 0x80, 2, REG_NONE, INHERENT, notimpl },
     { "NOTIMPL", 0x81, 2, REG_NONE, INHERENT, notimpl },
     { "NOTIMPL", 0x82, 2, REG_NONE, INHERENT, notimpl },
-    { "NOTIMPL", 0x83, 2, REG_NONE, INHERENT, notimpl },
+    { "CMPU", OP_CMPU, 5, REG_U, IMMEDIATE, cmp16 },
     { "NOTIMPL", 0x84, 2, REG_NONE, INHERENT, notimpl },
     { "NOTIMPL", 0x85, 2, REG_NONE, INHERENT, notimpl },
     { "NOTIMPL", 0x86, 2, REG_NONE, INHERENT, notimpl },

@@ -68,3 +68,4 @@ extern void mock_assert(const int result, const char* const expression,
 /* Two byte opcodes - those have 0x11 as leading byte */
 
 #define OP_CMPS 0x8C
+#define OP_CMPU 0x83
