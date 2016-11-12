@@ -3,7 +3,7 @@
 #include "functions.h"
 
 extern struct opcode_def opcode_table[];
-extern struct opcode_def opcode_ext_table[];
+extern struct opcode_def opcode_ext_x10_table[];
 extern struct cpu_state e_cpu_context;
 
 /* Add Memory Byte plus Carry with Accumulator A or B */
@@ -333,5 +333,5 @@ int cmp16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
         (output_val & 0x8000) == 0;
     e_cpu_context.cc.v = pos_overflow || neg_overflow;
 
-    return opcode_ext_table[opcode].cycle_count;
+    return opcode_ext_x10_table[opcode].cycle_count;
 }

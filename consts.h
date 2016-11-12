@@ -19,7 +19,8 @@ extern void mock_assert(const int result, const char* const expression,
     mock_assert((int)(expression), #expression, __FILE__, __LINE__);
 /* #endif */
 
-#define OP_EXTENDED 0x10
+#define OP_EXTENDED_X10 0x10
+#define OP_EXTENDED_X11 0x11
 #define OP_NOP 0x12
 #define OP_DAA 0x19
 #define OP_ANDCC 0x1C
@@ -60,6 +61,10 @@ extern void mock_assert(const int result, const char* const expression,
 #define OP_ADCB 0xC9
 #define OP_ADDB 0xCB
 
-/* Two byte opcodes - those have 0x10 or 0x11 as leading byte */
+/* Two byte opcodes - those have 0x10 as leading byte */
 
 #define OP_CMPD 0x83
+
+/* Two byte opcodes - those have 0x11 as leading byte */
+
+#define OP_CMPS 0x8C
