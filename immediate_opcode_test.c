@@ -1771,3 +1771,111 @@ void cmpu_immediate_zero(void **state) {
     assert_int_equal(cycles, opcode_ext_x11_table[OP_CMPU].cycle_count);
     assert_true(post_pc == pre_pc + 4);
 }
+
+void cmpx_immediate_nocarry(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+
+    uint8 code_bytes[] = {
+        OP_CMPX,
+        0x12,
+        0x34
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 4 }
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.x = 0xFFFF;
+
+    int cycles = run_cycles(opcode_table[OP_CMPX].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.x, 0xFFFF);
+    assert_int_equal(e_cpu_context.cc.n, 1);
+    assert_int_equal(e_cpu_context.cc.c, 0);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_int_equal(cycles, opcode_table[OP_CMPX].cycle_count);
+    assert_true(post_pc == pre_pc + 3);
+}
+
+void cmpx_immediate_carry(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+
+    uint8 code_bytes[] = {
+        OP_CMPX,
+        0x7A,
+        0x7A
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 4 }
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.x = 0x2727;
+
+    int cycles = run_cycles(opcode_table[OP_CMPX].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.x, 0x2727);
+    assert_int_equal(e_cpu_context.cc.n, 1);
+    assert_int_equal(e_cpu_context.cc.c, 1);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 1);
+    assert_int_equal(cycles, opcode_table[OP_CMPX].cycle_count);
+    assert_true(post_pc == pre_pc + 3);
+}
+
+void cmpx_immediate_overflow(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+
+    uint8 code_bytes[] = {
+        OP_CMPX,
+        0xEE,
+        0xEE
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 3 }
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.x = 0xFFFF;
+
+    int cycles = run_cycles(opcode_table[OP_CMPX].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.x, 0xFFFF);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.c, 0);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 1);
+    assert_int_equal(cycles, opcode_table[OP_CMPX].cycle_count);
+    assert_true(post_pc == pre_pc + 3);
+}
+
+void cmpx_immediate_zero(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+
+    uint8 code_bytes[] = {
+        OP_CMPX,
+        0x69,
+        0x69
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 3 }
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.x = 0x6969;
+
+    int cycles = run_cycles(opcode_table[OP_CMPX].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.x, 0x6969);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.c, 0);
+    assert_int_equal(e_cpu_context.cc.z, 1);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_int_equal(cycles, opcode_table[OP_CMPX].cycle_count);
+    assert_true(post_pc == pre_pc + 3);
+}
