@@ -25,6 +25,7 @@ extern void mock_assert(const int result, const char* const expression,
 #define OP_DAA 0x19
 #define OP_ANDCC 0x1C
 #define OP_SEX 0x1D
+#define OP_EXG 0x1E
 #define OP_ABX 0x3A
 #define OP_MUL 0x3D
 #define OP_NEGA 0x40

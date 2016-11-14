@@ -208,3 +208,139 @@ int extended(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
 
     return completed_cycles;
 }
+
+enum target_register decode_target_register_from_postbyte(uint8 postbyte) {
+    switch (postbyte) {
+    case 0x0:
+        return REG_D;
+    case 0x1:
+        return REG_X;
+    case 0x2:
+        return REG_Y;
+    case 0x3:
+        return REG_U;
+    case 0x4:
+        return REG_S;
+    case 0x5:
+        return REG_PC;
+    case 0x8:
+        return REG_A;
+    case 0x9:
+        return REG_B;
+    case 0xA:
+        return REG_CC;
+    case 0xB:
+        return REG_DP;
+    default:
+        return REG_NONE;
+    }
+}
+
+void decode_source_target_postbyte(uint8 postbyte, enum target_register* out_source, enum target_register* out_target) {
+    if (!out_source || !out_target) {
+        assert(FALSE);
+        return;
+    }
+
+    uint8 upper_nibble = postbyte >> 4;
+    uint8 lower_nibble = postbyte & 0xF;
+
+    *out_source = decode_target_register_from_postbyte(upper_nibble);
+    *out_target = decode_target_register_from_postbyte(lower_nibble);
+}
+
+enum reg_size get_reg_size(enum target_register reg) {
+    switch (reg) {
+    case REG_A:
+    case REG_B:
+    case REG_DP:
+    case REG_CC:
+        return REG_SIZE_8;
+    case REG_NONE:
+        return REG_SIZE_INVALID;
+    default:
+        return REG_SIZE_16;
+    }
+}
+
+uint8 get_reg_value_8(enum target_register reg) {
+    switch (reg) {
+    case REG_A:
+        return e_cpu_context.d.byte_acc.a;
+    case REG_B:
+        return e_cpu_context.d.byte_acc.b;
+    case REG_DP:
+        return e_cpu_context.dp;
+    case REG_CC:
+        return *((uint8*) (&e_cpu_context.cc));
+    default:
+        assert(FALSE);
+        return 0xFF;
+    }
+}
+
+uint16 get_reg_value_16(enum target_register reg) {
+    switch (reg) {
+    case REG_X:
+        return e_cpu_context.x;
+    case REG_Y:
+        return e_cpu_context.y;
+    case REG_U:
+        return e_cpu_context.u;
+    case REG_S:
+        return e_cpu_context.s;
+    case REG_PC:
+        return e_cpu_context.pc;
+    case REG_D:
+        return e_cpu_context.d.d;
+    default:
+        assert(FALSE);
+        return 0xFFFF;
+    }
+}
+
+void set_reg_value_8(enum target_register reg, uint8 value) {
+    switch (reg) {
+    case REG_A:
+        e_cpu_context.d.byte_acc.a = value;
+        return;
+    case REG_B:
+        e_cpu_context.d.byte_acc.b = value;
+        return;
+    case REG_DP:
+        e_cpu_context.dp = value;
+        return;
+    case REG_CC:
+        *((uint8*) (&e_cpu_context.cc)) = value;
+        return;
+    default:
+        assert(FALSE);
+        return;
+    }
+}
+
+void set_reg_value_16(enum target_register reg, uint16 value) {
+    switch (reg) {
+    case REG_X:
+        e_cpu_context.x = value;
+        return;
+    case REG_Y:
+        e_cpu_context.y = value;
+        return;
+    case REG_U:
+        e_cpu_context.u = value;
+        return;
+    case REG_S:
+        e_cpu_context.s = value;
+        return;
+    case REG_PC:
+        e_cpu_context.pc = value;
+        return;
+    case REG_D:
+        e_cpu_context.d.d = value;
+        return;
+    default:
+        assert(FALSE);
+        return;
+    }
+}

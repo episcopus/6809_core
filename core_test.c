@@ -254,6 +254,8 @@ static void memory_clear_test(void **state) {
 
 /* Run a single NOP instruction which should yield 2 cycles */
 static void run_cycles_test(void **state) {
+    (void) state; /* unused */
+
     uint8 code_bytes[] = {
         OP_NOP
     };
@@ -273,6 +275,8 @@ static void run_cycles_test(void **state) {
 
 /* Run two NOP instructions which should yield 4 cycles */
 static void run_cycles_multiple_test(void **state) {
+    (void) state; /* unused */
+
     uint8 code_bytes[] = {
         OP_NOP, OP_NOP
     };
@@ -294,6 +298,8 @@ static void run_cycles_multiple_test(void **state) {
 /* 0x1 on the 6809 is an invalid exception and we'll use it for this NOTIMPL
    assert test */
 static void run_cycles_notimpl_test(void **state) {
+    (void) state; /* unused */
+
     uint8 code_bytes[] = {
         0x1
     };
@@ -305,6 +311,94 @@ static void run_cycles_notimpl_test(void **state) {
     load_memory(test_memory, 1);
 
     expect_assert_failure(run_cycles(1));
+}
+
+static void decode_source_target_postbyte_test(void **state) {
+    (void) state; /* unused */
+
+    /* from X to B */
+    uint8 postbyte = 0x19;
+    enum target_register src, trg;
+    decode_source_target_postbyte(postbyte, &src, &trg);
+
+    assert_int_equal(src, REG_X);
+    assert_int_equal(trg, REG_B);
+}
+
+static void decode_source_target_postbyte_2_test(void **state) {
+    (void) state; /* unused */
+
+    /* from PC to DP */
+    uint8 postbyte = 0x5B;
+    enum target_register src, trg;
+    decode_source_target_postbyte(postbyte, &src, &trg);
+
+    assert_int_equal(src, REG_PC);
+    assert_int_equal(trg, REG_DP);
+}
+
+static void decode_source_target_postbyte_invalid_test(void **state) {
+    (void) state; /* unused */
+
+    /* from PC to invalid */
+    uint8 postbyte = 0x5D;
+    enum target_register src, trg;
+    decode_source_target_postbyte(postbyte, &src, &trg);
+
+    assert_int_equal(src, REG_PC);
+    assert_int_equal(trg, REG_NONE);
+}
+
+static void get_reg_value_8_test(void **state) {
+    (void) state; /* unused */
+
+    e_cpu_context.d.byte_acc.a = 0x78;
+    uint8 val = get_reg_value_8(REG_A);
+
+    assert_int_equal(val, 0x78);
+}
+
+static void get_reg_value_8_invalid_test(void **state) {
+    (void) state; /* unused */
+
+    expect_assert_failure(get_reg_value_8(REG_U));
+}
+
+static void set_reg_value_8_test(void **state) {
+    (void) state; /* unused */
+
+    set_reg_value_8(REG_CC, 0x78);
+    uint8 val = get_reg_value_8(REG_CC);
+
+    assert_int_equal(val, 0x78);
+    assert_int_equal(e_cpu_context.cc.e, 0);
+    assert_int_equal(e_cpu_context.cc.c, 0);
+    assert_int_equal(e_cpu_context.cc.n, 1);
+}
+
+static void get_reg_value_16_test(void **state) {
+    (void) state; /* unused */
+
+    e_cpu_context.d.d = 0x7812;
+    uint16 val = get_reg_value_16(REG_D);
+
+    assert_int_equal(val, 0x7812);
+}
+
+static void get_reg_value_16_invalid_test(void **state) {
+    (void) state; /* unused */
+
+    expect_assert_failure(get_reg_value_16(REG_A));
+}
+
+static void set_reg_value_16_test(void **state) {
+    (void) state; /* unused */
+
+    set_reg_value_16(REG_U, 0x7812);
+    uint16 val = get_reg_value_16(REG_U);
+
+    assert_int_equal(val, 0x7812);
+    assert_int_equal(get_reg_value_16(REG_S), 0);
 }
 
 int main(void) {
@@ -329,7 +423,16 @@ int main(void) {
         cmocka_unit_test_setup_teardown(read_word_from_memory_test, test_setup, test_teardown),
         cmocka_unit_test_setup_teardown(read_byte_handler_immedidate_test, test_setup, test_teardown),
         cmocka_unit_test_setup_teardown(read_word_handler_immedidate_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(memory_clear_test, test_setup, test_teardown)
+        cmocka_unit_test_setup_teardown(memory_clear_test, test_setup, test_teardown),
+        cmocka_unit_test_setup_teardown(decode_source_target_postbyte_test, test_setup, test_teardown),
+        cmocka_unit_test_setup_teardown(decode_source_target_postbyte_2_test, test_setup, test_teardown),
+        cmocka_unit_test_setup_teardown(decode_source_target_postbyte_invalid_test, test_setup, test_teardown),
+        cmocka_unit_test_setup_teardown(get_reg_value_8_test, test_setup, test_teardown),
+        cmocka_unit_test_setup_teardown(get_reg_value_8_invalid_test, test_setup, test_teardown),
+        cmocka_unit_test_setup_teardown(set_reg_value_8_test, test_setup, test_teardown),
+        cmocka_unit_test_setup_teardown(get_reg_value_16_test, test_setup, test_teardown),
+        cmocka_unit_test_setup_teardown(get_reg_value_16_invalid_test, test_setup, test_teardown),
+        cmocka_unit_test_setup_teardown(set_reg_value_16_test, test_setup, test_teardown)
     };
 
     return cmocka_run_group_tests(tests, NULL, NULL) +

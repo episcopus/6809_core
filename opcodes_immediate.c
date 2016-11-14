@@ -345,6 +345,7 @@ int cmp16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     return this_opcode_table[opcode].cycle_count;
 }
 
+/* Exclusively-OR Memory Byte with Accumulator A or B */
 int eor(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;
 
@@ -376,5 +377,101 @@ int eor(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.cc.v = 0;
 
     *p_reg = reg_val;
+    return opcode_table[opcode].cycle_count;
+}
+
+/* Exchange Registers */
+int exg(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
+    (void) t_r; /* unused */
+    (void) a_m; /* unused */
+    e_cpu_context.pc++;
+
+    uint8 post_byte = read_byte_handler(IMMEDIATE);
+    enum target_register src;
+    enum target_register trg;
+    decode_source_target_postbyte(post_byte, &src, &trg);
+
+    enum reg_size src_size = get_reg_size(src);
+    enum reg_size trg_size = get_reg_size(trg);
+
+    /* Tolerate one invalid register, not both */
+    if (src_size == REG_SIZE_INVALID && trg_size != REG_SIZE_INVALID) {
+        src_size = trg_size;
+    }
+    else if (trg_size == REG_SIZE_INVALID && src_size != REG_SIZE_INVALID) {
+        trg_size = src_size;
+    }
+    else if (trg_size == REG_SIZE_INVALID && src_size == REG_SIZE_INVALID) {
+        /* Do nothing when we get trolled */
+        return opcode_table[opcode].cycle_count;
+    }
+
+    /* If an invalid register encoding is specified for either register, a
+       constant value of FF or FFFF is used for the exchange.  */
+    if (src_size == trg_size && src_size == REG_SIZE_8) {
+        uint8 src_value = src == REG_NONE ? 0xFF : get_reg_value_8(src);
+        uint8 trg_value = trg == REG_NONE ? 0xFF : get_reg_value_8(trg);
+        if (src != REG_NONE) {
+            set_reg_value_8(src, trg_value);
+        }
+        if (trg != REG_NONE) {
+            set_reg_value_8(trg, src_value);
+        }
+    }
+    else if (src_size == trg_size && src_size == REG_SIZE_16) {
+        uint16 src_value = src == REG_NONE ? 0xFFFF : get_reg_value_16(src);
+        uint16 trg_value = trg == REG_NONE ? 0xFFFF : get_reg_value_16(trg);
+        if (src != REG_NONE) {
+            set_reg_value_16(src, trg_value);
+        }
+        if (trg != REG_NONE) {
+            set_reg_value_16(trg, src_value);
+        }
+    }
+    else if (src_size == REG_SIZE_16) {
+        uint16 src_value = get_reg_value_16(src);
+        uint8 trg_value = get_reg_value_8(trg);
+        uint16 new_src_value = 0xFF00 | trg_value;
+        uint8 new_trg_value = (uint8) (src_value & 0xFF);
+        set_reg_value_16(src, new_src_value);
+        set_reg_value_8(trg, new_trg_value);
+    }
+    else { /* src_size == REG_SIZE_8 && trg_size == REG_SIZE_16 */
+        /* The 8-bit register is always exchanged with the lower half of the
+           16-bit register, and the the upper half of the 16-bit register is
+           then set to the value shown in the table below. */
+        uint8 new_src_value = 0;
+        uint16 new_trg_value = 0;
+        switch (src) {
+        case REG_A:
+            if (trg == REG_D) {
+                /* The one exception is for EXG A,D which produces exactly the
+                   same result as EXG A,B */
+                uint8 temp = get_reg_value_8(src);
+                set_reg_value_8(src, get_reg_value_8(REG_B));
+                set_reg_value_8(REG_B, temp);
+                break;
+            }
+        case REG_B:
+            new_trg_value = 0xFF00 | get_reg_value_8(src);
+            new_src_value = (uint8) (get_reg_value_16(trg) & 0xFF);
+            break;
+        case REG_CC:
+        case REG_DP:
+            new_trg_value = (get_reg_value_8(src) << 8) | get_reg_value_8(src);
+            new_src_value = (uint8) (get_reg_value_16(trg) & 0xFF);
+            break;
+        default:
+            assert(FALSE);
+            break;
+        }
+
+        if (!(src == REG_A && trg == REG_D)) {
+            /* This special case was handled above */
+            set_reg_value_8(src, new_src_value);
+            set_reg_value_16(trg, new_trg_value);
+        }
+    }
+
     return opcode_table[opcode].cycle_count;
 }

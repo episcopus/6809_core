@@ -62,7 +62,14 @@ enum target_register {
     REG_D,
     REG_DP,
     REG_A,
-    REG_B
+    REG_B,
+    REG_CC
+};
+
+enum reg_size {
+    REG_SIZE_8,
+    REG_SIZE_16,
+    REG_SIZE_INVALID
 };
 
 typedef int (*opcode_func)(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);

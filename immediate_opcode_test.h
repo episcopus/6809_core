@@ -78,6 +78,14 @@ void eora_immediate_test(void **state);
 void eorb_immediate_test(void **state);
 void eora_immediate_zero_test(void **state);
 void eorb_immediate_zero_test(void **state);
+void exg_basic_test(void **state);
+void exg_basic_16_test(void **state);
+void exg_basic_16_to_8_test(void **state);
+void exg_basic_8_to_16_test(void **state);
+void exg_a_d_8_to_16_test(void **state);
+void exg_cc_x_8_to_16_test(void **state);
+void exg_cc_invalid_test(void **state);
+void exg_x_invalid_test(void **state);
 
 const struct CMUnitTest immediate_tests[] = {
     cmocka_unit_test_setup_teardown(adca_immediate_test, test_setup, test_teardown),
@@ -151,5 +159,13 @@ const struct CMUnitTest immediate_tests[] = {
     cmocka_unit_test_setup_teardown(eora_immediate_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(eorb_immediate_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(eora_immediate_zero_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(eorb_immediate_zero_test, test_setup, test_teardown)
+    cmocka_unit_test_setup_teardown(eorb_immediate_zero_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(exg_basic_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(exg_basic_16_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(exg_basic_16_to_8_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(exg_basic_8_to_16_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(exg_a_d_8_to_16_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(exg_cc_x_8_to_16_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(exg_cc_invalid_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(exg_x_invalid_test, test_setup, test_teardown)
 };
