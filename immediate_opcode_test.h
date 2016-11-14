@@ -88,6 +88,11 @@ void exg_cc_invalid_test(void **state);
 void exg_x_invalid_test(void **state);
 void lda_basic_test(void **state);
 void ldb_basic_test(void **state);
+void ldd_basic_test(void **state);
+void lds_basic_test(void **state);
+void ldu_basic_test(void **state);
+void ldx_basic_test(void **state);
+void ldy_basic_test(void **state);
 
 const struct CMUnitTest immediate_tests[] = {
     cmocka_unit_test_setup_teardown(adca_immediate_test, test_setup, test_teardown),
@@ -171,5 +176,10 @@ const struct CMUnitTest immediate_tests[] = {
     cmocka_unit_test_setup_teardown(exg_cc_invalid_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(exg_x_invalid_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(lda_basic_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(ldb_basic_test, test_setup, test_teardown)
+    cmocka_unit_test_setup_teardown(ldb_basic_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(ldd_basic_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(lds_basic_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(ldu_basic_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(ldx_basic_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(ldy_basic_test, test_setup, test_teardown)
 };

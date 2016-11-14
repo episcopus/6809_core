@@ -494,3 +494,22 @@ int ld(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
 
     return opcode_table[opcode].cycle_count;
 }
+
+/* Load Data into 16-Bit Register */
+int ld16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
+    e_cpu_context.pc++;
+
+    uint16 memory_val = read_word_handler(a_m);
+    set_reg_value_16(t_r, memory_val);
+
+    /* The Negative flag is set equal to the new value of bit 15 of
+       the accumulator. */
+    e_cpu_context.cc.n = (memory_val & 0x8000) > 1;
+    /* The Zero flag is set if the new accumulator value is zero;
+       cleared otherwise. */
+    e_cpu_context.cc.z = memory_val == 0;
+    /* The Overflow flag is cleared by this instruction. */
+    e_cpu_context.cc.v = 0;
+
+    return opcode_table[opcode].cycle_count;
+}

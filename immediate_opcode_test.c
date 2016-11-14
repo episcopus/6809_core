@@ -2341,3 +2341,110 @@ void ldb_basic_test(void **state) {
     assert_int_equal(cycles, opcode_table[OP_LDB].cycle_count);
     assert_true(post_pc == pre_pc + 2);
 }
+
+void ldd_basic_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    uint8 code_bytes[] = {
+        OP_LDD,
+        0xF0,
+        0x0D
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 3 }
+    };
+    load_memory(test_memory, 1);
+
+    int cycles = run_cycles(opcode_table[OP_LDD].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.d.d, 0xF00D);
+    assert_int_equal(cycles, opcode_table[OP_LDD].cycle_count);
+    assert_true(post_pc == pre_pc + 3);
+}
+
+void lds_basic_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    uint8 code_bytes[] = {
+        OP_EXTENDED_X10,
+        OP_LDS,
+        0xF0,
+        0x0D
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 4 }
+    };
+    load_memory(test_memory, 1);
+
+    int cycles = run_cycles(opcode_table[OP_LDS].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.s, 0xF00D);
+    assert_int_equal(cycles, opcode_table[OP_LDS].cycle_count);
+    assert_true(post_pc == pre_pc + 4);
+}
+
+void ldu_basic_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    uint8 code_bytes[] = {
+        OP_LDU,
+        0xF0,
+        0x0D
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 3 }
+    };
+    load_memory(test_memory, 1);
+
+    int cycles = run_cycles(opcode_table[OP_LDU].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.u, 0xF00D);
+    assert_int_equal(cycles, opcode_table[OP_LDU].cycle_count);
+    assert_true(post_pc == pre_pc + 3);
+}
+
+void ldx_basic_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    uint8 code_bytes[] = {
+        OP_LDX,
+        0xF0,
+        0x0D
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 3 }
+    };
+    load_memory(test_memory, 1);
+
+    int cycles = run_cycles(opcode_table[OP_LDX].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.x, 0xF00D);
+    assert_int_equal(cycles, opcode_table[OP_LDX].cycle_count);
+    assert_true(post_pc == pre_pc + 3);
+}
+
+void ldy_basic_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    uint8 code_bytes[] = {
+        OP_EXTENDED_X10,
+        OP_LDY,
+        0xF0,
+        0x0D
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 4 }
+    };
+    load_memory(test_memory, 1);
+
+    int cycles = run_cycles(opcode_table[OP_LDY].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.y, 0xF00D);
+    assert_int_equal(cycles, opcode_table[OP_LDY].cycle_count);
+    assert_true(post_pc == pre_pc + 4);
+}
