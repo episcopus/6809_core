@@ -475,3 +475,22 @@ int exg(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
 
     return opcode_table[opcode].cycle_count;
 }
+
+/* Load Data into 8-Bit Accumulator */
+int ld(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
+    e_cpu_context.pc++;
+
+    uint8 memory_val = read_byte_handler(a_m);
+    set_reg_value_8(t_r, memory_val);
+
+    /* The Negative flag is set equal to the new value of bit 7 of
+       the accumulator. */
+    e_cpu_context.cc.n = (memory_val & 0x80) > 1;
+    /* The Zero flag is set if the new accumulator value is zero;
+       cleared otherwise. */
+    e_cpu_context.cc.z = memory_val == 0;
+    /* The Overflow flag is cleared by this instruction. */
+    e_cpu_context.cc.v = 0;
+
+    return opcode_table[opcode].cycle_count;
+}

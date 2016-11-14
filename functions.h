@@ -38,6 +38,7 @@ int dec(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int eor(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int exg(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int inc(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
+int ld(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int lsr(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int mul(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int neg(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
