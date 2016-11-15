@@ -93,6 +93,8 @@ void lds_basic_test(void **state);
 void ldu_basic_test(void **state);
 void ldx_basic_test(void **state);
 void ldy_basic_test(void **state);
+void ora_immediate_test(void **state);
+void orb_immediate_test(void **state);
 
 const struct CMUnitTest immediate_tests[] = {
     cmocka_unit_test_setup_teardown(adca_immediate_test, test_setup, test_teardown),
@@ -181,5 +183,7 @@ const struct CMUnitTest immediate_tests[] = {
     cmocka_unit_test_setup_teardown(lds_basic_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(ldu_basic_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(ldx_basic_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(ldy_basic_test, test_setup, test_teardown)
+    cmocka_unit_test_setup_teardown(ldy_basic_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(ora_immediate_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(orb_immediate_test, test_setup, test_teardown)
 };
