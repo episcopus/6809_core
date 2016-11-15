@@ -4,9 +4,7 @@
 #include <cmocka.h>
 #include <stdio.h>
 
-#include "functions.h"
-#include "inherent_opcode_test.h"
-#include "immediate_opcode_test.h"
+#include "core.h"
 
 extern struct cpu_state e_cpu_context;
 extern struct opcode_def opcode_table[];
@@ -25,7 +23,7 @@ int test_teardown(void **state) {
     return 0;
 }
 
-static void core_init_test(void **state) {
+void core_init_test(void **state) {
     (void) state; /* unused */
 
     assert_int_equal(e_cpu_context.x, 0);
@@ -46,7 +44,7 @@ static void core_init_test(void **state) {
     assert_int_equal(e_cpu_context.cycle_count, 0);
 }
 
-static void test_e_flag(void **state) {
+void test_e_flag(void **state) {
     (void) state; /* unused */
 
     e_cpu_context.cc.e = 1;
@@ -54,7 +52,7 @@ static void test_e_flag(void **state) {
     assert_int_equal(raw_cc, 0x80);
 }
 
-static void test_f_flag(void **state) {
+void test_f_flag(void **state) {
     (void) state; /* unused */
 
     e_cpu_context.cc.f = 1;
@@ -62,7 +60,7 @@ static void test_f_flag(void **state) {
     assert_int_equal(raw_cc, 0x40);
 }
 
-static void test_h_flag(void **state) {
+void test_h_flag(void **state) {
     (void) state; /* unused */
 
     e_cpu_context.cc.h = 1;
@@ -70,7 +68,7 @@ static void test_h_flag(void **state) {
     assert_int_equal(raw_cc, 0x20);
 }
 
-static void test_i_flag(void **state) {
+void test_i_flag(void **state) {
     (void) state; /* unused */
 
     e_cpu_context.cc.i = 1;
@@ -78,7 +76,7 @@ static void test_i_flag(void **state) {
     assert_int_equal(raw_cc, 0x10);
 }
 
-static void test_n_flag(void **state) {
+void test_n_flag(void **state) {
     (void) state; /* unused */
 
     e_cpu_context.cc.n = 1;
@@ -86,7 +84,7 @@ static void test_n_flag(void **state) {
     assert_int_equal(raw_cc, 0x8);
 }
 
-static void test_z_flag(void **state) {
+void test_z_flag(void **state) {
     (void) state; /* unused */
 
     e_cpu_context.cc.z = 1;
@@ -94,7 +92,7 @@ static void test_z_flag(void **state) {
     assert_int_equal(raw_cc, 0x4);
 }
 
-static void test_v_flag(void **state) {
+void test_v_flag(void **state) {
     (void) state; /* unused */
 
     e_cpu_context.cc.v = 1;
@@ -102,7 +100,7 @@ static void test_v_flag(void **state) {
     assert_int_equal(raw_cc, 0x2);
 }
 
-static void test_c_flag(void **state) {
+void test_c_flag(void **state) {
     (void) state; /* unused */
 
     e_cpu_context.cc.c = 1;
@@ -110,7 +108,7 @@ static void test_c_flag(void **state) {
     assert_int_equal(raw_cc, 0x1);
 }
 
-static void test_all_flags(void **state) {
+void test_all_flags(void **state) {
     (void) state; /* unused */
 
     unsigned int raw_cc = (unsigned int) *((unsigned int*) &e_cpu_context.cc);
@@ -129,7 +127,7 @@ static void test_all_flags(void **state) {
     assert_int_equal(raw_cc, 0xFF);
 }
 
-static void test_load_memory(void **state) {
+void test_load_memory(void **state) {
     (void) state; /* unused */
 
     uint8 test_bytes[] = {
@@ -146,7 +144,7 @@ static void test_load_memory(void **state) {
     assert_int_equal(e_cpu_context.memory[USER_SPACE_ROOT + 1], 0x34);
 }
 
-static void test_load_memory_too_big(void **state) {
+void test_load_memory_too_big(void **state) {
     (void) state; /* unused */
 
     uint8 test_bytes[] = {
@@ -160,7 +158,7 @@ static void test_load_memory_too_big(void **state) {
     expect_assert_failure(load_memory(test_memory, 1));
 }
 
-static void test_load_memory_too_far(void **state) {
+void test_load_memory_too_far(void **state) {
     (void) state; /* unused */
 
     uint8 test_bytes[] = {
@@ -174,7 +172,7 @@ static void test_load_memory_too_far(void **state) {
     expect_assert_failure(load_memory(test_memory, 1));
 }
 
-static void read_byte_from_memory_test(void **state) {
+void read_byte_from_memory_test(void **state) {
     (void) state; /* unused */
 
     uint8 test_value = 0x7F;
@@ -187,7 +185,7 @@ static void read_byte_from_memory_test(void **state) {
     assert_int_equal(post_value, test_value);
 }
 
-static void read_word_from_memory_test(void **state) {
+void read_word_from_memory_test(void **state) {
     (void) state; /* unused */
 
     uint16 test_value = 0x1234;
@@ -200,7 +198,7 @@ static void read_word_from_memory_test(void **state) {
     assert_int_equal(post_value, test_value);
 }
 
-static void read_byte_handler_immedidate_test(void **state) {
+void read_byte_handler_immedidate_test(void **state) {
     (void) state; /* unused */
 
     uint8 test_value = 0x7F;
@@ -217,7 +215,7 @@ static void read_byte_handler_immedidate_test(void **state) {
     assert_int_equal(e_cpu_context.pc, 0x1235);
 }
 
-static void read_word_handler_immedidate_test(void **state) {
+void read_word_handler_immedidate_test(void **state) {
     (void) state; /* unused */
 
     uint16 test_value = 0x7FFF;
@@ -234,7 +232,7 @@ static void read_word_handler_immedidate_test(void **state) {
     assert_int_equal(e_cpu_context.pc, 0x1236);
 }
 
-static void memory_clear_test(void **state) {
+void memory_clear_test(void **state) {
     (void) state; /* unused */
 
     uint8 test_value = 0x7F;
@@ -253,7 +251,7 @@ static void memory_clear_test(void **state) {
 }
 
 /* Run a single NOP instruction which should yield 2 cycles */
-static void run_cycles_test(void **state) {
+void run_cycles_test(void **state) {
     (void) state; /* unused */
 
     uint8 code_bytes[] = {
@@ -274,7 +272,7 @@ static void run_cycles_test(void **state) {
 }
 
 /* Run two NOP instructions which should yield 4 cycles */
-static void run_cycles_multiple_test(void **state) {
+void run_cycles_multiple_test(void **state) {
     (void) state; /* unused */
 
     uint8 code_bytes[] = {
@@ -297,7 +295,7 @@ static void run_cycles_multiple_test(void **state) {
 
 /* 0x1 on the 6809 is an invalid exception and we'll use it for this NOTIMPL
    assert test */
-static void run_cycles_notimpl_test(void **state) {
+void run_cycles_notimpl_test(void **state) {
     (void) state; /* unused */
 
     uint8 code_bytes[] = {
@@ -313,7 +311,7 @@ static void run_cycles_notimpl_test(void **state) {
     expect_assert_failure(run_cycles(1));
 }
 
-static void decode_source_target_postbyte_test(void **state) {
+void decode_source_target_postbyte_test(void **state) {
     (void) state; /* unused */
 
     /* from X to B */
@@ -325,7 +323,7 @@ static void decode_source_target_postbyte_test(void **state) {
     assert_int_equal(trg, REG_B);
 }
 
-static void decode_source_target_postbyte_2_test(void **state) {
+void decode_source_target_postbyte_2_test(void **state) {
     (void) state; /* unused */
 
     /* from PC to DP */
@@ -337,7 +335,7 @@ static void decode_source_target_postbyte_2_test(void **state) {
     assert_int_equal(trg, REG_DP);
 }
 
-static void decode_source_target_postbyte_invalid_test(void **state) {
+void decode_source_target_postbyte_invalid_test(void **state) {
     (void) state; /* unused */
 
     /* from PC to invalid */
@@ -349,7 +347,7 @@ static void decode_source_target_postbyte_invalid_test(void **state) {
     assert_int_equal(trg, REG_NONE);
 }
 
-static void get_reg_value_8_test(void **state) {
+void get_reg_value_8_test(void **state) {
     (void) state; /* unused */
 
     e_cpu_context.d.byte_acc.a = 0x78;
@@ -358,13 +356,13 @@ static void get_reg_value_8_test(void **state) {
     assert_int_equal(val, 0x78);
 }
 
-static void get_reg_value_8_invalid_test(void **state) {
+void get_reg_value_8_invalid_test(void **state) {
     (void) state; /* unused */
 
     expect_assert_failure(get_reg_value_8(REG_U));
 }
 
-static void set_reg_value_8_test(void **state) {
+void set_reg_value_8_test(void **state) {
     (void) state; /* unused */
 
     set_reg_value_8(REG_CC, 0x78);
@@ -376,7 +374,7 @@ static void set_reg_value_8_test(void **state) {
     assert_int_equal(e_cpu_context.cc.n, 1);
 }
 
-static void get_reg_value_16_test(void **state) {
+void get_reg_value_16_test(void **state) {
     (void) state; /* unused */
 
     e_cpu_context.d.d = 0x7812;
@@ -385,13 +383,13 @@ static void get_reg_value_16_test(void **state) {
     assert_int_equal(val, 0x7812);
 }
 
-static void get_reg_value_16_invalid_test(void **state) {
+void get_reg_value_16_invalid_test(void **state) {
     (void) state; /* unused */
 
     expect_assert_failure(get_reg_value_16(REG_A));
 }
 
-static void set_reg_value_16_test(void **state) {
+void set_reg_value_16_test(void **state) {
     (void) state; /* unused */
 
     set_reg_value_16(REG_U, 0x7812);
@@ -399,44 +397,4 @@ static void set_reg_value_16_test(void **state) {
 
     assert_int_equal(val, 0x7812);
     assert_int_equal(get_reg_value_16(REG_S), 0);
-}
-
-int main(void) {
-    const struct CMUnitTest tests[] = {
-        cmocka_unit_test_setup_teardown(core_init_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(test_e_flag, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(test_f_flag, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(test_h_flag, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(test_i_flag, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(test_n_flag, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(test_z_flag, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(test_v_flag, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(test_c_flag, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(test_all_flags, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(test_load_memory, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(test_load_memory_too_big, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(test_load_memory_too_far, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(run_cycles_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(run_cycles_multiple_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(run_cycles_notimpl_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(read_byte_from_memory_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(read_word_from_memory_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(read_byte_handler_immedidate_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(read_word_handler_immedidate_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(memory_clear_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(decode_source_target_postbyte_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(decode_source_target_postbyte_2_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(decode_source_target_postbyte_invalid_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(get_reg_value_8_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(get_reg_value_8_invalid_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(set_reg_value_8_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(get_reg_value_16_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(get_reg_value_16_invalid_test, test_setup, test_teardown),
-        cmocka_unit_test_setup_teardown(set_reg_value_16_test, test_setup, test_teardown)
-    };
-
-    return cmocka_run_group_tests(tests, NULL, NULL) +
-        cmocka_run_group_tests(inherent_tests, NULL, NULL) +
-        cmocka_run_group_tests(immediate_tests, NULL, NULL);
-
 }

@@ -1,4 +1,4 @@
-#include "functions.h"
+#include "opcodes.h"
 
 const struct opcode_def opcode_table[] = {
     /* 0x0 */ { "NOTIMPL", 0x0, 2, REG_NONE, INHERENT, notimpl },

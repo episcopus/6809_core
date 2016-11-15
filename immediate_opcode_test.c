@@ -3,7 +3,7 @@
 #include <setjmp.h>
 #include <cmocka.h>
 
-#include "functions.h"
+#include "core.h"
 
 extern struct cpu_state e_cpu_context;
 extern struct opcode_def opcode_table[];

@@ -2,8 +2,7 @@
 #include <assert.h>
 #include <string.h>
 
-#include "types.h"
-#include "consts.h"
+#include "core.h"
 
 struct cpu_state e_cpu_context;
 extern struct opcode_def opcode_table[];
