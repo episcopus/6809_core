@@ -29,7 +29,7 @@ const struct opcode_def opcode_table[] = {
     /* 0x17 */ { "NOTIMPL", 0x17, 2, REG_NONE, INHERENT, notimpl },
     /* 0x18 */ { "NOTIMPL", 0x18, 2, REG_NONE, INHERENT, notimpl },
     /* 0x19 */ { "DAA", OP_DAA, 2, REG_NONE, INHERENT, daa },
-    /* 0x1A */ { "NOTIMPL", 0x1A, 2, REG_NONE, INHERENT, notimpl },
+    /* 0x1A */ { "ORCC", OP_ORCC, 3, REG_CC, IMMEDIATE, orcc },
     /* 0x1B */ { "NOTIMPL", 0x1B, 2, REG_NONE, INHERENT, notimpl },
     /* 0x1C */ { "ANDCC", OP_ANDCC, 3, REG_NONE, IMMEDIATE, andcc },
     /* 0x1D */ { "SEX", OP_SEX, 2, REG_NONE, INHERENT, sex },

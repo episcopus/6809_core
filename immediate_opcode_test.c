@@ -2502,3 +2502,30 @@ void orb_immediate_test(void **state) {
     assert_int_equal(cycles, opcode_table[OP_ORB].cycle_count);
     assert_true(post_pc == pre_pc + 2);
 }
+
+void orcc_immediate_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    uint8 code_bytes[] = {
+        OP_ORCC,
+        0x5
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 }
+    };
+    load_memory(test_memory, 1);
+
+    int cycles = run_cycles(opcode_table[OP_ORCC].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.cc.c, 1);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_int_equal(e_cpu_context.cc.z, 1);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.i, 0);
+    assert_int_equal(e_cpu_context.cc.h, 0);
+    assert_int_equal(e_cpu_context.cc.f, 0);
+    assert_int_equal(e_cpu_context.cc.e, 0);
+    assert_int_equal(cycles, opcode_table[OP_ORCC].cycle_count);
+    assert_true(post_pc == pre_pc + 2);
+}

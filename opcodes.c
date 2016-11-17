@@ -921,6 +921,19 @@ int or(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     return opcode_table[opcode].cycle_count;
 }
 
+/* Logically OR Accumulator with a Byte from Memory */
+int orcc(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
+    e_cpu_context.pc++;
+
+    uint8 reg_val = get_reg_value_8(t_r);
+    uint8 memory_val = read_byte_handler(a_m);
+
+    reg_val |= memory_val;
+
+    set_reg_value_8(t_r, reg_val);
+    return opcode_table[opcode].cycle_count;
+}
+
 /* Rotate 8-Bit Accumulator or Memory Byte Left through Carry */
 int rol(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     (void) a_m; /* unused */
