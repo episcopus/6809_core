@@ -89,3 +89,8 @@ struct mem_loader_def {
     uint8* byte_payload;
     uint16 byte_size;
 };
+
+struct stack_op_postbyte_entry {
+    enum target_register reg;
+    uint8 bit;
+};

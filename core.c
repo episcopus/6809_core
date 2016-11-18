@@ -12,8 +12,8 @@ extern struct opcode_def opcode_ext_x11_table[];
 void core_init() {
     e_cpu_context.x = 0;
     e_cpu_context.y = 0;
-    e_cpu_context.u = 0;
-    e_cpu_context.s = 0;
+    e_cpu_context.u = U_POINTER;
+    e_cpu_context.s = S_POINTER;
     e_cpu_context.pc = USER_SPACE_ROOT;
     e_cpu_context.d.d = 0;
     e_cpu_context.dp = 0;

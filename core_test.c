@@ -28,8 +28,8 @@ void core_init_test(void **state) {
 
     assert_int_equal(e_cpu_context.x, 0);
     assert_int_equal(e_cpu_context.y, 0);
-    assert_int_equal(e_cpu_context.u, 0);
-    assert_int_equal(e_cpu_context.s, 0);
+    assert_int_equal(e_cpu_context.u, U_POINTER);
+    assert_int_equal(e_cpu_context.s, S_POINTER);
     assert_int_equal(e_cpu_context.pc, USER_SPACE_ROOT);
     assert_int_equal(e_cpu_context.d.d, 0);
     assert_int_equal(e_cpu_context.dp, 0);
@@ -396,5 +396,5 @@ void set_reg_value_16_test(void **state) {
     uint16 val = get_reg_value_16(REG_U);
 
     assert_int_equal(val, 0x7812);
-    assert_int_equal(get_reg_value_16(REG_S), 0);
+    assert_int_equal(get_reg_value_16(REG_S), S_POINTER);
 }

@@ -8,6 +8,10 @@
    memory map before it. This leaves 24K of usable user space under 0x7FFF. */
 #define USER_SPACE_ROOT 0x2000
 
+/* Pin the s and u stack pointers at 4KB intervals from the user space root */
+#define S_POINTER 0x3000
+#define U_POINTER 0x4000
+
 /* For cmocka, replace regular assert with mock_assert() which allows us to
    test for assert()'s in tests. */
 /* #ifdef UNIT_TESTING */
@@ -27,6 +31,8 @@ extern void mock_assert(const int result, const char* const expression,
 #define OP_ANDCC 0x1C
 #define OP_SEX 0x1D
 #define OP_EXG 0x1E
+#define OP_PSHS 0x34
+#define OP_PSHU 0x36
 #define OP_ABX 0x3A
 #define OP_MUL 0x3D
 #define OP_NEGA 0x40

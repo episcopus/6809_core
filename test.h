@@ -126,6 +126,12 @@ void ldy_basic_test(void **state);
 void ora_immediate_test(void **state);
 void orb_immediate_test(void **state);
 void orcc_immediate_test(void **state);
+void pshs_immediate_test(void ** state);
+void pshu_immediate_test(void ** state);
+void pshs_nothing_test(void ** state);
+void pshu_nothing_test(void ** state);
+void pshs_one_test(void ** state);
+void pshu_one_test(void ** state);
 
 void nop_test(void **state);
 void nop_pc_test(void **state);
@@ -390,5 +396,11 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(ldy_basic_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(ora_immediate_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(orb_immediate_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(orcc_immediate_test, test_setup, test_teardown)
+    cmocka_unit_test_setup_teardown(orcc_immediate_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(pshs_immediate_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(pshu_immediate_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(pshs_nothing_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(pshu_nothing_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(pshs_one_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(pshu_one_test, test_setup, test_teardown)
 };

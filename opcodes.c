@@ -8,6 +8,18 @@ extern struct opcode_def opcode_ext_x10_table[];
 extern struct opcode_def opcode_ext_x11_table[];
 extern struct cpu_state e_cpu_context;
 
+/* This struct captures the inverse order stacking order for psh operations */
+const struct stack_op_postbyte_entry stack_op_pb_entry_table[] = {
+    { REG_CC, 0 },
+    { REG_A, 1 },
+    { REG_B, 2 },
+    { REG_DP, 3 },
+    { REG_X, 4 },
+    { REG_Y, 5 },
+    { REG_S, 6 },
+    { REG_PC, 7 }
+};
+
 /* Add Accumulator B to Index Register X */
 int abx(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     (void) t_r; /* unused */
@@ -921,7 +933,7 @@ int or(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     return opcode_table[opcode].cycle_count;
 }
 
-/* Logically OR Accumulator with a Byte from Memory */
+/* Logically OR the CC Register with an Immediate Value */
 int orcc(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;
 
@@ -932,6 +944,57 @@ int orcc(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
 
     set_reg_value_8(t_r, reg_val);
     return opcode_table[opcode].cycle_count;
+}
+
+/* Push Registers onto a Stack */
+int psh(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
+    e_cpu_context.pc++;
+
+    /* postbyte indicating which registers to push */
+    uint8 postbyte = read_byte_handler(a_m);
+    /* baseline figure for clock cycles, each register pushed is one
+       additional cycle */
+    uint8 cycles = opcode_table[opcode].cycle_count;
+    /* baseline stack pointer, decremented for each push, works for
+       both u and s pointer */
+    uint16 stack_pointer = get_reg_value_16(t_r);
+
+    /* number of possible registers to push - it's really 8 but
+       the REG_S value is special and needs to toggle since can't push own
+       stack pointer */
+    int sizeof_table = sizeof(stack_op_pb_entry_table) /
+        sizeof(struct stack_op_postbyte_entry);
+    /* push all necessary registers as requested in the postbyte according
+       to the 6809 spec. */
+    for (int i = sizeof_table - 1; i >= 0; i--) {
+        if (postbyte & (1 << i)) {
+            enum target_register this_t_r = stack_op_pb_entry_table[i].reg;
+
+            if (get_reg_size(this_t_r) == REG_SIZE_16) {
+                /* REG_S in this table is a special value that flips to REG_U in
+                   the case where the function is called with REG_S target
+                   register. This is because the psh instruction cannot push
+                   its own stack pointer */
+                this_t_r == REG_S && t_r == REG_S ? this_t_r = REG_U : REG_S;
+                uint16 val = get_reg_value_16(this_t_r);
+                uint8 lower_byte = val;
+                uint8 upper_byte = val >> 8;
+
+                write_byte_to_memory(stack_pointer--, lower_byte);
+                write_byte_to_memory(stack_pointer--, upper_byte);
+                cycles += 2;
+            }
+            else if (get_reg_size(this_t_r) == REG_SIZE_8) {
+                uint8 val = get_reg_value_8(this_t_r);
+
+                write_byte_to_memory(stack_pointer--, val);
+                cycles++;
+            }
+        }
+    }
+
+    set_reg_value_16(t_r, stack_pointer);
+    return cycles;
 }
 
 /* Rotate 8-Bit Accumulator or Memory Byte Left through Carry */

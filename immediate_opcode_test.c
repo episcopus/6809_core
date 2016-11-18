@@ -2529,3 +2529,211 @@ void orcc_immediate_test(void **state) {
     assert_int_equal(cycles, opcode_table[OP_ORCC].cycle_count);
     assert_true(post_pc == pre_pc + 2);
 }
+
+void pshs_immediate_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    uint8 code_bytes[] = {
+        OP_PSHS,
+        0xFF
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 }
+    };
+    load_memory(test_memory, 1);
+
+    uint16 old_sp = get_reg_value_16(REG_S);
+    set_reg_value_16(REG_U, USER_SPACE_ROOT + 0x100);
+    set_reg_value_16(REG_Y, 0x1234);
+    set_reg_value_16(REG_X, 0x5678);
+    set_reg_value_8(REG_DP, 0x99);
+    set_reg_value_8(REG_B, 0xAB);
+    set_reg_value_8(REG_A, 0xCD);
+    set_reg_value_8(REG_CC, 0xEF);
+
+    int cycles = run_cycles(opcode_table[OP_PSHS].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    int new_sp = get_reg_value_16(REG_S);
+
+    assert_int_equal(new_sp, old_sp - 12);
+    assert_int_equal(cycles, opcode_table[OP_PSHS].cycle_count + 12);
+    assert_int_equal(read_byte_from_memory(new_sp + 1), 0xEF);
+    assert_int_equal(read_byte_from_memory(new_sp + 2), 0xCD);
+    assert_int_equal(read_byte_from_memory(new_sp + 3), 0xAB);
+    assert_int_equal(read_byte_from_memory(new_sp + 4), 0x99);
+    assert_int_equal(read_byte_from_memory(new_sp + 5), 0x56);
+    assert_int_equal(read_byte_from_memory(new_sp + 6), 0x78);
+    assert_int_equal(read_byte_from_memory(new_sp + 7), 0x12);
+    assert_int_equal(read_byte_from_memory(new_sp + 8), 0x34);
+    assert_int_equal(read_word_from_memory(new_sp + 9), USER_SPACE_ROOT + 0x100);
+    assert_int_equal(read_word_from_memory(new_sp + 11), post_pc);
+    assert_true(post_pc == pre_pc + 2);
+}
+
+void pshu_immediate_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    uint8 code_bytes[] = {
+        OP_PSHU,
+        0xFF
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 }
+    };
+    load_memory(test_memory, 1);
+
+    uint16 old_sp = get_reg_value_16(REG_U);
+    set_reg_value_16(REG_S, USER_SPACE_ROOT + 0x100);
+    set_reg_value_16(REG_Y, 0x1234);
+    set_reg_value_16(REG_X, 0x5678);
+    set_reg_value_8(REG_DP, 0x99);
+    set_reg_value_8(REG_B, 0xAB);
+    set_reg_value_8(REG_A, 0xCD);
+    set_reg_value_8(REG_CC, 0xEF);
+
+    int cycles = run_cycles(opcode_table[OP_PSHU].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    int new_sp = get_reg_value_16(REG_U);
+
+    assert_int_equal(new_sp, old_sp - 12);
+    assert_int_equal(cycles, opcode_table[OP_PSHU].cycle_count + 12);
+    assert_int_equal(read_byte_from_memory(new_sp + 1), 0xEF);
+    assert_int_equal(read_byte_from_memory(new_sp + 2), 0xCD);
+    assert_int_equal(read_byte_from_memory(new_sp + 3), 0xAB);
+    assert_int_equal(read_byte_from_memory(new_sp + 4), 0x99);
+    assert_int_equal(read_byte_from_memory(new_sp + 5), 0x56);
+    assert_int_equal(read_byte_from_memory(new_sp + 6), 0x78);
+    assert_int_equal(read_byte_from_memory(new_sp + 7), 0x12);
+    assert_int_equal(read_byte_from_memory(new_sp + 8), 0x34);
+    assert_int_equal(read_word_from_memory(new_sp + 9), USER_SPACE_ROOT + 0x100);
+    assert_int_equal(read_word_from_memory(new_sp + 11), post_pc);
+    assert_true(post_pc == pre_pc + 2);
+}
+
+void pshs_nothing_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    uint8 code_bytes[] = {
+        OP_PSHS,
+        0
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 }
+    };
+    load_memory(test_memory, 1);
+
+    uint16 old_sp = get_reg_value_16(REG_S);
+    set_reg_value_16(REG_U, USER_SPACE_ROOT + 0x100);
+    set_reg_value_16(REG_Y, 0x1234);
+    set_reg_value_16(REG_X, 0x5678);
+    set_reg_value_8(REG_DP, 0x99);
+    set_reg_value_8(REG_B, 0xAB);
+    set_reg_value_8(REG_A, 0xCD);
+    set_reg_value_8(REG_CC, 0xEF);
+
+    int cycles = run_cycles(opcode_table[OP_PSHS].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    int new_sp = get_reg_value_16(REG_S);
+
+    assert_int_equal(new_sp, old_sp);
+    assert_int_equal(cycles, opcode_table[OP_PSHS].cycle_count);
+    assert_true(post_pc == pre_pc + 2);
+}
+
+void pshu_nothing_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    uint8 code_bytes[] = {
+        OP_PSHU,
+        0
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 }
+    };
+    load_memory(test_memory, 1);
+
+    uint16 old_sp = get_reg_value_16(REG_U);
+    set_reg_value_16(REG_S, USER_SPACE_ROOT + 0x100);
+    set_reg_value_16(REG_Y, 0x1234);
+    set_reg_value_16(REG_X, 0x5678);
+    set_reg_value_8(REG_DP, 0x99);
+    set_reg_value_8(REG_B, 0xAB);
+    set_reg_value_8(REG_A, 0xCD);
+    set_reg_value_8(REG_CC, 0xEF);
+
+    int cycles = run_cycles(opcode_table[OP_PSHU].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    int new_sp = get_reg_value_16(REG_U);
+
+    assert_int_equal(new_sp, old_sp);
+    assert_int_equal(cycles, opcode_table[OP_PSHU].cycle_count);
+    assert_true(post_pc == pre_pc + 2);
+}
+
+void pshs_one_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    uint8 code_bytes[] = {
+        OP_PSHS,
+        0x10
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 }
+    };
+    load_memory(test_memory, 1);
+
+    uint16 old_sp = get_reg_value_16(REG_S);
+    set_reg_value_16(REG_U, USER_SPACE_ROOT + 0x100);
+    set_reg_value_16(REG_Y, 0x1234);
+    set_reg_value_16(REG_X, 0x5678);
+    set_reg_value_8(REG_DP, 0x99);
+    set_reg_value_8(REG_B, 0xAB);
+    set_reg_value_8(REG_A, 0xCD);
+    set_reg_value_8(REG_CC, 0xEF);
+
+    int cycles = run_cycles(opcode_table[OP_PSHS].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    int new_sp = get_reg_value_16(REG_S);
+
+    assert_int_equal(new_sp, old_sp - 2);
+    assert_int_equal(cycles, opcode_table[OP_PSHS].cycle_count + 2);
+    assert_int_equal(read_word_from_memory(new_sp + 1), 0x5678);
+    assert_true(post_pc == pre_pc + 2);
+}
+
+void pshu_one_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    uint8 code_bytes[] = {
+        OP_PSHU,
+        0x10
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 }
+    };
+    load_memory(test_memory, 1);
+
+    uint16 old_sp = get_reg_value_16(REG_U);
+    set_reg_value_16(REG_S, USER_SPACE_ROOT + 0x100);
+    set_reg_value_16(REG_Y, 0x1234);
+    set_reg_value_16(REG_X, 0x5678);
+    set_reg_value_8(REG_DP, 0x99);
+    set_reg_value_8(REG_B, 0xAB);
+    set_reg_value_8(REG_A, 0xCD);
+    set_reg_value_8(REG_CC, 0xEF);
+
+    int cycles = run_cycles(opcode_table[OP_PSHU].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    int new_sp = get_reg_value_16(REG_U);
+
+    assert_int_equal(new_sp, old_sp - 2);
+    assert_int_equal(cycles, opcode_table[OP_PSHU].cycle_count + 2);
+    assert_int_equal(read_word_from_memory(new_sp + 1), 0x5678);
+    assert_true(post_pc == pre_pc + 2);
+}

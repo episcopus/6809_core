@@ -16,3 +16,4 @@ uint8 get_reg_value_8(enum target_register reg);
 uint16 get_reg_value_16(enum target_register reg);
 void set_reg_value_8(enum target_register reg, uint8 value);
 void set_reg_value_16(enum target_register reg, uint16 value);
+enum reg_size get_reg_size(enum target_register reg);
