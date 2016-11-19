@@ -980,14 +980,64 @@ int psh(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
                 uint8 lower_byte = val;
                 uint8 upper_byte = val >> 8;
 
-                write_byte_to_memory(stack_pointer--, lower_byte);
-                write_byte_to_memory(stack_pointer--, upper_byte);
+                write_byte_to_memory(--stack_pointer, lower_byte);
+                write_byte_to_memory(--stack_pointer, upper_byte);
                 cycles += 2;
             }
             else if (get_reg_size(this_t_r) == REG_SIZE_8) {
                 uint8 val = get_reg_value_8(this_t_r);
 
-                write_byte_to_memory(stack_pointer--, val);
+                write_byte_to_memory(--stack_pointer, val);
+                cycles++;
+            }
+        }
+    }
+
+    set_reg_value_16(t_r, stack_pointer);
+    return cycles;
+}
+
+/* Pull Registers from Stack */
+int pul(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
+    e_cpu_context.pc++;
+
+    /* postbyte indicating which registers to push */
+    uint8 postbyte = read_byte_handler(a_m);
+    /* baseline figure for clock cycles, each register pushed is one
+       additional cycle */
+    uint8 cycles = opcode_table[opcode].cycle_count;
+    /* baseline stack pointer, incremented for each pull, works for
+       both u and s pointer */
+    uint16 stack_pointer = get_reg_value_16(t_r);
+
+    /* number of possible registers to pull - it's really 8 but
+       the REG_S value is special and needs to toggle since can't pull own
+       stack pointer */
+    int sizeof_table = sizeof(stack_op_pb_entry_table) /
+        sizeof(struct stack_op_postbyte_entry);
+    /* pull all necessary registers as requested in the postbyte according
+       to the 6809 spec. */
+    for (int i = 0; i < sizeof_table; i++) {
+        if (postbyte & (1 << i)) {
+            enum target_register this_t_r = stack_op_pb_entry_table[i].reg;
+
+            if (get_reg_size(this_t_r) == REG_SIZE_16) {
+                /* REG_S in this table is a special value that flips to REG_U in
+                   the case where the function is called with REG_S target
+                   register. This is because the pul instruction cannot pull
+                   its own stack pointer */
+                this_t_r == REG_S && t_r == REG_S ? this_t_r = REG_U : REG_S;
+
+                uint16 this_val = read_word_from_memory(stack_pointer);
+                stack_pointer += 2;
+                set_reg_value_16(this_t_r, this_val);
+
+                cycles += 2;
+            }
+            else if (get_reg_size(this_t_r) == REG_SIZE_8) {
+                uint8 this_val = read_byte_from_memory(stack_pointer++);
+                set_reg_value_8(this_t_r, this_val);
+
                 cycles++;
             }
         }
