@@ -138,6 +138,12 @@ void pulu_one_test(void ** state);
 void puls_one_test(void ** state);
 void pulu_nothing_test(void ** state);
 void puls_nothing_test(void ** state);
+void sbca_immediate_test(void ** state);
+void sbcb_immediate_test(void ** state);
+void sbca_carry_test(void ** state);
+void sbcb_carry_test(void ** state);
+void sbca_overflow_test(void ** state);
+void sbcb_overflow_test(void ** state);
 
 void nop_test(void **state);
 void nop_pc_test(void **state);
@@ -414,5 +420,11 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(puls_one_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(pulu_one_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(puls_nothing_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(pulu_nothing_test, test_setup, test_teardown)
+    cmocka_unit_test_setup_teardown(pulu_nothing_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(sbca_immediate_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(sbcb_immediate_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(sbca_carry_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(sbcb_carry_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(sbca_overflow_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(sbcb_overflow_test, test_setup, test_teardown)
 };
