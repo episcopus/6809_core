@@ -1175,6 +1175,37 @@ int sex(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     return opcode_table[opcode].cycle_count;
 }
 
+int sub(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
+    e_cpu_context.pc++;
+
+    uint8 reg_val = get_reg_value_8(t_r);
+    uint8 memory_val = read_byte_handler(a_m);
+    uint8 total_val = reg_val - memory_val;
+
+    /* The Carry flag is set if a borrow into bit-7 was needed; cleared
+       otherwise. */
+    e_cpu_context.cc.c = memory_val > reg_val;
+    /* The Negative flag is set equal to the new value of bit 7 of
+       the accumulator. */
+    e_cpu_context.cc.n = (total_val & 0x80) > 1;
+    /* The Zero flag is set if the new accumulator value is zero;
+       cleared otherwise. */
+    e_cpu_context.cc.z = total_val == 0;
+    /* The Overflow flag is set if an overflow occurred; cleared otherwise. */
+    /* If the difference of a positive and a negative number yields a negative
+       result, the difference has overflowed. */
+    uint8 pos_overflow = (reg_val & 0x80) == 0 && (memory_val & 0x80) > 0 &&
+        e_cpu_context.cc.n;
+    /* If the difference of a negative and a positive number yields a negative
+       result, the difference has overflowed. */
+    uint8 neg_overflow = (reg_val & 0x80) > 0 && (memory_val & 0x80) == 0 &&
+        (total_val & 0x80) == 0;
+    e_cpu_context.cc.v = pos_overflow || neg_overflow;
+
+    set_reg_value_8(t_r, total_val);
+    return opcode_table[opcode].cycle_count;
+}
+
 /* Test Value in Accumulator */
 int tst(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     (void) a_m; /* unused */
