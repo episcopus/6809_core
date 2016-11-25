@@ -3083,11 +3083,12 @@ void sbca_immediate_test(void **state) {
         { USER_SPACE_ROOT, code_bytes, 2 }
     };
     load_memory(test_memory, 1);
+    e_cpu_context.cc.c = 1;
     set_reg_value_8(REG_A, 6);
 
     int cycles = run_cycles(opcode_table[OP_SBCA].cycle_count);
     int post_pc = e_cpu_context.pc;
-    assert_int_equal(get_reg_value_8(REG_A), 2);
+    assert_int_equal(get_reg_value_8(REG_A), 1);
     assert_int_equal(get_reg_value_8(REG_B), 0xFF);
     assert_int_equal(e_cpu_context.cc.n, 0);
     assert_int_equal(e_cpu_context.cc.c, 0);
@@ -3112,11 +3113,12 @@ void sbcb_immediate_test(void **state) {
         { USER_SPACE_ROOT, code_bytes, 2 }
     };
     load_memory(test_memory, 1);
+    e_cpu_context.cc.c = 1;
     set_reg_value_8(REG_B, 6);
 
     int cycles = run_cycles(opcode_table[OP_SBCB].cycle_count);
     int post_pc = e_cpu_context.pc;
-    assert_int_equal(get_reg_value_8(REG_B), 2);
+    assert_int_equal(get_reg_value_8(REG_B), 1);
     assert_int_equal(get_reg_value_8(REG_A), 0xFF);
     assert_int_equal(e_cpu_context.cc.n, 0);
     assert_int_equal(e_cpu_context.cc.c, 0);
