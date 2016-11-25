@@ -3419,3 +3419,84 @@ void subb_overflow_test(void **state) {
     assert_int_equal(cycles, opcode_table[OP_SUBB].cycle_count);
     assert_true(post_pc == pre_pc + 2);
 }
+
+void sub16d_immediate_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+
+    uint8 code_bytes[] = {
+        OP_SUBD,
+        0x00,
+        0x04
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 3 }
+    };
+    load_memory(test_memory, 1);
+    set_reg_value_16(REG_D, 6);
+
+    int cycles = run_cycles(opcode_table[OP_SUBD].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(get_reg_value_16(REG_D), 2);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.c, 0);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_int_equal(cycles, opcode_table[OP_SUBD].cycle_count);
+    assert_true(post_pc == pre_pc + 3);
+}
+
+void sub16d_carry_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+
+    uint8 code_bytes[] = {
+        OP_SUBD,
+        0x40,
+        0x00
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 3 }
+    };
+    load_memory(test_memory, 1);
+    set_reg_value_16(REG_D, 0);
+
+    int cycles = run_cycles(opcode_table[OP_SUBD].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(get_reg_value_16(REG_D), 0xC000);
+    assert_int_equal(e_cpu_context.cc.n, 1);
+    assert_int_equal(e_cpu_context.cc.c, 1);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_int_equal(cycles, opcode_table[OP_SUBD].cycle_count);
+    assert_true(post_pc == pre_pc + 3);
+}
+
+void sub16d_overflow_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+
+    uint8 code_bytes[] = {
+        OP_SUBD,
+        0x80,
+        0x00
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 3 }
+    };
+    load_memory(test_memory, 1);
+    set_reg_value_16(REG_D, 0x4000);
+
+    int cycles = run_cycles(opcode_table[OP_SUBD].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(get_reg_value_16(REG_D), 0xC000);
+    assert_int_equal(e_cpu_context.cc.n, 1);
+    assert_int_equal(e_cpu_context.cc.c, 1);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 1);
+    assert_int_equal(cycles, opcode_table[OP_SUBD].cycle_count);
+    assert_true(post_pc == pre_pc + 3);
+}

@@ -37,5 +37,6 @@ int ror(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int sbc(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int sex(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int sub(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
+int sub16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 /* int st(uint8 opcode, enum target_register t_r, enum addressing_mode a_m); */
 int tst(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);

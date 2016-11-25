@@ -62,6 +62,7 @@ extern void mock_assert(const int result, const char* const expression,
 #define OP_SUBA 0x80
 #define OP_CMPA 0x81
 #define OP_SBCA 0x82
+#define OP_SUBD 0x83
 #define OP_ANDA 0x84
 #define OP_BITA 0x85
 #define OP_LDA 0x86

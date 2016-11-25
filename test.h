@@ -150,6 +150,9 @@ void suba_carry_test(void ** state);
 void subb_carry_test(void ** state);
 void suba_overflow_test(void ** state);
 void subb_overflow_test(void ** state);
+void sub16d_immediate_test(void ** state);
+void sub16d_carry_test(void ** state);
+void sub16d_overflow_test(void ** state);
 
 void nop_test(void **state);
 void nop_pc_test(void **state);
@@ -438,5 +441,8 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(suba_carry_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(subb_carry_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(suba_overflow_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(subb_overflow_test, test_setup, test_teardown)
+    cmocka_unit_test_setup_teardown(subb_overflow_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(sub16d_immediate_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(sub16d_carry_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(sub16d_overflow_test, test_setup, test_teardown)
 };
