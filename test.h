@@ -153,6 +153,14 @@ void subb_overflow_test(void ** state);
 void sub16d_immediate_test(void ** state);
 void sub16d_carry_test(void ** state);
 void sub16d_overflow_test(void ** state);
+void tfr_basic_test(void **state);
+void tfr_basic_16_test(void **state);
+void tfr_basic_16_to_8_test(void **state);
+void tfr_basic_8_to_16_test(void **state);
+void tfr_a_d_8_to_16_test(void **state);
+void tfr_cc_x_8_to_16_test(void **state);
+void tfr_cc_invalid_test(void **state);
+void tfr_x_invalid_test(void **state);
 
 void nop_test(void **state);
 void nop_pc_test(void **state);
@@ -444,5 +452,12 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(subb_overflow_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(sub16d_immediate_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(sub16d_carry_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(sub16d_overflow_test, test_setup, test_teardown)
+    cmocka_unit_test_setup_teardown(sub16d_overflow_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(tfr_basic_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(tfr_basic_16_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(tfr_basic_16_to_8_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(tfr_basic_8_to_16_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(tfr_a_d_8_to_16_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(tfr_cc_x_8_to_16_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(tfr_cc_invalid_test, test_setup, test_teardown)
 };
