@@ -3,6 +3,7 @@
 #include <setjmp.h>
 #include <cmocka.h>
 
+/* Core tests */
 int test_setup(void **state);
 int test_teardown(void **state);
 void core_init_test(void **state);
@@ -21,6 +22,7 @@ void test_load_memory_too_far(void **state);
 void read_byte_from_memory_test(void **state);
 void read_word_from_memory_test(void **state);
 void read_byte_handler_immedidate_test(void **state);
+void read_byte_handler_direct_test(void **state);
 void read_word_handler_immedidate_test(void **state);
 void memory_clear_test(void **state);
 void run_cycles_test(void **state);
@@ -36,6 +38,7 @@ void get_reg_value_16_test(void **state);
 void get_reg_value_16_invalid_test(void **state);
 void set_reg_value_16_test(void **state);
 
+/* Immediate tests */
 void adca_immediate_test(void **state);
 void adcb_immediate_test(void **state);
 void adca_immediate_carry_test(void **state);
@@ -162,6 +165,7 @@ void tfr_cc_x_8_to_16_test(void **state);
 void tfr_cc_invalid_test(void **state);
 void tfr_x_invalid_test(void **state);
 
+/* Inherent tests */
 void nop_test(void **state);
 void nop_pc_test(void **state);
 void abx_test(void **state);
@@ -233,6 +237,10 @@ void tstb_negative_test(void **state);
 void tsta_zero_test(void **state);
 void tstb_zero_test(void **state);
 
+/* Direct tests */
+void adca_direct_test(void **state);
+
+
 const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(core_init_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(test_e_flag, test_setup, test_teardown),
@@ -253,6 +261,7 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(read_byte_from_memory_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(read_word_from_memory_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(read_byte_handler_immedidate_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(read_byte_handler_direct_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(read_word_handler_immedidate_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(memory_clear_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(decode_source_target_postbyte_test, test_setup, test_teardown),
@@ -459,5 +468,7 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(tfr_basic_8_to_16_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(tfr_a_d_8_to_16_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(tfr_cc_x_8_to_16_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(tfr_cc_invalid_test, test_setup, test_teardown)
+    cmocka_unit_test_setup_teardown(tfr_cc_invalid_test, test_setup, test_teardown),
+
+    cmocka_unit_test_setup_teardown(adca_direct_test, test_setup, test_teardown)
 };

@@ -130,11 +130,18 @@ void write_word_to_memory(uint16 address, uint16 word) {
    in memory based on the addressing mode. Will move the pc
    appropriately based on the addressing mode and postbyte opcode. */
 uint8 read_byte_handler(enum addressing_mode am) {
-    uint8 return_byte = 0;
+    uint8 return_byte = 0, lower_byte = 0, upper_byte = 0;
     switch (am) {
     case IMMEDIATE:
         /* byte is located right at the pc */
         return_byte = read_byte_from_memory(e_cpu_context.pc++);
+        break;
+    case DIRECT:
+        /* byte following instruction is lower 8 bit of full address with
+           upper 8 bit being direct page register */
+        lower_byte = read_byte_from_memory(e_cpu_context.pc++);
+        upper_byte = e_cpu_context.dp;
+        return_byte = read_byte_from_memory(upper_byte << 8 | lower_byte);
         break;
     default:
         assert(FALSE);

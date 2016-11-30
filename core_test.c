@@ -215,6 +215,34 @@ void read_byte_handler_immedidate_test(void **state) {
     assert_int_equal(e_cpu_context.pc, 0x1235);
 }
 
+void read_byte_handler_direct_test(void **state) {
+    (void) state; /* unused */
+
+    e_cpu_context.dp = S_POINTER >> 8;
+    uint8 lower_byte_address = 0x40;
+
+    uint8 test_value = 0x7F;
+    uint8 code_bytes[] = {
+        lower_byte_address
+    };
+    uint8 data_bytes[] = {
+        test_value
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 1 },
+        { S_POINTER + lower_byte_address, data_bytes, 1 }
+    };
+    load_memory(test_memory, 2);
+
+    /* DIRECT mode reads data right from the location pointed to
+       by dp << 8 | IMMEDIATE value */
+    e_cpu_context.pc = USER_SPACE_ROOT;
+    uint8 read_value = read_byte_handler(DIRECT);
+
+    assert_int_equal(read_value, test_value);
+    assert_int_equal(e_cpu_context.pc, USER_SPACE_ROOT + 1);
+}
+
 void read_word_handler_immedidate_test(void **state) {
     (void) state; /* unused */
 
