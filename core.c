@@ -156,11 +156,19 @@ uint8 read_byte_handler(enum addressing_mode am) {
    appropriately based on the addressing mode and postbyte opcode. */
 uint16 read_word_handler(enum addressing_mode am) {
     uint16 return_word = 0;
+    uint8 lower_byte = 0, upper_byte = 0;
     switch (am) {
     case IMMEDIATE:
         /* word is located right at the pc */
         return_word = read_word_from_memory(e_cpu_context.pc);
         e_cpu_context.pc += 2;
+        break;
+    case DIRECT:
+        /* byte following instruction is lower 8 bit of full address with
+           upper 8 bit being direct page register */
+        lower_byte = read_byte_from_memory(e_cpu_context.pc++);
+        upper_byte = e_cpu_context.dp;
+        return_word = read_word_from_memory(upper_byte << 8 | lower_byte);
         break;
     default:
         assert(FALSE);

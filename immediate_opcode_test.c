@@ -39,7 +39,6 @@ void adca_immediate_test(void **state) {
     assert_int_equal(cycles, opcode_table[OP_ADCA].cycle_count);
     assert_true(post_pc == pre_pc + 2);
 }
-
 void adcb_immediate_test(void **state) {
     (void) state; /* unused */
 
