@@ -205,10 +205,10 @@ void read_byte_handler_immedidate_test(void **state) {
     /* IMMEDIATE mode reads data right from the pc register location
        and moves the pc forward */
     e_cpu_context.pc = 0x1234;
-    uint8 pre_value = read_byte_handler(IMMEDIATE, NULL);
+    uint8 pre_value = read_byte_handler(IMMEDIATE);
     e_cpu_context.pc--;
     write_byte_to_memory(e_cpu_context.pc, test_value);
-    uint8 post_value = read_byte_handler(IMMEDIATE, NULL);
+    uint8 post_value = read_byte_handler(IMMEDIATE);
 
     assert_int_equal(pre_value, 0);
     assert_int_equal(post_value, test_value);
@@ -237,7 +237,7 @@ void read_byte_handler_direct_test(void **state) {
     /* DIRECT mode reads data right from the location pointed to
        by dp << 8 | IMMEDIATE value */
     e_cpu_context.pc = USER_SPACE_ROOT;
-    uint8 read_value = read_byte_handler(DIRECT, NULL);
+    uint8 read_value = read_byte_handler(DIRECT);
 
     assert_int_equal(read_value, test_value);
     assert_int_equal(e_cpu_context.pc, USER_SPACE_ROOT + 1);
@@ -296,13 +296,13 @@ void memory_clear_test(void **state) {
     uint8 test_value = 0x7F;
     e_cpu_context.pc = 0x1234;
     write_byte_to_memory(e_cpu_context.pc, test_value);
-    uint8 pre_value = read_byte_handler(IMMEDIATE, NULL);
+    uint8 pre_value = read_byte_handler(IMMEDIATE);
 
     /* this should clear out my memory */
     core_destroy();
     core_init();
 
-    uint8 post_value = read_byte_handler(IMMEDIATE, NULL);
+    uint8 post_value = read_byte_handler(IMMEDIATE);
 
     assert_int_equal(pre_value, test_value);
     assert_int_equal(post_value, 0);

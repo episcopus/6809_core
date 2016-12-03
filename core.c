@@ -129,30 +129,24 @@ void write_word_to_memory(uint16 address, uint16 word) {
 /* This memory accessor reads a byte from the appropriate location
    in memory based on the addressing mode. Will move the pc
    appropriately based on the addressing mode and postbyte opcode. */
-uint8 read_byte_handler(enum addressing_mode am, uint16* out_addr) {
-    uint8 return_byte = 0, lower_byte = 0, upper_byte = 0;
-    uint16 return_addr = 0;
+uint8 read_byte_handler(enum addressing_mode am) {
+    uint8 return_byte = 0;
+    uint16 byte_addr = get_memory_address_from_postbyte(am);
     switch (am) {
     case IMMEDIATE:
         /* byte is located right at the pc */
-        return_byte = read_byte_from_memory(e_cpu_context.pc++);
+        return_byte = read_byte_from_memory(byte_addr);
         break;
     case DIRECT:
         /* byte following instruction is lower 8 bit of full address with
            upper 8 bit being direct page register */
-        lower_byte = read_byte_from_memory(e_cpu_context.pc++);
-        upper_byte = e_cpu_context.dp;
-        return_addr = upper_byte << 8 | lower_byte;
-        return_byte = read_byte_from_memory(return_addr);
+        return_byte = read_byte_from_memory(byte_addr);
         break;
     default:
         assert(FALSE);
         break;
     }
 
-    if (out_addr) {
-        *out_addr = return_addr;
-    }
     return return_byte;
 }
 
@@ -161,19 +155,17 @@ uint8 read_byte_handler(enum addressing_mode am, uint16* out_addr) {
    appropriately based on the addressing mode and postbyte opcode. */
 uint16 read_word_handler(enum addressing_mode am) {
     uint16 return_word = 0;
-    uint8 lower_byte = 0, upper_byte = 0;
+    uint16 word_addr = get_memory_address_from_postbyte(am);
     switch (am) {
     case IMMEDIATE:
         /* word is located right at the pc */
-        return_word = read_word_from_memory(e_cpu_context.pc);
-        e_cpu_context.pc += 2;
+        return_word = read_word_from_memory(word_addr);
+        e_cpu_context.pc++;
         break;
     case DIRECT:
         /* byte following instruction is lower 8 bit of full address with
            upper 8 bit being direct page register */
-        lower_byte = read_byte_from_memory(e_cpu_context.pc++);
-        upper_byte = e_cpu_context.dp;
-        return_word = read_word_from_memory(upper_byte << 8 | lower_byte);
+        return_word = read_word_from_memory(word_addr);
         break;
     default:
         assert(FALSE);
@@ -181,6 +173,29 @@ uint16 read_word_handler(enum addressing_mode am) {
     }
 
     return return_word;
+}
+
+uint16 get_memory_address_from_postbyte(enum addressing_mode am) {
+    uint16 return_addr = 0;
+    uint8 lower_byte = 0, upper_byte = 0;
+    switch (am) {
+    case IMMEDIATE:
+        /* byte is located right at the pc */
+        return_addr = e_cpu_context.pc++;
+        break;
+    case DIRECT:
+        /* byte following instruction is lower 8 bit of full address with
+           upper 8 bit being direct page register */
+        lower_byte = read_byte_from_memory(e_cpu_context.pc++);
+        upper_byte = e_cpu_context.dp;
+        return_addr = upper_byte << 8 | lower_byte;
+        break;
+    default:
+        assert(FALSE);
+        break;
+    }
+
+    return return_addr;
 }
 
 uint32 run_cycles(uint32 wanted_cycles) {
