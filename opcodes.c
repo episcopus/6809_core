@@ -122,17 +122,7 @@ int add(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
 int addd(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;
 
-    uint16* p_reg = 0;
-    switch (t_r) {
-    case REG_D:
-        p_reg = &e_cpu_context.d.d;
-        break;
-    default:
-        assert(FALSE);
-        return 0;
-    }
-
-    uint16 reg_val = *p_reg;
+    uint16 reg_val = get_reg_value_16(t_r);
     uint16 memory_val = read_word_handler(a_m);
     uint32 total_val = reg_val + memory_val;
     uint16 output_val = total_val & 0xFFFF;
@@ -159,7 +149,7 @@ int addd(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
         (output_val & 0x80) == 0;
     e_cpu_context.cc.v = pos_overflow || neg_overflow;
 
-    *p_reg = output_val;
+    set_reg_value_16(t_r, output_val);
     return opcode_table[opcode].cycle_count;
 }
 
