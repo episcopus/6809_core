@@ -241,6 +241,7 @@ void tstb_zero_test(void **state);
 /* Direct tests */
 void adca_direct_test(void **state);
 void adda_direct_test(void **state);
+void addb_direct_test(void **state);
 void addd_direct_test(void **state);
 void anda_direct_test(void **state);
 void andb_direct_test(void **state);
@@ -481,6 +482,7 @@ const struct CMUnitTest tests[] = {
 
     cmocka_unit_test_setup_teardown(adca_direct_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(adda_direct_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(addb_direct_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(addd_direct_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(anda_direct_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(andb_direct_test, test_setup, test_teardown),
