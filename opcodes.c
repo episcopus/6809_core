@@ -251,20 +251,7 @@ int asr(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
 int bit(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;
 
-    uint8* p_reg = 0;
-    switch (t_r) {
-    case REG_A:
-        p_reg = &e_cpu_context.d.byte_acc.a;
-        break;
-    case REG_B:
-        p_reg = &e_cpu_context.d.byte_acc.b;
-        break;
-    default:
-        assert(FALSE);
-        return 0;
-    }
-
-    uint8 reg_val = *p_reg;
+    uint8 reg_val = get_reg_value_8(t_r);
     uint8 memory_val = read_byte_handler(a_m, NULL);
 
     reg_val &= memory_val;
