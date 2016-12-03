@@ -244,6 +244,7 @@ void adda_direct_test(void **state);
 void addd_direct_test(void **state);
 void anda_direct_test(void **state);
 void asl_direct_test(void **state);
+void asr_direct_test(void **state);
 
 const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(core_init_test, test_setup, test_teardown),
@@ -479,5 +480,6 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(adda_direct_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(addd_direct_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(anda_direct_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(asl_direct_test, test_setup, test_teardown)
+    cmocka_unit_test_setup_teardown(asl_direct_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(asr_direct_test, test_setup, test_teardown)
 };
