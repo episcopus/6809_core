@@ -35,7 +35,7 @@ int adc(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;
 
     uint8 reg_val = get_reg_value_8(t_r);
-    uint8 memory_val = read_byte_handler(a_m);
+    uint8 memory_val = read_byte_handler(a_m, NULL);
     uint16 total_val = reg_val + memory_val +
         (e_cpu_context.cc.c ? 1 : 0);
     uint8 output_val = total_val & 0xFF;
@@ -86,7 +86,7 @@ int add(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     }
 
     uint8 reg_val = *p_reg;
-    uint8 memory_val = read_byte_handler(a_m);
+    uint8 memory_val = read_byte_handler(a_m, NULL);
     uint16 total_val = reg_val + memory_val;
     uint8 output_val = total_val & 0xFF;
 
@@ -158,7 +158,7 @@ int and(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;
 
     uint8 reg_val = get_reg_value_8(t_r);
-    uint8 memory_val = read_byte_handler(a_m);
+    uint8 memory_val = read_byte_handler(a_m, NULL);
 
     reg_val &= memory_val;
 
@@ -181,7 +181,7 @@ int andcc(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
 
     e_cpu_context.pc++;
     uint8 reg_val = (uint8) *((uint8*) &e_cpu_context.cc);
-    uint8 memory_val = read_byte_handler(a_m);
+    uint8 memory_val = read_byte_handler(a_m, NULL);
 
     reg_val &= memory_val;
     *((uint8*) &e_cpu_context.cc) = reg_val;
@@ -191,23 +191,11 @@ int andcc(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
 
 /* Arithmetic Shift Left of 8-Bit Accumulator or Memory Byte */
 int asl(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
-    (void) a_m; /* unused */
-
     e_cpu_context.pc++;
-    uint8* p_reg = 0;
-    switch (t_r) {
-    case REG_A:
-        p_reg = &e_cpu_context.d.byte_acc.a;
-        break;
-    case REG_B:
-        p_reg = &e_cpu_context.d.byte_acc.b;
-        break;
-    default:
-        assert(FALSE);
-        return 0;
-    }
 
-    uint8 reg_val = *p_reg;
+    uint16 out_addr = 0;
+    uint8 reg_val = a_m == INHERENT ? get_reg_value_8(t_r) :
+        read_byte_handler(a_m, &out_addr);
 
     /*The Carry flag receives the value shifted out of bit 7. */
     e_cpu_context.cc.c = (reg_val & 0x80) > 0;
@@ -223,7 +211,8 @@ int asl(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
        otherwise. */
     e_cpu_context.cc.z = reg_val == 0;
 
-    *p_reg = reg_val;
+    a_m == INHERENT ? set_reg_value_8(t_r, reg_val) :
+        write_byte_to_memory(out_addr, reg_val);
     return opcode_table[opcode].cycle_count;
 }
 
@@ -286,7 +275,7 @@ int bit(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     }
 
     uint8 reg_val = *p_reg;
-    uint8 memory_val = read_byte_handler(a_m);
+    uint8 memory_val = read_byte_handler(a_m, NULL);
 
     reg_val &= memory_val;
 
@@ -389,7 +378,7 @@ int cmp(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     }
 
     uint8 reg_val = *p_reg;
-    uint8 memory_val = read_byte_handler(a_m);
+    uint8 memory_val = read_byte_handler(a_m, NULL);
 
     uint8 output_val = reg_val - memory_val;
 
@@ -568,7 +557,7 @@ int eor(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     }
 
     uint8 reg_val = *p_reg;
-    uint8 memory_val = read_byte_handler(a_m);
+    uint8 memory_val = read_byte_handler(a_m, NULL);
 
     reg_val ^= memory_val;
 
@@ -592,7 +581,7 @@ int exg(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     (void) a_m; /* unused */
     e_cpu_context.pc++;
 
-    uint8 post_byte = read_byte_handler(IMMEDIATE);
+    uint8 post_byte = read_byte_handler(IMMEDIATE, NULL);
     enum target_register src;
     enum target_register trg;
     decode_source_target_postbyte(post_byte, &src, &trg);
@@ -723,7 +712,7 @@ int inc(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
 int ld(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;
 
-    uint8 memory_val = read_byte_handler(a_m);
+    uint8 memory_val = read_byte_handler(a_m, NULL);
     set_reg_value_8(t_r, memory_val);
 
     /* The Negative flag is set equal to the new value of bit 7 of
@@ -880,7 +869,7 @@ int or(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;
 
     uint8 reg_val = get_reg_value_8(t_r);
-    uint8 memory_val = read_byte_handler(a_m);
+    uint8 memory_val = read_byte_handler(a_m, NULL);
 
     reg_val |= memory_val;
 
@@ -902,7 +891,7 @@ int orcc(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;
 
     uint8 reg_val = get_reg_value_8(t_r);
-    uint8 memory_val = read_byte_handler(a_m);
+    uint8 memory_val = read_byte_handler(a_m, NULL);
 
     reg_val |= memory_val;
 
@@ -915,7 +904,7 @@ int psh(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;
 
     /* postbyte indicating which registers to push */
-    uint8 postbyte = read_byte_handler(a_m);
+    uint8 postbyte = read_byte_handler(a_m, NULL);
     /* baseline figure for clock cycles, each register pushed is one
        additional cycle */
     uint8 cycles = opcode_table[opcode].cycle_count;
@@ -966,7 +955,7 @@ int pul(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;
 
     /* postbyte indicating which registers to push */
-    uint8 postbyte = read_byte_handler(a_m);
+    uint8 postbyte = read_byte_handler(a_m, NULL);
     /* baseline figure for clock cycles, each register pushed is one
        additional cycle */
     uint8 cycles = opcode_table[opcode].cycle_count;
@@ -1094,7 +1083,7 @@ int sbc(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;
 
     uint8 reg_val = get_reg_value_8(t_r);
-    uint8 memory_val = read_byte_handler(a_m);
+    uint8 memory_val = read_byte_handler(a_m, NULL);
     uint8 total_val = reg_val - memory_val -
         (e_cpu_context.cc.c ? 1 : 0);
 
@@ -1144,7 +1133,7 @@ int sub(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;
 
     uint8 reg_val = get_reg_value_8(t_r);
-    uint8 memory_val = read_byte_handler(a_m);
+    uint8 memory_val = read_byte_handler(a_m, NULL);
     uint8 total_val = reg_val - memory_val;
 
     /* The Carry flag is set if a borrow into bit-7 was needed; cleared
@@ -1209,7 +1198,7 @@ int tfr(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     (void) a_m; /* unused */
     e_cpu_context.pc++;
 
-    uint8 post_byte = read_byte_handler(IMMEDIATE);
+    uint8 post_byte = read_byte_handler(IMMEDIATE, NULL);
     enum target_register src;
     enum target_register trg;
     decode_source_target_postbyte(post_byte, &src, &trg);
