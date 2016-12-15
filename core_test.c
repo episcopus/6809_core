@@ -308,6 +308,36 @@ void memory_clear_test(void **state) {
     assert_int_equal(post_value, 0);
 }
 
+void get_memory_address_from_postbyte_immediate_test(void **state) {
+    (void) state; /* unused */
+
+    e_cpu_context.pc = 0x1234;
+    uint16 read_value = get_memory_address_from_postbyte(IMMEDIATE);
+
+    assert_int_equal(read_value, e_cpu_context.pc - 1);
+    assert_int_equal(e_cpu_context.pc, 0x1235);
+}
+
+void get_memory_address_from_postbyte_direct_test(void **state) {
+    (void) state; /* unused */
+
+    e_cpu_context.dp = S_POINTER >> 8;
+    uint8 lower_byte_address = 0x40;
+    uint8 code_bytes[] = {
+        lower_byte_address
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 1 }
+    };
+    load_memory(test_memory, 1);
+
+    /* DIRECT mode reads data right from the location pointed to
+       by dp << 8 | IMMEDIATE value */
+    uint16 read_value = get_memory_address_from_postbyte(DIRECT);
+
+    assert_int_equal(read_value, S_POINTER | lower_byte_address);
+}
+
 /* Run a single NOP instruction which should yield 2 cycles */
 void run_cycles_test(void **state) {
     (void) state; /* unused */

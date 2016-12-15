@@ -26,6 +26,8 @@ void read_byte_handler_direct_test(void **state);
 void read_word_handler_immedidate_test(void **state);
 void read_word_handler_direct_test(void **state);
 void memory_clear_test(void **state);
+void get_memory_address_from_postbyte_direct_test(void **state);
+void get_memory_address_from_postbyte_immediate_test(void **state);
 void run_cycles_test(void **state);
 void run_cycles_multiple_test(void **state);
 void run_cycles_notimpl_test(void **state);
@@ -276,6 +278,8 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(read_word_handler_immedidate_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(read_word_handler_direct_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(memory_clear_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(get_memory_address_from_postbyte_direct_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(get_memory_address_from_postbyte_immediate_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(decode_source_target_postbyte_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(decode_source_target_postbyte_2_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(decode_source_target_postbyte_invalid_test, test_setup, test_teardown),

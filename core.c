@@ -132,20 +132,7 @@ void write_word_to_memory(uint16 address, uint16 word) {
 uint8 read_byte_handler(enum addressing_mode am) {
     uint8 return_byte = 0;
     uint16 byte_addr = get_memory_address_from_postbyte(am);
-    switch (am) {
-    case IMMEDIATE:
-        /* byte is located right at the pc */
-        return_byte = read_byte_from_memory(byte_addr);
-        break;
-    case DIRECT:
-        /* byte following instruction is lower 8 bit of full address with
-           upper 8 bit being direct page register */
-        return_byte = read_byte_from_memory(byte_addr);
-        break;
-    default:
-        assert(FALSE);
-        break;
-    }
+    return_byte = read_byte_from_memory(byte_addr);
 
     return return_byte;
 }
