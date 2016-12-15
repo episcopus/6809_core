@@ -253,6 +253,9 @@ void asr_direct_test(void **state);
 void bita_direct_test(void **state);
 void bitb_direct_test(void **state);
 void clr_direct_test(void **state);
+void cmpa_direct_nocarry_test(void **state);
+void cmpb_direct_nocarry_test(void **state);
+
 
 const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(core_init_test, test_setup, test_teardown),
@@ -497,5 +500,7 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(asr_direct_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(bita_direct_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(bitb_direct_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(clr_direct_test, test_setup, test_teardown)
+    cmocka_unit_test_setup_teardown(clr_direct_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(cmpa_direct_nocarry_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(cmpb_direct_nocarry_test, test_setup, test_teardown)
 };

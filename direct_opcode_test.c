@@ -445,3 +445,73 @@ void clr_direct_test(void **state) {
     assert_int_equal(cycles, opcode_table[OP_CLR].cycle_count);
     assert_int_equal(post_pc, pre_pc + 2);
 }
+
+void cmpa_direct_nocarry_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    /* b shouldn't be messed with */
+    e_cpu_context.d.byte_acc.b = 0xFF;
+
+    uint8 lower_byte_address = 0x40;
+    e_cpu_context.dp = S_POINTER >> 8;
+    uint8 code_bytes[] = {
+        OP_CMPA_D,
+        lower_byte_address
+    };
+    uint8 data_bytes[] = {
+        0x11
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 },
+        { S_POINTER + lower_byte_address, data_bytes, 1 }
+    };
+    load_memory(test_memory, 2);
+    e_cpu_context.d.byte_acc.a = 0xFF;
+
+    int cycles = run_cycles(opcode_table[OP_CMPA_D].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF);
+    assert_int_equal(e_cpu_context.cc.n, 1);
+    assert_int_equal(e_cpu_context.cc.c, 0);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_int_equal(cycles, opcode_table[OP_CMPA_D].cycle_count);
+    assert_true(post_pc == pre_pc + 2);
+}
+
+void cmpb_direct_nocarry_test(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+    /* a shouldn't be messed with */
+    e_cpu_context.d.byte_acc.a = 0xFF;
+
+    uint8 lower_byte_address = 0x40;
+    e_cpu_context.dp = S_POINTER >> 8;
+    uint8 code_bytes[] = {
+        OP_CMPB_D,
+        lower_byte_address
+    };
+    uint8 data_bytes[] = {
+        0x11
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 },
+        { S_POINTER + lower_byte_address, data_bytes, 1 }
+    };
+    load_memory(test_memory, 2);
+    e_cpu_context.d.byte_acc.b = 0xFF;
+
+    int cycles = run_cycles(opcode_table[OP_CMPB_D].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF);
+    assert_int_equal(e_cpu_context.cc.n, 1);
+    assert_int_equal(e_cpu_context.cc.c, 0);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_int_equal(cycles, opcode_table[OP_CMPB_D].cycle_count);
+    assert_true(post_pc == pre_pc + 2);
+}
