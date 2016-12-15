@@ -115,3 +115,4 @@ extern void mock_assert(const int result, const char* const expression,
 
 #define OP_CMPS 0x8C
 #define OP_CMPU 0x83
+#define OP_CMPS_D 0x9C

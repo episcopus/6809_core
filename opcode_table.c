@@ -677,7 +677,7 @@ const struct opcode_def opcode_ext_x11_table[] = {
     { "NOTIMPL", 0x99, 2, REG_NONE, INHERENT, notimpl },
     { "NOTIMPL", 0x9A, 2, REG_NONE, INHERENT, notimpl },
     { "NOTIMPL", 0x9B, 2, REG_NONE, INHERENT, notimpl },
-    { "NOTIMPL", 0x9C, 2, REG_NONE, INHERENT, notimpl },
+    { "CMPS", OP_CMPS_D, 7, REG_S, DIRECT, cmp16 },
     { "NOTIMPL", 0x9D, 2, REG_NONE, INHERENT, notimpl },
     { "NOTIMPL", 0x9E, 2, REG_NONE, INHERENT, notimpl },
     { "NOTIMPL", 0x9F, 2, REG_NONE, INHERENT, notimpl },
