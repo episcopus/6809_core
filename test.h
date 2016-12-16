@@ -258,7 +258,7 @@ void cmpb_direct_nocarry_test(void **state);
 void cmpd_direct_nocarry_test(void **state);
 void cmps_direct_nocarry_test(void **state);
 void cmpu_direct_nocarry_test(void **state);
-
+void cmpx_direct_overflow_test(void **state);
 
 const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(core_init_test, test_setup, test_teardown),
@@ -508,5 +508,6 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(cmpb_direct_nocarry_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(cmpd_direct_nocarry_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(cmps_direct_nocarry_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(cmpu_direct_nocarry_test, test_setup, test_teardown)
+    cmocka_unit_test_setup_teardown(cmpu_direct_nocarry_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(cmpx_direct_overflow_test, test_setup, test_teardown)
 };
