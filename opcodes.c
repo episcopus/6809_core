@@ -702,6 +702,17 @@ int inc(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     return opcode_table[opcode].cycle_count;
 }
 
+
+/* Unconditional Jump */
+int jmp(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
+    e_cpu_context.pc++;
+
+    uint16 out_addr = get_memory_address_from_postbyte(a_m);
+    e_cpu_context.pc = out_addr;
+
+    return opcode_table[opcode].cycle_count;
+}
+
 /* Load Data into 8-Bit Accumulator */
 int ld(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;
