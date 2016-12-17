@@ -262,6 +262,8 @@ void cmpx_direct_overflow_test(void **state);
 void cmpy_direct_zero_test(void **state);
 void com_direct_test(void **state);
 void dec_direct_test(void **state);
+void eora_direct_test(void **state);
+void eorb_direct_test(void **state);
 
 const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(core_init_test, test_setup, test_teardown),
@@ -515,5 +517,7 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(cmpx_direct_overflow_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(cmpy_direct_zero_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(com_direct_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(dec_direct_test, test_setup, test_teardown)
+    cmocka_unit_test_setup_teardown(dec_direct_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(eora_direct_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(eorb_direct_test, test_setup, test_teardown)
 };
