@@ -269,6 +269,7 @@ void jmp_direct_test(void **state);
 void jsr_direct_test(void **state);
 void lda_direct_test(void **state);
 void ldb_direct_test(void **state);
+void ldd_direct_test(void **state);
 
 const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(core_init_test, test_setup, test_teardown),
@@ -529,5 +530,6 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(jmp_direct_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(jsr_direct_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(lda_direct_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(ldb_direct_test, test_setup, test_teardown)
+    cmocka_unit_test_setup_teardown(ldb_direct_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(ldd_direct_test, test_setup, test_teardown)
 };

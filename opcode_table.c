@@ -223,7 +223,7 @@ const struct opcode_def opcode_table[] = {
     /* 0xD9 */ { "ADCB", OP_ADCB_D, 4, REG_B, DIRECT, adc },
     /* 0xDA */ { "NOTIMPL", 0xDA, 2, REG_NONE, INHERENT, notimpl },
     /* 0xDB */ { "ADDB", OP_ADDB_D, 4, REG_B, DIRECT, add },
-    /* 0xDC */ { "NOTIMPL", 0xDC, 2, REG_NONE, INHERENT, notimpl },
+    /* 0xDC */ { "LDD", OP_LDD_D, 5, REG_D, DIRECT, ld16 },
     /* 0xDD */ { "NOTIMPL", 0xDD, 2, REG_NONE, INHERENT, notimpl },
     /* 0xDE */ { "NOTIMPL", 0xDE, 2, REG_NONE, INHERENT, notimpl },
     /* 0xDF */ { "NOTIMPL", 0xDF, 2, REG_NONE, INHERENT, notimpl },
