@@ -161,7 +161,7 @@ const struct opcode_def opcode_table[] = {
     /* 0x9B */ { "ADDA", OP_ADDA_D, 4, REG_A, DIRECT, add },
     /* 0x9C */ { "CMPX", OP_CMPX_D, 6, REG_X, DIRECT, cmp16 },
     /* 0x9D */ { "JSR", OP_JSR_D, 7, REG_NONE, DIRECT, jsr },
-    /* 0x9E */ { "NOTIMPL", 0x9E, 2, REG_NONE, INHERENT, notimpl },
+    /* 0x9E */ { "LDX", OP_LDX_D, 5, REG_X, DIRECT, ld16 },
     /* 0x9F */ { "NOTIMPL", 0x9F, 2, REG_NONE, INHERENT, notimpl },
     /* 0xA0 */ { "NOTIMPL", 0xA0, 2, REG_NONE, INHERENT, notimpl },
     /* 0xA1 */ { "NOTIMPL", 0xA1, 2, REG_NONE, INHERENT, notimpl },
