@@ -2377,10 +2377,10 @@ void lds_basic_test(void **state) {
     };
     load_memory(test_memory, 1);
 
-    int cycles = run_cycles(opcode_table[OP_LDS].cycle_count);
+    int cycles = run_cycles(opcode_ext_x10_table[OP_LDS].cycle_count);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.s, 0xF00D);
-    assert_int_equal(cycles, opcode_table[OP_LDS].cycle_count);
+    assert_int_equal(cycles, opcode_ext_x10_table[OP_LDS].cycle_count);
     assert_true(post_pc == pre_pc + 4);
 }
 
@@ -2441,10 +2441,10 @@ void ldy_basic_test(void **state) {
     };
     load_memory(test_memory, 1);
 
-    int cycles = run_cycles(opcode_table[OP_LDY].cycle_count);
+    int cycles = run_cycles(opcode_ext_x10_table[OP_LDY].cycle_count);
     int post_pc = e_cpu_context.pc;
     assert_int_equal(e_cpu_context.y, 0xF00D);
-    assert_int_equal(cycles, opcode_table[OP_LDY].cycle_count);
+    assert_int_equal(cycles, opcode_ext_x10_table[OP_LDY].cycle_count);
     assert_true(post_pc == pre_pc + 4);
 }
 

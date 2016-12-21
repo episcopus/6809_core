@@ -187,6 +187,7 @@ uint16 get_memory_address_from_postbyte(enum addressing_mode am) {
 
 uint32 run_cycles(uint32 wanted_cycles) {
     uint32 completed_cycles = 0;
+
     while (completed_cycles < wanted_cycles) {
         uint8 opcode = e_cpu_context.memory[e_cpu_context.pc];
         struct opcode_def this_opcode = opcode_table[opcode];

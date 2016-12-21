@@ -751,6 +751,21 @@ int ld(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
 int ld16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;
 
+    /* Need to reference the correct opcode table for the cycle lookup at the
+       end of the function. */
+    struct opcode_def* this_opcode_table = NULL;
+    switch (t_r) {
+    case REG_S:
+        this_opcode_table = opcode_ext_x10_table;
+        break;
+    case REG_Y:
+        this_opcode_table = opcode_ext_x10_table;
+        break;
+    default:
+        this_opcode_table = opcode_table;
+        break;
+    }
+
     uint16 memory_val = read_word_handler(a_m);
     set_reg_value_16(t_r, memory_val);
 
@@ -763,7 +778,7 @@ int ld16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     /* The Overflow flag is cleared by this instruction. */
     e_cpu_context.cc.v = 0;
 
-    return opcode_table[opcode].cycle_count;
+    return this_opcode_table[opcode].cycle_count;
 }
 
 /* Logical Shift Right of 8-Bit Accumulator or Memory Byte */
