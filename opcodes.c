@@ -834,23 +834,18 @@ int mul(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
 /* Negation (Twos-Complement) of Accumulator */
 int neg(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     (void) a_m; /* unused */
-
     e_cpu_context.pc++;
 
-    uint8* p_reg = 0;
-    switch (t_r) {
-    case REG_A:
-        p_reg = &e_cpu_context.d.byte_acc.a;
-        break;
-    case REG_B:
-        p_reg = &e_cpu_context.d.byte_acc.b;
-        break;
-    default:
-        assert(FALSE);
-        return 0;
+    uint16 out_addr = 0;
+    uint8 reg_val = 0;
+    if (a_m == INHERENT) {
+        reg_val = get_reg_value_8(t_r);
+    }
+    else {
+        out_addr = get_memory_address_from_postbyte(a_m);
+        reg_val = read_byte_from_memory(out_addr);
     }
 
-    uint8 reg_val = *p_reg;
     /* The Carry flag represents a Borrow for this operation and is therefore
        always set unless the accumulator’s original value was zero. */
     e_cpu_context.cc.c = reg_val != 0;
@@ -874,7 +869,12 @@ int neg(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
        high-order bit. */
     e_cpu_context.cc.n = (reg_val & 0x80) > 0;
 
-    *p_reg = reg_val;
+    if (a_m == INHERENT) {
+        set_reg_value_8(t_r, reg_val);
+    }
+    else {
+        write_byte_to_memory(out_addr, reg_val);
+    }
 
     return opcode_table[opcode].cycle_count;
 }

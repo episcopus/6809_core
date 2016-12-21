@@ -1,7 +1,7 @@
 #include "opcodes.h"
 
 const struct opcode_def opcode_table[] = {
-    /* 0x0 */ { "NOTIMPL", 0x0, 2, REG_NONE, INHERENT, notimpl },
+    /* 0x0 */ { "NEG", OP_NEG_D, 6, REG_NONE, DIRECT, neg },
     /* 0x1 is an invalid exption on the 6809 which normally falls back to NEG,
        using it for the run_cycles() unit test instead. */
     /* 0x1 */ { "NOTIMPL", 0x1, 2, REG_NONE, INHERENT, notimpl },

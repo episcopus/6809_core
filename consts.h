@@ -23,6 +23,7 @@ extern void mock_assert(const int result, const char* const expression,
     mock_assert((int)(expression), #expression, __FILE__, __LINE__);
 /* #endif */
 
+#define OP_NEG_D 0x0
 #define OP_COM_D 0x3
 #define OP_ASR_D 0x7
 #define OP_ASL_D 0x8
