@@ -1012,3 +1012,30 @@ void lds_direct_test(void **state) {
     assert_int_equal(cycles, opcode_ext_x10_table[OP_LDS_D].cycle_count);
     assert_true(post_pc == pre_pc + 3);
 }
+
+void ldu_direct_test(void **state) {
+    (void) state; /* unused */
+    int pre_pc = e_cpu_context.pc;
+
+    uint8 lower_byte_address = 0x40;
+    e_cpu_context.dp = S_POINTER >> 8;
+    uint8 code_bytes[] = {
+        OP_LDU_D,
+        lower_byte_address
+    };
+    uint8 data_bytes[] = {
+        0xF0,
+        0x0D
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 3 },
+        { S_POINTER + lower_byte_address, data_bytes, 2 }
+    };
+    load_memory(test_memory, 2);
+
+    int cycles = run_cycles(opcode_table[OP_LDU_D].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.u, 0xF00D);
+    assert_int_equal(cycles, opcode_table[OP_LDU_D].cycle_count);
+    assert_true(post_pc == pre_pc + 2);
+}

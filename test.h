@@ -271,6 +271,7 @@ void lda_direct_test(void **state);
 void ldb_direct_test(void **state);
 void ldd_direct_test(void **state);
 void lds_direct_test(void **state);
+void ldu_direct_test(void **state);
 
 const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(core_init_test, test_setup, test_teardown),
@@ -533,5 +534,6 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(lda_direct_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(ldb_direct_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(ldd_direct_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(lds_direct_test, test_setup, test_teardown)
+    cmocka_unit_test_setup_teardown(lds_direct_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(ldu_direct_test, test_setup, test_teardown)
 };
