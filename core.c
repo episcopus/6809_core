@@ -137,6 +137,13 @@ uint8 read_byte_handler(enum addressing_mode am) {
     return return_byte;
 }
 
+/* Write a byte to the appropriate location based on the decoded
+   postbyte / addressing mode combination */
+void write_byte_handler(enum addressing_mode am, uint8 byte) {
+    uint16 byte_addr = get_memory_address_from_postbyte(am);
+    write_byte_to_memory(byte_addr, byte);
+}
+
 /* This memory accessor reads a word from the appropriate location
    in memory based on the addressing mode. Will move the pc
    appropriately based on the addressing mode and postbyte opcode. */
