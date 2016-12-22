@@ -1182,6 +1182,25 @@ int st(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     return opcode_table[opcode].cycle_count;
 }
 
+/* Store 16-Bit Register to Memory */
+int st16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
+    e_cpu_context.pc++;
+
+    uint16 store_word = get_reg_value_16(t_r);
+    write_word_handler(a_m, store_word);
+
+    /* The Negative flag is set equal to the new value of bit 15 of
+       the register. */
+    e_cpu_context.cc.n = (store_word & 0x8000) > 1;
+    /* The Zero flag is set if the new register value is zero;
+       cleared otherwise. */
+    e_cpu_context.cc.z = store_word == 0;
+    /* The Overflow flag is cleared by this instruction. */
+    e_cpu_context.cc.v = 0;
+
+    return opcode_table[opcode].cycle_count;
+}
+
 /* Subtract from value in 8-Bit Accumulator */
 int sub(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;

@@ -33,7 +33,7 @@ void core_init() {
     /* Clear out the memory to since consecutive core_init() calls may
        resurface prior core memory */
     for (int i = 0; i < MEMORY_SIZE; i++) {
-        e_cpu_context.memory[i++] = 0;
+        e_cpu_context.memory[i] = 0;
     }
     e_cpu_context.cycle_count = 0;
 
@@ -167,6 +167,13 @@ uint16 read_word_handler(enum addressing_mode am) {
     }
 
     return return_word;
+}
+
+/* Write a word to the appropriate location based on the decoded
+   postbyte / addressing mode combination */
+void write_word_handler(enum addressing_mode am, uint16 word) {
+    uint16 word_addr = get_memory_address_from_postbyte(am);
+    write_word_to_memory(word_addr, word);
 }
 
 uint16 get_memory_address_from_postbyte(enum addressing_mode am) {

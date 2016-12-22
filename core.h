@@ -11,6 +11,7 @@ void write_word_to_memory(uint16 address, uint16 word);
 uint8 read_byte_handler(enum addressing_mode am);
 void write_byte_handler(enum addressing_mode am, uint8 byte);
 uint16 read_word_handler(enum addressing_mode am);
+void write_word_handler(enum addressing_mode am, uint16 word);
 uint16 get_memory_address_from_postbyte(enum addressing_mode am);
 
 uint32 run_cycles(uint32 wanted_cycles);

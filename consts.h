@@ -122,6 +122,7 @@ extern void mock_assert(const int result, const char* const expression,
 #define OP_ADCB_D 0xD9
 #define OP_ORB_D 0xDA
 #define OP_ADDB_D 0xDB
+#define OP_STD_D 0xDD
 #define OP_LDU_D 0xDE
 
 /* Two byte opcodes - those have 0x10 as leading byte */

@@ -42,6 +42,10 @@ void core_init_test(void **state) {
     assert_int_equal(e_cpu_context.cc.v, 0);
     assert_int_equal(e_cpu_context.cc.c, 0);
     assert_int_equal(e_cpu_context.cycle_count, 0);
+
+    for (int i = 0; i < MEMORY_SIZE; i++) {
+        assert_int_equal(e_cpu_context.memory[i], 0);
+    }
 }
 
 void test_e_flag(void **state) {
