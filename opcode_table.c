@@ -12,7 +12,7 @@ const struct opcode_def opcode_table[] = {
     /* 0x6 */ { "NOTIMPL", 0x6, 2, REG_NONE, INHERENT, notimpl },
     /* 0x7 */ { "ASR", OP_ASR_D, 6, REG_NONE, DIRECT, asr },
     /* 0x8 */ { "ASL", OP_ASL_D, 6, REG_NONE, DIRECT, asl },
-    /* 0x9 */ { "NOTIMPL", 0x9, 2, REG_NONE, INHERENT, notimpl },
+    /* 0x9 */ { "ROL", OP_ROL_D, 6, REG_NONE, DIRECT, rol },
     /* 0xA */ { "DEC", 0xA, 6, REG_NONE, DIRECT, dec },
     /* 0xB */ { "NOTIMPL", 0xB, 2, REG_NONE, INHERENT, notimpl },
     /* 0xC */ { "INC", OP_INC_D, 6, REG_NONE, DIRECT, inc },
