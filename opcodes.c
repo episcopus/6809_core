@@ -1186,6 +1186,21 @@ int st(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
 int st16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;
 
+    /* Need to reference the correct opcode table for the cycle lookup at the
+       end of the function. */
+    struct opcode_def* this_opcode_table = NULL;
+    switch (t_r) {
+    case REG_S:
+        this_opcode_table = opcode_ext_x10_table;
+        break;
+    case REG_Y:
+        this_opcode_table = opcode_ext_x10_table;
+        break;
+    default:
+        this_opcode_table = opcode_table;
+        break;
+    }
+
     uint16 store_word = get_reg_value_16(t_r);
     write_word_handler(a_m, store_word);
 
@@ -1198,7 +1213,7 @@ int st16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     /* The Overflow flag is cleared by this instruction. */
     e_cpu_context.cc.v = 0;
 
-    return opcode_table[opcode].cycle_count;
+    return this_opcode_table[opcode].cycle_count;
 }
 
 /* Subtract from value in 8-Bit Accumulator */
