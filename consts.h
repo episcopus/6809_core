@@ -96,6 +96,7 @@ extern void mock_assert(const int result, const char* const expression,
 #define OP_CMPX_D 0x9C
 #define OP_JSR_D 0x9D
 #define OP_LDX_D 0x9E
+#define OP_STX_D 0x9F
 #define OP_SUBB 0xC0
 #define OP_CMPB 0xC1
 #define OP_SBCB 0xC2
