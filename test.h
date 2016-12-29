@@ -288,6 +288,7 @@ void sts_direct_test(void **state);
 void stu_direct_test(void **state);
 void stx_direct_test(void **state);
 void sty_direct_test(void **state);
+void suba_direct_test(void ** state);
 
 const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(core_init_test, test_setup, test_teardown),
@@ -567,5 +568,6 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(sts_direct_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(stu_direct_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(stx_direct_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(sty_direct_test, test_setup, test_teardown)
+    cmocka_unit_test_setup_teardown(sty_direct_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(suba_direct_test, test_setup, test_teardown)
 };
