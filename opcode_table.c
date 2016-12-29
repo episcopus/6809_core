@@ -16,7 +16,7 @@ const struct opcode_def opcode_table[] = {
     /* 0xA */ { "DEC", 0xA, 6, REG_NONE, DIRECT, dec },
     /* 0xB */ { "NOTIMPL", 0xB, 2, REG_NONE, INHERENT, notimpl },
     /* 0xC */ { "INC", OP_INC_D, 6, REG_NONE, DIRECT, inc },
-    /* 0xD */ { "NOTIMPL", 0xD, 2, REG_NONE, INHERENT, notimpl },
+    /* 0xD */ { "TST", OP_TST_D, 6, REG_NONE, DIRECT, tst },
     /* 0xE */ { "JMP", OP_JMP_D, 3, REG_NONE, DIRECT, jmp },
     /* 0xF */ { "CLR", OP_CLR, 6, REG_NONE, DIRECT, clr },
     /* 0x10 */ { "EXTENDED_X10", OP_EXTENDED_X10, 0, REG_NONE, INHERENT, extended },
