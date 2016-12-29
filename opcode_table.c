@@ -150,7 +150,7 @@ const struct opcode_def opcode_table[] = {
     /* 0x90 */ { "SUBA", OP_SUBA_D, 4, REG_A, DIRECT, sub },
     /* 0x91 */ { "CMPA", OP_CMPA_D, 4, REG_A, DIRECT, cmp },
     /* 0x92 */ { "SBCA", OP_SBCA_D, 4, REG_A, DIRECT, sbc },
-    /* 0x93 */ { "NOTIMPL", 0x93, 2, REG_NONE, INHERENT, notimpl },
+    /* 0x93 */ { "SUBD", OP_SUBD_D, 6, REG_D, DIRECT, sub16 },
     /* 0x94 */ { "ANDA", OP_ANDA_D, 4, REG_A, DIRECT, and },
     /* 0x95 */ { "BITA", OP_BITA_D, 4, REG_A, DIRECT, bit },
     /* 0x96 */ { "LDA", OP_LDA_D, 4, REG_A, DIRECT, ld },
