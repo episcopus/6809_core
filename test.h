@@ -300,7 +300,7 @@ void tst_direct_test(void **state);
 void adca_extended_test(void **state);
 void adcb_extended_test(void **state);
 void adda_extended_test(void **state);
-/* void addb_extended_test(void **state); */
+void addb_extended_test(void **state);
 /* void addd_extended_test(void **state); */
 /* void anda_extended_test(void **state); */
 /* void andb_extended_test(void **state); */
@@ -638,8 +638,8 @@ const struct CMUnitTest tests[] = {
 
     cmocka_unit_test_setup_teardown(adca_extended_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(adcb_extended_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(adda_extended_test, test_setup, test_teardown)
-    /* cmocka_unit_test_setup_teardown(addb_extended_test, test_setup, test_teardown), */
+    cmocka_unit_test_setup_teardown(adda_extended_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(addb_extended_test, test_setup, test_teardown)
     /* cmocka_unit_test_setup_teardown(addd_extended_test, test_setup, test_teardown), */
     /* cmocka_unit_test_setup_teardown(anda_extended_test, test_setup, test_teardown), */
     /* cmocka_unit_test_setup_teardown(andb_extended_test, test_setup, test_teardown), */
