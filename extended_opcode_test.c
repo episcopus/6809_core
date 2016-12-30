@@ -551,3 +551,36 @@ void cmpd_extended_nocarry_test(void **state) {
     assert_int_equal(cycles, opcode_ext_x10_table[OP_CMPD_E].cycle_count);
     assert_true(post_pc == pre_pc + 4);
 }
+
+void cmps_extended_nocarry_test(void **state) {
+    (void) state; /* unused */
+    int pre_pc = e_cpu_context.pc;
+
+    uint8 lower_byte_address = 0x40;
+    uint8 code_bytes[] = {
+        OP_EXTENDED_X11,
+        OP_CMPS_E,
+        S_POINTER >> 8,
+        lower_byte_address
+    };
+    uint8 data_bytes[] = {
+        0x12,
+        0x34
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 4 },
+        { S_POINTER + lower_byte_address, data_bytes, 2 }
+    };
+    load_memory(test_memory, 2);
+    e_cpu_context.s = 0xFFFF;
+
+    int cycles = run_cycles(opcode_ext_x11_table[OP_CMPS_E].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.s, 0xFFFF);
+    assert_int_equal(e_cpu_context.cc.n, 1);
+    assert_int_equal(e_cpu_context.cc.c, 0);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_int_equal(cycles, opcode_ext_x11_table[OP_CMPS_E].cycle_count);
+    assert_true(post_pc == pre_pc + 4);
+}

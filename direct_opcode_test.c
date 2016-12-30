@@ -532,7 +532,7 @@ void cmpd_direct_nocarry_test(void **state) {
         0x34
     };
     struct mem_loader_def test_memory[] = {
-        { USER_SPACE_ROOT, code_bytes, 4 },
+        { USER_SPACE_ROOT, code_bytes, 3 },
         { S_POINTER + lower_byte_address, data_bytes, 2 }
     };
     load_memory(test_memory, 2);
@@ -565,7 +565,7 @@ void cmps_direct_nocarry_test(void **state) {
         0x34
     };
     struct mem_loader_def test_memory[] = {
-        { USER_SPACE_ROOT, code_bytes, 4 },
+        { USER_SPACE_ROOT, code_bytes, 3 },
         { S_POINTER + lower_byte_address, data_bytes, 2 }
     };
     load_memory(test_memory, 2);
