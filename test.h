@@ -318,8 +318,8 @@ void cmpx_extended_overflow_test(void **state);
 void cmpy_extended_zero_test(void **state);
 void com_extended_test(void **state);
 void dec_extended_test(void **state);
-/* void eora_extended_test(void **state); */
-/* void eorb_extended_test(void **state); */
+void eora_extended_test(void **state);
+void eorb_extended_test(void **state);
 /* void inc_extended_test(void **state); */
 /* void jmp_extended_test(void **state); */
 /* void jsr_extended_test(void **state); */
@@ -656,9 +656,9 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(cmpx_extended_overflow_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(cmpy_extended_zero_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(com_extended_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(dec_extended_test, test_setup, test_teardown)
-    /* cmocka_unit_test_setup_teardown(eora_extended_test, test_setup, test_teardown), */
-    /* cmocka_unit_test_setup_teardown(eorb_extended_test, test_setup, test_teardown), */
+    cmocka_unit_test_setup_teardown(dec_extended_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(eora_extended_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(eorb_extended_test, test_setup, test_teardown)
     /* cmocka_unit_test_setup_teardown(inc_extended_test, test_setup, test_teardown), */
     /* cmocka_unit_test_setup_teardown(jmp_extended_test, test_setup, test_teardown), */
     /* cmocka_unit_test_setup_teardown(jsr_extended_test, test_setup, test_teardown), */
