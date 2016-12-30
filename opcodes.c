@@ -296,11 +296,13 @@ int clr(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;
 
     uint16 out_addr = 0;
-    if (a_m != INHERENT) {
-        out_addr = get_memory_address_from_postbyte(a_m);
+    if (a_m == INHERENT) {
+        set_reg_value_8(t_r, 0);
     }
-    a_m == INHERENT ? set_reg_value_8(t_r, 0) :
+    else {
+        out_addr = get_memory_address_from_postbyte(a_m);
         write_byte_to_memory(out_addr, 0);
+    }
 
     /* The Carry flag is cleared. */
     e_cpu_context.cc.c = 0;

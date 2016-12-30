@@ -420,7 +420,7 @@ void clr_direct_test(void **state) {
                      0xBB);
 
     uint8 code_bytes[] = {
-        OP_CLR,
+        OP_CLR_D,
         lower_byte_address
     };
     struct mem_loader_def test_memory[] = {
@@ -431,10 +431,10 @@ void clr_direct_test(void **state) {
     e_cpu_context.d.byte_acc.a = 1;
     e_cpu_context.d.byte_acc.b = 8;
 
-    int cycles = run_cycles(opcode_table[OP_CLR].cycle_count);
+    int cycles = run_cycles(opcode_table[OP_CLR_D].cycle_count);
     int post_pc = e_cpu_context.pc;
 
-    assert_int_equal(cycles, opcode_table[OP_CLR].cycle_count);
+    assert_int_equal(cycles, opcode_table[OP_CLR_D].cycle_count);
     assert_int_equal(e_cpu_context.d.byte_acc.a, 1);
     assert_int_equal(e_cpu_context.d.byte_acc.b, 8);
     assert_int_equal(read_byte_from_memory(S_POINTER + lower_byte_address), 0);
@@ -442,7 +442,7 @@ void clr_direct_test(void **state) {
     assert_int_equal(e_cpu_context.cc.v, 0);
     assert_int_equal(e_cpu_context.cc.n, 0);
     assert_int_equal(e_cpu_context.cc.z, 1);
-    assert_int_equal(cycles, opcode_table[OP_CLR].cycle_count);
+    assert_int_equal(cycles, opcode_table[OP_CLR_D].cycle_count);
     assert_int_equal(post_pc, pre_pc + 2);
 }
 
