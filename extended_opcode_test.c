@@ -261,3 +261,39 @@ void andb_extended_test(void **state) {
     assert_int_equal(cycles, opcode_table[OP_ANDB_E].cycle_count);
     assert_int_equal(post_pc, pre_pc + 3);
 }
+
+void asl_extended_test(void **state) {
+    (void) state; /* unused */
+    int pre_pc = e_cpu_context.pc;
+
+    uint8 lower_byte_address = 0x40;
+
+    uint8 code_bytes[] = {
+        OP_ASL_E,
+        S_POINTER >> 8,
+        lower_byte_address
+    };
+    uint8 data_bytes[] = {
+        0x2
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 3 },
+        { S_POINTER + lower_byte_address, data_bytes, 1 }
+    };
+    load_memory(test_memory, 2);
+
+    /* b shouldn't be messed with */
+    e_cpu_context.d.byte_acc.b = 8;
+    int cycles = run_cycles(opcode_table[OP_ASL_E].cycle_count);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_ASL_E].cycle_count);
+    assert_int_equal(read_byte_from_memory(S_POINTER + lower_byte_address),
+                     0x4);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x8);
+    assert_int_equal(e_cpu_context.cc.c, 0);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_true(post_pc > pre_pc);
+}
