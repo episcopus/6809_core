@@ -122,7 +122,7 @@ const struct opcode_def opcode_table[] = {
     /* 0x74 */ { "NOTIMPL", 0x74, 2, REG_NONE, INHERENT, notimpl },
     /* 0x75 */ { "NOTIMPL", 0x75, 2, REG_NONE, INHERENT, notimpl },
     /* 0x76 */ { "NOTIMPL", 0x76, 2, REG_NONE, INHERENT, notimpl },
-    /* 0x77 */ { "NOTIMPL", 0x77, 2, REG_NONE, INHERENT, notimpl },
+    /* 0x77 */ { "ASR", OP_ASR_E, 7, REG_NONE, EXTENDED, asr },
     /* 0x78 */ { "ASL", OP_ASL_E, 7, REG_NONE, EXTENDED, asl },
     /* 0x79 */ { "NOTIMPL", 0x79, 2, REG_NONE, INHERENT, notimpl },
     /* 0x7A */ { "NOTIMPL", 0x7A, 2, REG_NONE, INHERENT, notimpl },
