@@ -860,7 +860,7 @@ void jmp_direct_test(void **state) {
     };
     struct mem_loader_def test_memory[] = {
         { USER_SPACE_ROOT, code_bytes, 2 },
-        { S_POINTER + lower_byte_address, data_bytes, 1 }
+        { S_POINTER + lower_byte_address, data_bytes, 2 }
     };
     load_memory(test_memory, 2);
 

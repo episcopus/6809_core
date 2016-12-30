@@ -849,3 +849,29 @@ void inc_extended_test(void **state) {
     assert_int_equal(e_cpu_context.cc.v, 0);
     assert_int_equal(post_pc, pre_pc + 3);
 }
+
+void jmp_extended_test(void **state) {
+    (void) state; /* unused */
+
+    uint8 lower_byte_address = 0x40;
+    uint8 code_bytes[] = {
+        OP_JMP_E,
+        S_POINTER >> 8,
+        lower_byte_address
+    };
+    uint8 data_bytes[] = {
+        0x45,
+        0x45
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 3 },
+        { S_POINTER + lower_byte_address, data_bytes, 2 }
+    };
+    load_memory(test_memory, 2);
+
+    int cycles = run_cycles(opcode_table[OP_JMP_E].cycle_count);
+    int post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_JMP_E].cycle_count);
+    assert_int_equal(post_pc, S_POINTER | lower_byte_address);
+}
