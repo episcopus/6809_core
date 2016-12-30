@@ -296,6 +296,60 @@ void subb_direct_test(void ** state);
 void subd_direct_test(void ** state);
 void tst_direct_test(void **state);
 
+/* Extended tests */
+void adca_extended_test(void **state);
+/* void adcb_direct_test(void **state); */
+/* void adda_direct_test(void **state); */
+/* void addb_direct_test(void **state); */
+/* void addd_direct_test(void **state); */
+/* void anda_direct_test(void **state); */
+/* void andb_direct_test(void **state); */
+/* void asl_direct_test(void **state); */
+/* void asr_direct_test(void **state); */
+/* void bita_direct_test(void **state); */
+/* void bitb_direct_test(void **state); */
+/* void clr_direct_test(void **state); */
+/* void cmpa_direct_nocarry_test(void **state); */
+/* void cmpb_direct_nocarry_test(void **state); */
+/* void cmpd_direct_nocarry_test(void **state); */
+/* void cmps_direct_nocarry_test(void **state); */
+/* void cmpu_direct_nocarry_test(void **state); */
+/* void cmpx_direct_overflow_test(void **state); */
+/* void cmpy_direct_zero_test(void **state); */
+/* void com_direct_test(void **state); */
+/* void dec_direct_test(void **state); */
+/* void eora_direct_test(void **state); */
+/* void eorb_direct_test(void **state); */
+/* void inc_direct_test(void **state); */
+/* void jmp_direct_test(void **state); */
+/* void jsr_direct_test(void **state); */
+/* void lda_direct_test(void **state); */
+/* void ldb_direct_test(void **state); */
+/* void ldd_direct_test(void **state); */
+/* void lds_direct_test(void **state); */
+/* void ldu_direct_test(void **state); */
+/* void ldx_direct_test(void **state); */
+/* void ldy_direct_test(void **state); */
+/* void neg_direct_test(void **state); */
+/* void ora_direct_test(void **state); */
+/* void orb_direct_test(void **state); */
+/* void rol_direct_test(void **state); */
+/* void ror_direct_test(void **state); */
+/* void sbca_direct_test(void ** state); */
+/* void sbcb_direct_test(void ** state); */
+/* void sta_direct_test(void **state); */
+/* void stb_direct_test(void **state); */
+/* void std_direct_test(void **state); */
+/* void sts_direct_test(void **state); */
+/* void stu_direct_test(void **state); */
+/* void stx_direct_test(void **state); */
+/* void sty_direct_test(void **state); */
+/* void suba_direct_test(void ** state); */
+/* void subb_direct_test(void ** state); */
+/* void subd_direct_test(void ** state); */
+/* void tst_direct_test(void **state); */
+
+
 const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(core_init_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(test_e_flag, test_setup, test_teardown),
@@ -581,5 +635,57 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(suba_direct_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(subb_direct_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(subd_direct_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(tst_direct_test, test_setup, test_teardown)
+    cmocka_unit_test_setup_teardown(tst_direct_test, test_setup, test_teardown),
+
+    cmocka_unit_test_setup_teardown(adca_extended_test, test_setup, test_teardown)
+    /* cmocka_unit_test_setup_teardown(adcb_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(adda_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(addb_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(addd_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(anda_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(andb_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(asl_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(asr_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(bita_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(bitb_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(clr_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(cmpa_direct_nocarry_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(cmpb_direct_nocarry_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(cmpd_direct_nocarry_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(cmps_direct_nocarry_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(cmpu_direct_nocarry_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(cmpx_direct_overflow_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(cmpy_direct_zero_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(com_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(dec_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(eora_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(eorb_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(inc_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(jmp_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(jsr_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(lda_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(ldb_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(ldd_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(lds_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(ldu_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(ldx_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(ldy_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(neg_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(ora_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(orb_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(rol_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(ror_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(sbca_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(sbcb_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(sta_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(stb_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(std_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(sts_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(stu_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(stx_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(sty_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(suba_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(subb_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(subd_direct_test, test_setup, test_teardown), */
+    /* cmocka_unit_test_setup_teardown(tst_direct_test, test_setup, test_teardown) */
 };
