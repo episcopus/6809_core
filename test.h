@@ -298,7 +298,7 @@ void tst_direct_test(void **state);
 
 /* Extended tests */
 void adca_extended_test(void **state);
-/* void adcb_direct_test(void **state); */
+void adcb_extended_test(void **state);
 /* void adda_direct_test(void **state); */
 /* void addb_direct_test(void **state); */
 /* void addd_direct_test(void **state); */
@@ -348,7 +348,6 @@ void adca_extended_test(void **state);
 /* void subb_direct_test(void ** state); */
 /* void subd_direct_test(void ** state); */
 /* void tst_direct_test(void **state); */
-
 
 const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(core_init_test, test_setup, test_teardown),
@@ -637,8 +636,8 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(subd_direct_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(tst_direct_test, test_setup, test_teardown),
 
-    cmocka_unit_test_setup_teardown(adca_extended_test, test_setup, test_teardown)
-    /* cmocka_unit_test_setup_teardown(adcb_direct_test, test_setup, test_teardown), */
+    cmocka_unit_test_setup_teardown(adca_extended_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(adcb_extended_test, test_setup, test_teardown)
     /* cmocka_unit_test_setup_teardown(adda_direct_test, test_setup, test_teardown), */
     /* cmocka_unit_test_setup_teardown(addb_direct_test, test_setup, test_teardown), */
     /* cmocka_unit_test_setup_teardown(addd_direct_test, test_setup, test_teardown), */
