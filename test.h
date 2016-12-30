@@ -314,8 +314,8 @@ void cmpb_extended_nocarry_test(void **state);
 void cmpd_extended_nocarry_test(void **state);
 void cmps_extended_nocarry_test(void **state);
 void cmpu_extended_nocarry_test(void **state);
-/* void cmpx_extended_overflow_test(void **state); */
-/* void cmpy_extended_zero_test(void **state); */
+void cmpx_extended_overflow_test(void **state);
+void cmpy_extended_zero_test(void **state);
 /* void com_extended_test(void **state); */
 /* void dec_extended_test(void **state); */
 /* void eora_extended_test(void **state); */
@@ -652,9 +652,9 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(cmpb_extended_nocarry_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(cmpd_extended_nocarry_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(cmps_extended_nocarry_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(cmpu_extended_nocarry_test, test_setup, test_teardown)
-    /* cmocka_unit_test_setup_teardown(cmpx_extended_overflow_test, test_setup, test_teardown), */
-    /* cmocka_unit_test_setup_teardown(cmpy_extended_zero_test, test_setup, test_teardown), */
+    cmocka_unit_test_setup_teardown(cmpu_extended_nocarry_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(cmpx_extended_overflow_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(cmpy_extended_zero_test, test_setup, test_teardown)
     /* cmocka_unit_test_setup_teardown(com_extended_test, test_setup, test_teardown), */
     /* cmocka_unit_test_setup_teardown(dec_extended_test, test_setup, test_teardown), */
     /* cmocka_unit_test_setup_teardown(eora_extended_test, test_setup, test_teardown), */
