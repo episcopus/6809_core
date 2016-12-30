@@ -159,6 +159,9 @@ uint16 read_word_handler(enum addressing_mode am) {
     case DIRECT:
         /* byte following instruction is lower 8 bit of full address with
            upper 8 bit being direct page register */
+    case EXTENDED:
+        /* word following instruction is full 16 bit address of
+           operand */
         return_word = read_word_from_memory(word_addr);
         break;
     default:
@@ -190,6 +193,12 @@ uint16 get_memory_address_from_postbyte(enum addressing_mode am) {
         lower_byte = read_byte_from_memory(e_cpu_context.pc++);
         upper_byte = e_cpu_context.dp;
         return_addr = upper_byte << 8 | lower_byte;
+        break;
+    case EXTENDED:
+        /* word following instruction is full 16 bit address of
+           operand */
+        return_addr = read_word_from_memory(e_cpu_context.pc);
+        e_cpu_context.pc += 2;
         break;
     default:
         assert(FALSE);
