@@ -127,7 +127,7 @@ const struct opcode_def opcode_table[] = {
     /* 0x79 */ { "NOTIMPL", 0x79, 2, REG_NONE, INHERENT, notimpl },
     /* 0x7A */ { "DEC", OP_DEC_E, 7, REG_NONE, EXTENDED, dec },
     /* 0x7B */ { "NOTIMPL", 0x7B, 2, REG_NONE, INHERENT, notimpl },
-    /* 0x7C */ { "NOTIMPL", 0x7C, 2, REG_NONE, INHERENT, notimpl },
+    /* 0x7C */ { "INC", OP_INC_E, 7, REG_NONE, EXTENDED, inc },
     /* 0x7D */ { "NOTIMPL", 0x7D, 2, REG_NONE, INHERENT, notimpl },
     /* 0x7E */ { "NOTIMPL", 0x7E, 2, REG_NONE, INHERENT, notimpl },
     /* 0x7F */ { "CLR", OP_CLR_E, 7, REG_NONE, EXTENDED, clr },
