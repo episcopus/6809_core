@@ -875,3 +875,34 @@ void jmp_extended_test(void **state) {
     assert_int_equal(cycles, opcode_table[OP_JMP_E].cycle_count);
     assert_int_equal(post_pc, S_POINTER | lower_byte_address);
 }
+
+void jsr_extended_test(void **state) {
+    (void) state; /* unused */
+
+    uint16 pre_stack_pointer = e_cpu_context.s;
+    uint8 lower_byte_address = 0x40;
+    uint8 code_bytes[] = {
+        OP_JSR_E,
+        S_POINTER >> 8,
+        lower_byte_address
+    };
+    uint8 data_bytes[] = {
+        0x45,
+        0x45
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 3 },
+        { S_POINTER + lower_byte_address, data_bytes, 2 }
+    };
+    load_memory(test_memory, 2);
+
+    int cycles = run_cycles(opcode_table[OP_JSR_E].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    uint16 post_stack_pointer = e_cpu_context.s;
+
+    assert_int_equal(cycles, opcode_table[OP_JSR_E].cycle_count);
+    assert_int_equal(post_pc, S_POINTER | lower_byte_address);
+    assert_int_equal(post_stack_pointer, pre_stack_pointer - 2);
+    assert_int_equal(read_word_from_memory(post_stack_pointer),
+                     USER_SPACE_ROOT + 3);
+}
