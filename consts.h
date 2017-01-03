@@ -114,6 +114,7 @@ extern void mock_assert(const int result, const char* const expression,
 #define OP_LDA_E 0xB6
 #define OP_EORA_E 0xB8
 #define OP_ADCA_E 0xB9
+#define OP_ORA_E 0xBA
 #define OP_ADDA_E 0xBB
 #define OP_CMPX_E 0xBC
 #define OP_JSR_E 0xBD
@@ -154,6 +155,7 @@ extern void mock_assert(const int result, const char* const expression,
 #define OP_LDB_E 0XF6
 #define OP_EORB_E 0xF8
 #define OP_ADCB_E 0xF9
+#define OP_ORB_E 0xFA
 #define OP_ADDB_E 0xFB
 #define OP_LDD_E 0xFC
 #define OP_LDU_E 0xFE
