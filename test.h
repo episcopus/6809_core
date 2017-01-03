@@ -324,7 +324,7 @@ void inc_extended_test(void **state);
 void jmp_extended_test(void **state);
 void jsr_extended_test(void **state);
 void lda_extended_test(void **state);
-/* void ldb_extended_test(void **state); */
+void ldb_extended_test(void **state);
 /* void ldd_extended_test(void **state); */
 /* void lds_extended_test(void **state); */
 /* void ldu_extended_test(void **state); */
@@ -662,8 +662,8 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(inc_extended_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(jmp_extended_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(jsr_extended_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(lda_extended_test, test_setup, test_teardown)
-    /* cmocka_unit_test_setup_teardown(ldb_extended_test, test_setup, test_teardown), */
+    cmocka_unit_test_setup_teardown(lda_extended_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(ldb_extended_test, test_setup, test_teardown)
     /* cmocka_unit_test_setup_teardown(ldd_extended_test, test_setup, test_teardown), */
     /* cmocka_unit_test_setup_teardown(lds_extended_test, test_setup, test_teardown), */
     /* cmocka_unit_test_setup_teardown(ldu_extended_test, test_setup, test_teardown), */
