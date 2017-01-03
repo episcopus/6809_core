@@ -333,7 +333,7 @@ void ldy_extended_test(void **state);
 void neg_extended_test(void **state);
 void ora_extended_test(void **state);
 void orb_extended_test(void **state);
-/* void rol_extended_test(void **state); */
+void rol_extended_test(void **state);
 /* void ror_extended_test(void **state); */
 /* void sbca_extended_test(void ** state); */
 /* void sbcb_extended_test(void ** state); */
@@ -671,8 +671,8 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(ldy_extended_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(neg_extended_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(ora_extended_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(orb_extended_test, test_setup, test_teardown)
-    /* cmocka_unit_test_setup_teardown(rol_extended_test, test_setup, test_teardown), */
+    cmocka_unit_test_setup_teardown(orb_extended_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(rol_extended_test, test_setup, test_teardown)
     /* cmocka_unit_test_setup_teardown(ror_extended_test, test_setup, test_teardown), */
     /* cmocka_unit_test_setup_teardown(sbca_extended_test, test_setup, test_teardown), */
     /* cmocka_unit_test_setup_teardown(sbcb_extended_test, test_setup, test_teardown), */
