@@ -1067,7 +1067,6 @@ void ldx_direct_test(void **state) {
     assert_true(post_pc == pre_pc + 2);
 }
 
-
 void ldy_direct_test(void **state) {
     (void) state; /* unused */
     int pre_pc = e_cpu_context.pc;
