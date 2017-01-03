@@ -245,7 +245,7 @@ const struct opcode_def opcode_table[] = {
     /* 0xEF */ { "NOTIMPL", 0xEF, 2, REG_NONE, INHERENT, notimpl },
     /* 0xF0 */ { "NOTIMPL", 0xF0, 2, REG_NONE, INHERENT, notimpl },
     /* 0xF1 */ { "CMPB", OP_CMPB_E, 5, REG_B, EXTENDED, cmp },
-    /* 0xF2 */ { "NOTIMPL", 0xF2, 2, REG_NONE, INHERENT, notimpl },
+    /* 0xF2 */ { "SBCB", OP_SBCB_E, 5, REG_B, EXTENDED, sbc },
     /* 0xF3 */ { "ADDD", OP_ADDD_E, 7, REG_D, EXTENDED, addd },
     /* 0xF4 */ { "ANDB", OP_ANDB_E, 5, REG_B, EXTENDED, and },
     /* 0xF5 */ { "BITB", OP_BITB_E, 5, REG_B, EXTENDED, bit },
