@@ -250,7 +250,7 @@ const struct opcode_def opcode_table[] = {
     /* 0xF4 */ { "ANDB", OP_ANDB_E, 5, REG_B, EXTENDED, and },
     /* 0xF5 */ { "BITB", OP_BITB_E, 5, REG_B, EXTENDED, bit },
     /* 0xF6 */ { "LDB", OP_LDB_E, 5, REG_B, EXTENDED, ld },
-    /* 0xF7 */ { "NOTIMPL", 0xF7, 2, REG_NONE, INHERENT, notimpl },
+    /* 0xF7 */ { "STB", OP_STB_E, 5, REG_B, EXTENDED, st },
     /* 0xF8 */ { "EORB", OP_EORB_E, 5, REG_B, EXTENDED, eor },
     /* 0xF9 */ { "ADCB", OP_ADCB_E, 5, REG_B, EXTENDED, adc },
     /* 0xFA */ { "ORB", OP_ORB_E, 5, REG_B, EXTENDED, or },
