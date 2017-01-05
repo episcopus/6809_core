@@ -194,7 +194,7 @@ const struct opcode_def opcode_table[] = {
     /* 0xBC */ { "CMPX",         OP_CMPX_E,       7,  REG_X,    EXTENDED,  cmp16    },
     /* 0xBD */ { "JSR",          OP_JSR_E,        8,  REG_NONE, EXTENDED,  jsr      },
     /* 0xBE */ { "LDX",          OP_LDX_E,        6,  REG_X,    EXTENDED,  ld16     },
-    /* 0xBF */ { "NOTIMPL",      0xBF,            2,  REG_NONE, INHERENT,  notimpl  },
+    /* 0xBF */ { "STX",          0xBF,            2,  REG_NONE, INHERENT,  notimpl  },
     /* 0xC0 */ { "SUBB",         OP_SUBB,         2,  REG_B,    IMMEDIATE, sub      },
     /* 0xC1 */ { "CMPB",         OP_CMPB,         2,  REG_B,    IMMEDIATE, cmp      },
     /* 0xC2 */ { "SBCB",         OP_SBCB,         2,  REG_B,    IMMEDIATE, sbc      },
@@ -258,7 +258,7 @@ const struct opcode_def opcode_table[] = {
     /* 0xFC */ { "LDD",          OP_LDD_E,        6,  REG_D,    EXTENDED,  ld16     },
     /* 0xFD */ { "STD",          OP_STD_E,        6,  REG_D,    EXTENDED,  st16     },
     /* 0xFE */ { "LDU",          OP_LDU_E,        6,  REG_U,    EXTENDED,  ld16     },
-    /* 0xFF */ { "NOTIMPL",      0xFF,            2,  REG_NONE, INHERENT,  notimpl  }
+    /* 0xFF */ { "STU",          OP_STU_E,        6,  REG_U,    EXTENDED,  st16     }
 };
 
 const struct opcode_def opcode_ext_x10_table[] = {
