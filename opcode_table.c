@@ -453,7 +453,7 @@ const struct opcode_def opcode_ext_x10_table[] = {
     { "CMPY",    OP_CMPY_E, 8, REG_Y,    EXTENDED,  cmp16   },
     { "NOTIMPL", 0xBD,      2, REG_NONE, INHERENT,  notimpl },
     { "LDY",     OP_LDY_E,  7, REG_Y,    EXTENDED,  ld16    },
-    { "NOTIMPL", 0xBF,      2, REG_NONE, INHERENT,  notimpl },
+    { "STY",     OP_STY_E,  7, REG_Y,    EXTENDED,  st16    },
     { "NOTIMPL", 0xC0,      2, REG_NONE, INHERENT,  notimpl },
     { "NOTIMPL", 0xC1,      2, REG_NONE, INHERENT,  notimpl },
     { "NOTIMPL", 0xC2,      2, REG_NONE, INHERENT,  notimpl },

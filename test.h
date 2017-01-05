@@ -343,7 +343,7 @@ void std_extended_test(void **state);
 void sts_extended_test(void **state);
 void stu_extended_test(void **state);
 void stx_extended_test(void **state);
-/* void sty_extended_test(void **state); */
+void sty_extended_test(void **state);
 /* void suba_extended_test(void ** state); */
 /* void subb_extended_test(void ** state); */
 /* void subd_extended_test(void ** state); */
@@ -681,8 +681,8 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(std_extended_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(sts_extended_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(stu_extended_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(stx_extended_test, test_setup, test_teardown)
-    /* cmocka_unit_test_setup_teardown(sty_extended_test, test_setup, test_teardown), */
+    cmocka_unit_test_setup_teardown(stx_extended_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(sty_extended_test, test_setup, test_teardown)
     /* cmocka_unit_test_setup_teardown(suba_extended_test, test_setup, test_teardown), */
     /* cmocka_unit_test_setup_teardown(subb_extended_test, test_setup, test_teardown), */
     /* cmocka_unit_test_setup_teardown(subd_extended_test, test_setup, test_teardown), */
