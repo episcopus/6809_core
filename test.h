@@ -36,6 +36,7 @@ void get_memory_address_from_postbyte_indexed_constant_basic_y_test(void **state
 void get_memory_address_from_postbyte_indexed_constant_basic_u_test(void **state);
 void get_memory_address_from_postbyte_indexed_constant_basic_s_test(void **state);
 void get_memory_address_from_postbyte_indexed_constant_5bit_x_test(void **state);
+void get_memory_address_from_postbyte_indexed_constant_8bit_y_test(void **state);
 void run_cycles_test(void **state);
 void run_cycles_multiple_test(void **state);
 void run_cycles_notimpl_test(void **state);
@@ -388,6 +389,7 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(get_memory_address_from_postbyte_indexed_constant_basic_u_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(get_memory_address_from_postbyte_indexed_constant_basic_s_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(get_memory_address_from_postbyte_indexed_constant_5bit_x_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(get_memory_address_from_postbyte_indexed_constant_8bit_y_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(decode_source_target_postbyte_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(decode_source_target_postbyte_2_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(decode_source_target_postbyte_invalid_test, test_setup, test_teardown),

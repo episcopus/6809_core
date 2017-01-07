@@ -457,6 +457,7 @@ void get_memory_address_from_postbyte_indexed_constant_basic_x_test(void **state
 
     assert_int_equal(read_value, 0xCAFE);
     assert_int_equal(extra_cycles, 0);
+    assert_int_equal(get_reg_value_16(REG_PC), USER_SPACE_ROOT + 1);
 }
 
 void get_memory_address_from_postbyte_indexed_constant_basic_y_test(void **state) {
@@ -478,6 +479,7 @@ void get_memory_address_from_postbyte_indexed_constant_basic_y_test(void **state
 
     assert_int_equal(read_value, 0xCAFE);
     assert_int_equal(extra_cycles, 0);
+    assert_int_equal(get_reg_value_16(REG_PC), USER_SPACE_ROOT + 1);
 }
 
 void get_memory_address_from_postbyte_indexed_constant_basic_u_test(void **state) {
@@ -499,6 +501,7 @@ void get_memory_address_from_postbyte_indexed_constant_basic_u_test(void **state
 
     assert_int_equal(read_value, 0xCAFE);
     assert_int_equal(extra_cycles, 0);
+    assert_int_equal(get_reg_value_16(REG_PC), USER_SPACE_ROOT + 1);
 }
 
 void get_memory_address_from_postbyte_indexed_constant_basic_s_test(void **state) {
@@ -520,6 +523,7 @@ void get_memory_address_from_postbyte_indexed_constant_basic_s_test(void **state
 
     assert_int_equal(read_value, 0xCAFE);
     assert_int_equal(extra_cycles, 0);
+    assert_int_equal(get_reg_value_16(REG_PC), USER_SPACE_ROOT + 1);
 }
 
 void get_memory_address_from_postbyte_indexed_constant_5bit_x_test(void **state) {
@@ -541,6 +545,30 @@ void get_memory_address_from_postbyte_indexed_constant_5bit_x_test(void **state)
 
     assert_int_equal(read_value, 0xCAFE);
     assert_int_equal(extra_cycles, 1);
+    assert_int_equal(get_reg_value_16(REG_PC), USER_SPACE_ROOT + 1);
+}
+
+void get_memory_address_from_postbyte_indexed_constant_8bit_y_test(void **state) {
+    (void) state; /* unused */
+
+    uint8 extra_cycles = 1;
+    uint8 code_bytes[] = {
+        0xA8, /* Constant 8-bit offset of -1 from register Y */
+        0xFF
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 }
+    };
+    load_memory(test_memory, 1);
+    set_reg_value_16(REG_Y, 0xCAFF);
+
+    /* word following instruction is full 16 bit address of
+       operand */
+    uint16 read_value = get_memory_address_from_postbyte(INDEXED, &extra_cycles);
+
+    assert_int_equal(read_value, 0xCAFE);
+    assert_int_equal(extra_cycles, 1);
+    assert_int_equal(get_reg_value_16(REG_PC), USER_SPACE_ROOT + 2);
 }
 
 /* Run a single NOP instruction which should yield 2 cycles */
