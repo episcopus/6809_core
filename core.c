@@ -243,7 +243,7 @@ uint16 decode_indexed_addressing_postbyte(uint8* out_extra_cycles) {
 uint16 decode_constant_offset_postbyte(uint8* out_extra_cycles) {
     uint8 postbyte = read_byte_from_memory(e_cpu_context.pc++);
     enum target_register tr = decode_register_from_indexed_postbyte(postbyte);
-    int offset = 0;
+    short int offset = 0;
     uint16 return_address = 0;
     uint8 indirect = postbyte & 0x10;
     *out_extra_cycles = 0;
@@ -255,6 +255,8 @@ uint16 decode_constant_offset_postbyte(uint8* out_extra_cycles) {
         // Hope it works
         offset |= (offset & 0x10) ? 0xFFF0 : 0;
         *out_extra_cycles = 1;
+        // 5-bit offset has no indirect mode
+        indirect = 0;
     }
     else {
         uint8 lower_nibble = postbyte & 0xF;

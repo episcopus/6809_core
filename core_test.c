@@ -522,6 +522,27 @@ void get_memory_address_from_postbyte_indexed_constant_basic_s_test(void **state
     assert_int_equal(extra_cycles, 0);
 }
 
+void get_memory_address_from_postbyte_indexed_constant_5bit_x_test(void **state) {
+    (void) state; /* unused */
+
+    uint8 extra_cycles = 1;
+    uint8 code_bytes[] = {
+        0x1F /* Constant 5-bit offset of -1 from register X */
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 1 }
+    };
+    load_memory(test_memory, 1);
+    set_reg_value_16(REG_X, 0xCAFF);
+
+    /* word following instruction is full 16 bit address of
+       operand */
+    uint16 read_value = get_memory_address_from_postbyte(INDEXED, &extra_cycles);
+
+    assert_int_equal(read_value, 0xCAFE);
+    assert_int_equal(extra_cycles, 1);
+}
+
 /* Run a single NOP instruction which should yield 2 cycles */
 void run_cycles_test(void **state) {
     (void) state; /* unused */
