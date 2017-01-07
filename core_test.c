@@ -418,6 +418,82 @@ void get_memory_address_from_postbyte_extended_test(void **state) {
     assert_int_equal(read_value, S_POINTER | lower_byte_address);
 }
 
+void get_memory_address_from_postbyte_indexed_constant_basic_x_test(void **state) {
+    (void) state; /* unused */
+
+    uint8 code_bytes[] = {
+        0x84 /* Constant offset of zero from register X */
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 1 }
+    };
+    load_memory(test_memory, 1);
+    set_reg_value_16(REG_X, 0xCAFE);
+
+    /* word following instruction is full 16 bit address of
+       operand */
+    uint16 read_value = get_memory_address_from_postbyte(INDEXED);
+
+    assert_int_equal(read_value, 0xCAFE);
+}
+
+void get_memory_address_from_postbyte_indexed_constant_basic_y_test(void **state) {
+    (void) state; /* unused */
+
+    uint8 code_bytes[] = {
+        0xA4 /* Constant offset of zero from register Y */
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 1 }
+    };
+    load_memory(test_memory, 1);
+    set_reg_value_16(REG_Y, 0xCAFE);
+
+    /* word following instruction is full 16 bit address of
+       operand */
+    uint16 read_value = get_memory_address_from_postbyte(INDEXED);
+
+    assert_int_equal(read_value, 0xCAFE);
+}
+
+void get_memory_address_from_postbyte_indexed_constant_basic_u_test(void **state) {
+    (void) state; /* unused */
+
+    uint8 code_bytes[] = {
+        0xC4 /* Constant offset of zero from register U */
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 1 }
+    };
+    load_memory(test_memory, 1);
+    set_reg_value_16(REG_U, 0xCAFE);
+
+    /* word following instruction is full 16 bit address of
+       operand */
+    uint16 read_value = get_memory_address_from_postbyte(INDEXED);
+
+    assert_int_equal(read_value, 0xCAFE);
+}
+
+void get_memory_address_from_postbyte_indexed_constant_basic_s_test(void **state) {
+    (void) state; /* unused */
+
+    uint8 code_bytes[] = {
+        0xE4 /* Constant offset of zero from register S */
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 1 }
+    };
+    load_memory(test_memory, 1);
+    set_reg_value_16(REG_S, 0xCAFE);
+
+    /* word following instruction is full 16 bit address of
+       operand */
+    uint16 read_value = get_memory_address_from_postbyte(INDEXED);
+
+    assert_int_equal(read_value, 0xCAFE);
+}
+
 /* Run a single NOP instruction which should yield 2 cycles */
 void run_cycles_test(void **state) {
     (void) state; /* unused */

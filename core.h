@@ -14,6 +14,10 @@ uint16 read_word_handler(enum addressing_mode am);
 void write_word_handler(enum addressing_mode am, uint16 word);
 uint16 get_memory_address_from_postbyte(enum addressing_mode am);
 
+uint16 decode_indexed_addressing_postbyte();
+enum target_register decode_register_from_indexed_postbyte(uint8 postbyte);
+uint16 decode_constant_offset_postbyte();
+
 uint32 run_cycles(uint32 wanted_cycles);
 void decode_source_target_postbyte(uint8 postbyte, enum target_register* out_source, enum target_register* out_target);
 

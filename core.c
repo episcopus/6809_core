@@ -200,12 +200,99 @@ uint16 get_memory_address_from_postbyte(enum addressing_mode am) {
         return_addr = read_word_from_memory(e_cpu_context.pc);
         e_cpu_context.pc += 2;
         break;
+    case INDEXED:
+        return_addr = decode_indexed_addressing_postbyte();
+        break;
     default:
         assert(FALSE);
         break;
     }
 
     return return_addr;
+}
+
+uint16 decode_indexed_addressing_postbyte() {
+    uint8 postbyte = e_cpu_context.memory[e_cpu_context.pc];
+    uint16 return_address = 0;
+
+    // Handle special / unique cases first and then switch on the main types.
+    if (!(postbyte & 0x80)) {
+        // 5 bit Constant Offset
+        return_address = decode_constant_offset_postbyte();
+    }
+    else if (postbyte == 0x9F) {
+        // Extended Indirect
+    }
+    else {
+        uint8 lower_nibble = postbyte & 0xF;
+        switch (lower_nibble) {
+        case 0x4:
+        case 0x8:
+        case 0x9:
+            return_address = decode_constant_offset_postbyte();
+            break;
+        }
+    }
+
+    return return_address;
+}
+
+uint16 decode_constant_offset_postbyte() {
+    uint8 postbyte = read_byte_from_memory(e_cpu_context.pc++);
+    enum target_register tr = decode_register_from_indexed_postbyte(postbyte);
+    int offset = 0;
+    uint16 return_address = 0;
+    uint8 indirect = postbyte & 0x10;
+
+    if (!(postbyte & 0x80)) {
+        // 5 bit Constant Offset
+        offset = postbyte & 0x1F;
+        // Poor attempt at 5-bit to 16-bit two's complement conversion follows.
+        // Hope it works
+        offset |= (offset & 0x10) ? 0xFFF0 : 0;
+    }
+    else {
+        uint8 lower_nibble = postbyte & 0xF;
+        char one_byte_offset = 0;
+        switch (lower_nibble) {
+        case 0x4:
+            offset = 0;
+            break;
+        case 0x8:
+            one_byte_offset = (char) read_byte_from_memory(e_cpu_context.pc++);
+            offset = (int) one_byte_offset;
+            break;
+        case 0x9:
+            offset = (int) read_word_from_memory(e_cpu_context.pc);
+            e_cpu_context.pc += 2;
+            break;
+        }
+    }
+
+    uint16 base_address = get_reg_value_16(tr);
+    return_address = base_address + offset;
+    if (indirect) {
+        return_address = read_word_from_memory(return_address);
+    }
+
+    return return_address;
+}
+
+enum target_register decode_register_from_indexed_postbyte(uint8 postbyte) {
+    uint8 masked = (postbyte & 0x60) >> 5;
+    switch (masked) {
+    case 0:
+        return REG_X;
+    case 1:
+        return REG_Y;
+    case 2:
+        return REG_U;
+    case 3:
+        return REG_S;
+    default:
+        assert(FALSE);
+        return REG_NONE;
+    }
 }
 
 uint32 run_cycles(uint32 wanted_cycles) {
