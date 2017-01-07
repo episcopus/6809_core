@@ -34,8 +34,9 @@ int abx(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
 int adc(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;
 
+    uint8 extra_cycles = 0;
     uint8 reg_val = get_reg_value_8(t_r);
-    uint8 memory_val = read_byte_handler(a_m);
+    uint8 memory_val = read_byte_handler(a_m, &extra_cycles);
     uint16 total_val = reg_val + memory_val +
         (e_cpu_context.cc.c ? 1 : 0);
     uint8 output_val = total_val & 0xFF;
@@ -65,7 +66,7 @@ int adc(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.cc.v = pos_overflow || neg_overflow;
 
     set_reg_value_8(t_r, output_val);
-    return opcode_table[opcode].cycle_count;
+    return opcode_table[opcode].cycle_count + extra_cycles;
 }
 
 /* Add Memory Byte to 8-Bit Accumulator */
@@ -86,7 +87,8 @@ int add(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     }
 
     uint8 reg_val = *p_reg;
-    uint8 memory_val = read_byte_handler(a_m);
+    uint8 extra_cycles = 0;
+    uint8 memory_val = read_byte_handler(a_m, &extra_cycles);
     uint16 total_val = reg_val + memory_val;
     uint8 output_val = total_val & 0xFF;
 
@@ -115,15 +117,16 @@ int add(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.cc.v = pos_overflow || neg_overflow;
 
     *p_reg = output_val;
-    return opcode_table[opcode].cycle_count;
+    return opcode_table[opcode].cycle_count + extra_cycles;
 }
 
 /* Add Memory Word to 16-Bit Accumulator */
 int addd(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;
 
+    uint8 extra_cycles = 0;
     uint16 reg_val = get_reg_value_16(t_r);
-    uint16 memory_val = read_word_handler(a_m);
+    uint16 memory_val = read_word_handler(a_m, &extra_cycles);
     uint32 total_val = reg_val + memory_val;
     uint16 output_val = total_val & 0xFFFF;
 
@@ -150,7 +153,7 @@ int addd(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.cc.v = pos_overflow || neg_overflow;
 
     set_reg_value_16(t_r, output_val);
-    return opcode_table[opcode].cycle_count;
+    return opcode_table[opcode].cycle_count + extra_cycles;
 }
 
 /* Logically AND Memory Byte with Accumulator A or B */
@@ -158,7 +161,8 @@ int and(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;
 
     uint8 reg_val = get_reg_value_8(t_r);
-    uint8 memory_val = read_byte_handler(a_m);
+    uint8 extra_cycles = 0;
+    uint8 memory_val = read_byte_handler(a_m, &extra_cycles);
 
     reg_val &= memory_val;
 
@@ -172,7 +176,7 @@ int and(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.cc.v = 0;
 
     set_reg_value_8(t_r, reg_val);
-    return opcode_table[opcode].cycle_count;
+    return opcode_table[opcode].cycle_count + extra_cycles;
 }
 
 /* Logically AND Immediate Value with the CC Register */
@@ -181,12 +185,13 @@ int andcc(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
 
     e_cpu_context.pc++;
     uint8 reg_val = (uint8) *((uint8*) &e_cpu_context.cc);
-    uint8 memory_val = read_byte_handler(a_m);
+    uint8 extra_cycles = 0;
+    uint8 memory_val = read_byte_handler(a_m, &extra_cycles);
 
     reg_val &= memory_val;
     *((uint8*) &e_cpu_context.cc) = reg_val;
 
-    return opcode_table[opcode].cycle_count;
+    return opcode_table[opcode].cycle_count + extra_cycles;
 }
 
 /* Arithmetic Shift Left of 8-Bit Accumulator or Memory Byte */
@@ -195,11 +200,12 @@ int asl(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
 
     uint16 out_addr = 0;
     uint8 reg_val = 0;
+    uint8 extra_cycles = 0;
     if (a_m == INHERENT) {
         reg_val = get_reg_value_8(t_r);
     }
     else {
-        out_addr = get_memory_address_from_postbyte(a_m);
+        out_addr = get_memory_address_from_postbyte(a_m, &extra_cycles);
         reg_val = read_byte_from_memory(out_addr);
     }
 
@@ -224,7 +230,7 @@ int asl(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
         write_byte_to_memory(out_addr, reg_val);
     }
 
-    return opcode_table[opcode].cycle_count;
+    return opcode_table[opcode].cycle_count + extra_cycles;
 }
 
 /* Arithmetic Shift Right of 8-Bit Accumulator or Memory Byte */
@@ -234,11 +240,12 @@ int asr(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
 
     uint16 out_addr = 0;
     uint8 reg_val = 0;
+    uint8 extra_cycles = 0;
     if (a_m == INHERENT) {
         reg_val = get_reg_value_8(t_r);
     }
     else {
-        out_addr = get_memory_address_from_postbyte(a_m);
+        out_addr = get_memory_address_from_postbyte(a_m, &extra_cycles);
         reg_val = read_byte_from_memory(out_addr);
     }
 
@@ -266,7 +273,7 @@ int asr(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
         write_byte_to_memory(out_addr, reg_val);
     }
 
-    return opcode_table[opcode].cycle_count;
+    return opcode_table[opcode].cycle_count + extra_cycles;
 }
 
 /* Bit Test Accumulator A or B with Memory Byte Value */
@@ -274,7 +281,8 @@ int bit(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;
 
     uint8 reg_val = get_reg_value_8(t_r);
-    uint8 memory_val = read_byte_handler(a_m);
+    uint8 extra_cycles = 0;
+    uint8 memory_val = read_byte_handler(a_m, &extra_cycles);
 
     reg_val &= memory_val;
 
@@ -287,7 +295,7 @@ int bit(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     /* The Overflow flag is cleared by this instruction. */
     e_cpu_context.cc.v = 0;
 
-    return opcode_table[opcode].cycle_count;
+    return opcode_table[opcode].cycle_count + extra_cycles;
 }
 
 /* Load Zero into Accumulator */
@@ -295,12 +303,13 @@ int clr(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     (void) a_m; /* unused */
     e_cpu_context.pc++;
 
+    uint8 extra_cycles = 0;
     uint16 out_addr = 0;
     if (a_m == INHERENT) {
         set_reg_value_8(t_r, 0);
     }
     else {
-        out_addr = get_memory_address_from_postbyte(a_m);
+        out_addr = get_memory_address_from_postbyte(a_m, &extra_cycles);
         write_byte_to_memory(out_addr, 0);
     }
 
@@ -313,7 +322,7 @@ int clr(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     /* The Negative flag is cleared. */
     e_cpu_context.cc.n = 0;
 
-    return opcode_table[opcode].cycle_count;
+    return opcode_table[opcode].cycle_count + extra_cycles;
 }
 
 /* Complement Accumulator */
@@ -321,13 +330,14 @@ int com(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     (void) a_m; /* unused */
     e_cpu_context.pc++;
 
+    uint8 extra_cycles = 0;
     uint16 out_addr = 0;
     uint8 reg_val = 0;
     if (a_m == INHERENT) {
         reg_val = get_reg_value_8(t_r);
     }
     else {
-        out_addr = get_memory_address_from_postbyte(a_m);
+        out_addr = get_memory_address_from_postbyte(a_m, &extra_cycles);
         reg_val = read_byte_from_memory(out_addr);
     }
 
@@ -352,7 +362,7 @@ int com(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
         write_byte_to_memory(out_addr, reg_val);
     }
 
-    return opcode_table[opcode].cycle_count;
+    return opcode_table[opcode].cycle_count + extra_cycles;
 }
 
 /* Subtract from value in 8-Bit Accumulator */
@@ -373,7 +383,8 @@ int cmp(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     }
 
     uint8 reg_val = *p_reg;
-    uint8 memory_val = read_byte_handler(a_m);
+    uint8 extra_cycles = 0;
+    uint8 memory_val = read_byte_handler(a_m, &extra_cycles);
 
     uint8 output_val = reg_val - memory_val;
 
@@ -398,7 +409,7 @@ int cmp(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
         (output_val & 0x80) == 0;
     e_cpu_context.cc.v = pos_overflow || neg_overflow;
 
-    return opcode_table[opcode].cycle_count;
+    return opcode_table[opcode].cycle_count + extra_cycles;
 }
 
 /* Compare Memory Word from 16-Bit Register */
@@ -436,7 +447,8 @@ int cmp16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     }
 
     uint16 reg_val = *p_reg;
-    uint16 memory_val = read_word_handler(a_m);
+    uint8 extra_cycles = 0;
+    uint16 memory_val = read_word_handler(a_m, &extra_cycles);
 
     uint16 output_val = reg_val - memory_val;
 
@@ -461,7 +473,7 @@ int cmp16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
         (output_val & 0x8000) == 0;
     e_cpu_context.cc.v = pos_overflow || neg_overflow;
 
-    return this_opcode_table[opcode].cycle_count;
+    return this_opcode_table[opcode].cycle_count + extra_cycles;
 }
 
 /* Decimal Addition Adjust */
@@ -504,11 +516,12 @@ int dec(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
 
     uint16 out_addr = 0;
     uint8 reg_val = 0;
+    uint8 extra_cycles = 0;
     if (a_m == INHERENT) {
         reg_val = get_reg_value_8(t_r);
     }
     else {
-        out_addr = get_memory_address_from_postbyte(a_m);
+        out_addr = get_memory_address_from_postbyte(a_m, &extra_cycles);
         reg_val = read_byte_from_memory(out_addr);
     }
 
@@ -532,7 +545,7 @@ int dec(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
         write_byte_to_memory(out_addr, reg_val);
     }
 
-    return opcode_table[opcode].cycle_count;
+    return opcode_table[opcode].cycle_count + extra_cycles;
 }
 
 /* Exclusively-OR Memory Byte with Accumulator A or B */
@@ -553,7 +566,8 @@ int eor(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     }
 
     uint8 reg_val = *p_reg;
-    uint8 memory_val = read_byte_handler(a_m);
+    uint8 extra_cycles = 0;
+    uint8 memory_val = read_byte_handler(a_m, &extra_cycles);
 
     reg_val ^= memory_val;
 
@@ -567,7 +581,7 @@ int eor(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.cc.v = 0;
 
     *p_reg = reg_val;
-    return opcode_table[opcode].cycle_count;
+    return opcode_table[opcode].cycle_count + extra_cycles;
 }
 
 
@@ -577,7 +591,8 @@ int exg(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     (void) a_m; /* unused */
     e_cpu_context.pc++;
 
-    uint8 post_byte = read_byte_handler(IMMEDIATE);
+    uint8 extra_cycles = 0;
+    uint8 post_byte = read_byte_handler(IMMEDIATE, &extra_cycles);
     enum target_register src;
     enum target_register trg;
     decode_source_target_postbyte(post_byte, &src, &trg);
@@ -594,7 +609,7 @@ int exg(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     }
     else if (trg_size == REG_SIZE_INVALID && src_size == REG_SIZE_INVALID) {
         /* Do nothing when we get trolled */
-        return opcode_table[opcode].cycle_count;
+        return opcode_table[opcode].cycle_count + extra_cycles;
     }
 
     /* If an invalid register encoding is specified for either register, a
@@ -664,7 +679,7 @@ int exg(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
         }
     }
 
-    return opcode_table[opcode].cycle_count;
+    return opcode_table[opcode].cycle_count + extra_cycles;
 }
 
 /* Increment Accumulator */
@@ -674,11 +689,12 @@ int inc(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
 
     uint16 out_addr = 0;
     uint8 reg_val = 0;
+    uint8 extra_cycles = 0;
     if (a_m == INHERENT) {
         reg_val = get_reg_value_8(t_r);
     }
     else {
-        out_addr = get_memory_address_from_postbyte(a_m);
+        out_addr = get_memory_address_from_postbyte(a_m, &extra_cycles);
         reg_val = read_byte_from_memory(out_addr);
     }
 
@@ -701,7 +717,7 @@ int inc(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     else {
         write_byte_to_memory(out_addr, reg_val);
     }
-    return opcode_table[opcode].cycle_count;
+    return opcode_table[opcode].cycle_count + extra_cycles;
 }
 
 
@@ -709,17 +725,19 @@ int inc(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
 int jmp(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;
 
-    uint16 out_addr = get_memory_address_from_postbyte(a_m);
+    uint8 extra_cycles = 0;
+    uint16 out_addr = get_memory_address_from_postbyte(a_m, &extra_cycles);
     e_cpu_context.pc = out_addr;
 
-    return opcode_table[opcode].cycle_count;
+    return opcode_table[opcode].cycle_count + extra_cycles;
 }
 
 /* Unconditional Jump to Subroutine */
 int jsr(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;
 
-    uint16 out_addr = get_memory_address_from_postbyte(a_m);
+    uint8 extra_cycles = 0;
+    uint16 out_addr = get_memory_address_from_postbyte(a_m, &extra_cycles);
 
     /* Save current PC onto hardware stack */
     e_cpu_context.s -= 2;
@@ -727,14 +745,15 @@ int jsr(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
 
     e_cpu_context.pc = out_addr;
 
-    return opcode_table[opcode].cycle_count;
+    return opcode_table[opcode].cycle_count + extra_cycles;
 }
 
 /* Load Data into 8-Bit Accumulator */
 int ld(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;
 
-    uint8 memory_val = read_byte_handler(a_m);
+    uint8 extra_cycles = 0;
+    uint8 memory_val = read_byte_handler(a_m, &extra_cycles);
     set_reg_value_8(t_r, memory_val);
 
     /* The Negative flag is set equal to the new value of bit 7 of
@@ -746,7 +765,7 @@ int ld(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     /* The Overflow flag is cleared by this instruction. */
     e_cpu_context.cc.v = 0;
 
-    return opcode_table[opcode].cycle_count;
+    return opcode_table[opcode].cycle_count + extra_cycles;
 }
 
 /* Load Data into 16-Bit Register */
@@ -768,7 +787,8 @@ int ld16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
         break;
     }
 
-    uint16 memory_val = read_word_handler(a_m);
+    uint8 extra_cycles = 0;
+    uint16 memory_val = read_word_handler(a_m, &extra_cycles);
     set_reg_value_16(t_r, memory_val);
 
     /* The Negative flag is set equal to the new value of bit 15 of
@@ -780,7 +800,7 @@ int ld16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     /* The Overflow flag is cleared by this instruction. */
     e_cpu_context.cc.v = 0;
 
-    return this_opcode_table[opcode].cycle_count;
+    return this_opcode_table[opcode].cycle_count + extra_cycles;
 }
 
 /* Logical Shift Right of 8-Bit Accumulator or Memory Byte */
@@ -840,11 +860,12 @@ int neg(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
 
     uint16 out_addr = 0;
     uint8 reg_val = 0;
+    uint8 extra_cycles = 0;
     if (a_m == INHERENT) {
         reg_val = get_reg_value_8(t_r);
     }
     else {
-        out_addr = get_memory_address_from_postbyte(a_m);
+        out_addr = get_memory_address_from_postbyte(a_m, &extra_cycles);
         reg_val = read_byte_from_memory(out_addr);
     }
 
@@ -878,7 +899,7 @@ int neg(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
         write_byte_to_memory(out_addr, reg_val);
     }
 
-    return opcode_table[opcode].cycle_count;
+    return opcode_table[opcode].cycle_count + extra_cycles;
 }
 
 /* No Operation */
@@ -905,8 +926,9 @@ int notimpl(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
 int or(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;
 
+    uint8 extra_cycles = 0;
     uint8 reg_val = get_reg_value_8(t_r);
-    uint8 memory_val = read_byte_handler(a_m);
+    uint8 memory_val = read_byte_handler(a_m, &extra_cycles);
 
     reg_val |= memory_val;
 
@@ -920,28 +942,30 @@ int or(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.cc.v = 0;
 
     set_reg_value_8(t_r, reg_val);
-    return opcode_table[opcode].cycle_count;
+    return opcode_table[opcode].cycle_count + extra_cycles;
 }
 
 /* Logically OR the CC Register with an Immediate Value */
 int orcc(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;
 
+    uint8 extra_cycles = 0;
     uint8 reg_val = get_reg_value_8(t_r);
-    uint8 memory_val = read_byte_handler(a_m);
+    uint8 memory_val = read_byte_handler(a_m, &extra_cycles);
 
     reg_val |= memory_val;
 
     set_reg_value_8(t_r, reg_val);
-    return opcode_table[opcode].cycle_count;
+    return opcode_table[opcode].cycle_count + extra_cycles;
 }
 
 /* Push Registers onto a Stack */
 int psh(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;
 
+    uint8 extra_cycles = 0;
     /* postbyte indicating which registers to push */
-    uint8 postbyte = read_byte_handler(a_m);
+    uint8 postbyte = read_byte_handler(a_m, &extra_cycles);
     /* baseline figure for clock cycles, each register pushed is one
        additional cycle */
     uint8 cycles = opcode_table[opcode].cycle_count;
@@ -984,15 +1008,16 @@ int psh(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     }
 
     set_reg_value_16(t_r, stack_pointer);
-    return cycles;
+    return cycles + extra_cycles;
 }
 
 /* Pull Registers from Stack */
 int pul(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;
 
+    uint8 extra_cycles = 0;
     /* postbyte indicating which registers to push */
-    uint8 postbyte = read_byte_handler(a_m);
+    uint8 postbyte = read_byte_handler(a_m, &extra_cycles);
     /* baseline figure for clock cycles, each register pushed is one
        additional cycle */
     uint8 cycles = opcode_table[opcode].cycle_count;
@@ -1034,7 +1059,7 @@ int pul(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     }
 
     set_reg_value_16(t_r, stack_pointer);
-    return cycles;
+    return cycles + extra_cycles;
 }
 
 /* Rotate 8-Bit Accumulator or Memory Byte Left through Carry */
@@ -1044,11 +1069,12 @@ int rol(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
 
     uint16 out_addr = 0;
     uint8 reg_val = 0;
+    uint8 extra_cycles = 0;
     if (a_m == INHERENT) {
         reg_val = get_reg_value_8(t_r);
     }
     else {
-        out_addr = get_memory_address_from_postbyte(a_m);
+        out_addr = get_memory_address_from_postbyte(a_m, &extra_cycles);
         reg_val = read_byte_from_memory(out_addr);
     }
 
@@ -1075,7 +1101,7 @@ int rol(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     else {
         write_byte_to_memory(out_addr, reg_val);
     }
-    return opcode_table[opcode].cycle_count;
+    return opcode_table[opcode].cycle_count + extra_cycles;
 }
 
 /* Rotate 8-Bit Accumulator or Memory Byte Right through Carry */
@@ -1085,11 +1111,12 @@ int ror(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
 
     uint16 out_addr = 0;
     uint8 reg_val = 0;
+    uint8 extra_cycles = 0;
     if (a_m == INHERENT) {
         reg_val = get_reg_value_8(t_r);
     }
     else {
-        out_addr = get_memory_address_from_postbyte(a_m);
+        out_addr = get_memory_address_from_postbyte(a_m, &extra_cycles);
         reg_val = read_byte_from_memory(out_addr);
     }
 
@@ -1112,15 +1139,16 @@ int ror(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     else {
         write_byte_to_memory(out_addr, reg_val);
     }
-    return opcode_table[opcode].cycle_count;
+    return opcode_table[opcode].cycle_count + extra_cycles;
 }
 
 /* Subtract Memory Byte and Carry from Accumulator A or B */
 int sbc(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;
 
+    uint8 extra_cycles = 0;
     uint8 reg_val = get_reg_value_8(t_r);
-    uint8 memory_val = read_byte_handler(a_m);
+    uint8 memory_val = read_byte_handler(a_m, &extra_cycles);
     uint8 total_val = reg_val - memory_val -
         (e_cpu_context.cc.c ? 1 : 0);
 
@@ -1146,7 +1174,7 @@ int sbc(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.cc.v = pos_overflow || neg_overflow;
 
     set_reg_value_8(t_r, total_val);
-    return opcode_table[opcode].cycle_count;
+    return opcode_table[opcode].cycle_count + extra_cycles;
 }
 
 /* Sign Extend the 8-bit Value in B to a 16-bit Value in D */
@@ -1169,8 +1197,9 @@ int sex(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
 int st(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;
 
+    uint8 extra_cycles = 0;
     uint8 store_byte = get_reg_value_8(t_r);
-    write_byte_handler(a_m, store_byte);
+    write_byte_handler(a_m, store_byte, &extra_cycles);
 
     /* The Negative flag is set equal to the new value of bit 7 of
        the accumulator. */
@@ -1181,7 +1210,7 @@ int st(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     /* The Overflow flag is cleared by this instruction. */
     e_cpu_context.cc.v = 0;
 
-    return opcode_table[opcode].cycle_count;
+    return opcode_table[opcode].cycle_count + extra_cycles;
 }
 
 /* Store 16-Bit Register to Memory */
@@ -1203,8 +1232,9 @@ int st16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
         break;
     }
 
+    uint8 extra_cycles = 0;
     uint16 store_word = get_reg_value_16(t_r);
-    write_word_handler(a_m, store_word);
+    write_word_handler(a_m, store_word, &extra_cycles);
 
     /* The Negative flag is set equal to the new value of bit 15 of
        the register. */
@@ -1215,15 +1245,16 @@ int st16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     /* The Overflow flag is cleared by this instruction. */
     e_cpu_context.cc.v = 0;
 
-    return this_opcode_table[opcode].cycle_count;
+    return this_opcode_table[opcode].cycle_count + extra_cycles;
 }
 
 /* Subtract from value in 8-Bit Accumulator */
 int sub(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;
 
+    uint8 extra_cycles = 0;
     uint8 reg_val = get_reg_value_8(t_r);
-    uint8 memory_val = read_byte_handler(a_m);
+    uint8 memory_val = read_byte_handler(a_m, &extra_cycles);
     uint8 total_val = reg_val - memory_val;
 
     /* The Carry flag is set if a borrow into bit-7 was needed; cleared
@@ -1247,15 +1278,16 @@ int sub(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.cc.v = pos_overflow || neg_overflow;
 
     set_reg_value_8(t_r, total_val);
-    return opcode_table[opcode].cycle_count;
+    return opcode_table[opcode].cycle_count + extra_cycles;
 }
 
 /* Subtract from value in 16-Bit Accumulator */
 int sub16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;
 
+    uint8 extra_cycles = 0;
     uint16 reg_val = get_reg_value_16(t_r);
-    uint16 memory_val = read_word_handler(a_m);
+    uint16 memory_val = read_word_handler(a_m, &extra_cycles);
     uint16 total_val = reg_val - memory_val;
 
     /* The Carry flag is set if a borrow into bit-7 was needed; cleared
@@ -1279,7 +1311,7 @@ int sub16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.cc.v = pos_overflow || neg_overflow;
 
     set_reg_value_16(t_r, total_val);
-    return opcode_table[opcode].cycle_count;
+    return opcode_table[opcode].cycle_count + extra_cycles;
 }
 
 /* Transfer Register to Register */
@@ -1288,7 +1320,8 @@ int tfr(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     (void) a_m; /* unused */
     e_cpu_context.pc++;
 
-    uint8 post_byte = read_byte_handler(IMMEDIATE);
+    uint8 extra_cycles = 0;
+    uint8 post_byte = read_byte_handler(IMMEDIATE, &extra_cycles);
     enum target_register src;
     enum target_register trg;
     decode_source_target_postbyte(post_byte, &src, &trg);
@@ -1349,7 +1382,7 @@ int tfr(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
         set_reg_value_16(trg, new_trg_value);
     }
 
-    return opcode_table[opcode].cycle_count;
+    return opcode_table[opcode].cycle_count + extra_cycles;
 }
 
 /* Test Value in Accumulator */
@@ -1359,11 +1392,12 @@ int tst(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
 
     uint16 out_addr = 0;
     uint8 reg_val = 0;
+    uint8 extra_cycles = 0;
     if (a_m == INHERENT) {
         reg_val = get_reg_value_8(t_r);
     }
     else {
-        out_addr = get_memory_address_from_postbyte(a_m);
+        out_addr = get_memory_address_from_postbyte(a_m, &extra_cycles);
         reg_val = read_byte_from_memory(out_addr);
     }
 
@@ -1383,5 +1417,5 @@ int tst(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
         write_byte_to_memory(out_addr, reg_val);
     }
 
-    return opcode_table[opcode].cycle_count;
+    return opcode_table[opcode].cycle_count + extra_cycles;
 }

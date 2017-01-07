@@ -129,9 +129,9 @@ void write_word_to_memory(uint16 address, uint16 word) {
 /* This memory accessor reads a byte from the appropriate location
    in memory based on the addressing mode. Will move the pc
    appropriately based on the addressing mode and postbyte opcode. */
-uint8 read_byte_handler(enum addressing_mode am) {
+uint8 read_byte_handler(enum addressing_mode am, uint8* out_extra_cycles) {
     uint8 return_byte = 0;
-    uint16 byte_addr = get_memory_address_from_postbyte(am);
+    uint16 byte_addr = get_memory_address_from_postbyte(am, out_extra_cycles);
     return_byte = read_byte_from_memory(byte_addr);
 
     return return_byte;
@@ -139,17 +139,17 @@ uint8 read_byte_handler(enum addressing_mode am) {
 
 /* Write a byte to the appropriate location based on the decoded
    postbyte / addressing mode combination */
-void write_byte_handler(enum addressing_mode am, uint8 byte) {
-    uint16 byte_addr = get_memory_address_from_postbyte(am);
+void write_byte_handler(enum addressing_mode am, uint8 byte, uint8* out_extra_cycles) {
+    uint16 byte_addr = get_memory_address_from_postbyte(am, out_extra_cycles);
     write_byte_to_memory(byte_addr, byte);
 }
 
 /* This memory accessor reads a word from the appropriate location
    in memory based on the addressing mode. Will move the pc
    appropriately based on the addressing mode and postbyte opcode. */
-uint16 read_word_handler(enum addressing_mode am) {
+uint16 read_word_handler(enum addressing_mode am, uint8* out_extra_cycles) {
     uint16 return_word = 0;
-    uint16 word_addr = get_memory_address_from_postbyte(am);
+    uint16 word_addr = get_memory_address_from_postbyte(am, out_extra_cycles);
     switch (am) {
     case IMMEDIATE:
         /* word is located right at the pc */
@@ -174,14 +174,15 @@ uint16 read_word_handler(enum addressing_mode am) {
 
 /* Write a word to the appropriate location based on the decoded
    postbyte / addressing mode combination */
-void write_word_handler(enum addressing_mode am, uint16 word) {
-    uint16 word_addr = get_memory_address_from_postbyte(am);
+void write_word_handler(enum addressing_mode am, uint16 word, uint8* out_extra_cycles) {
+    uint16 word_addr = get_memory_address_from_postbyte(am, out_extra_cycles);
     write_word_to_memory(word_addr, word);
 }
 
-uint16 get_memory_address_from_postbyte(enum addressing_mode am) {
+uint16 get_memory_address_from_postbyte(enum addressing_mode am, uint8* out_extra_cycles) {
     uint16 return_addr = 0;
     uint8 lower_byte = 0, upper_byte = 0;
+    *out_extra_cycles = 0;
     switch (am) {
     case IMMEDIATE:
         /* byte is located right at the pc */
@@ -201,7 +202,7 @@ uint16 get_memory_address_from_postbyte(enum addressing_mode am) {
         e_cpu_context.pc += 2;
         break;
     case INDEXED:
-        return_addr = decode_indexed_addressing_postbyte();
+        return_addr = decode_indexed_addressing_postbyte(out_extra_cycles);
         break;
     default:
         assert(FALSE);
@@ -211,17 +212,19 @@ uint16 get_memory_address_from_postbyte(enum addressing_mode am) {
     return return_addr;
 }
 
-uint16 decode_indexed_addressing_postbyte() {
+uint16 decode_indexed_addressing_postbyte(uint8* out_extra_cycles) {
     uint8 postbyte = e_cpu_context.memory[e_cpu_context.pc];
     uint16 return_address = 0;
+    *out_extra_cycles = 0;
 
     // Handle special / unique cases first and then switch on the main types.
     if (!(postbyte & 0x80)) {
         // 5 bit Constant Offset
-        return_address = decode_constant_offset_postbyte();
+        return_address = decode_constant_offset_postbyte(out_extra_cycles);
     }
     else if (postbyte == 0x9F) {
         // Extended Indirect
+        *out_extra_cycles = 5;
     }
     else {
         uint8 lower_nibble = postbyte & 0xF;
@@ -229,7 +232,7 @@ uint16 decode_indexed_addressing_postbyte() {
         case 0x4:
         case 0x8:
         case 0x9:
-            return_address = decode_constant_offset_postbyte();
+            return_address = decode_constant_offset_postbyte(out_extra_cycles);
             break;
         }
     }
@@ -237,12 +240,13 @@ uint16 decode_indexed_addressing_postbyte() {
     return return_address;
 }
 
-uint16 decode_constant_offset_postbyte() {
+uint16 decode_constant_offset_postbyte(uint8* out_extra_cycles) {
     uint8 postbyte = read_byte_from_memory(e_cpu_context.pc++);
     enum target_register tr = decode_register_from_indexed_postbyte(postbyte);
     int offset = 0;
     uint16 return_address = 0;
     uint8 indirect = postbyte & 0x10;
+    *out_extra_cycles = 0;
 
     if (!(postbyte & 0x80)) {
         // 5 bit Constant Offset
@@ -250,6 +254,7 @@ uint16 decode_constant_offset_postbyte() {
         // Poor attempt at 5-bit to 16-bit two's complement conversion follows.
         // Hope it works
         offset |= (offset & 0x10) ? 0xFFF0 : 0;
+        *out_extra_cycles = 1;
     }
     else {
         uint8 lower_nibble = postbyte & 0xF;
@@ -257,14 +262,17 @@ uint16 decode_constant_offset_postbyte() {
         switch (lower_nibble) {
         case 0x4:
             offset = 0;
+            *out_extra_cycles = 0;
             break;
         case 0x8:
             one_byte_offset = (char) read_byte_from_memory(e_cpu_context.pc++);
             offset = (int) one_byte_offset;
+            *out_extra_cycles = 1;
             break;
         case 0x9:
             offset = (int) read_word_from_memory(e_cpu_context.pc);
             e_cpu_context.pc += 2;
+            *out_extra_cycles = 4;
             break;
         }
     }
@@ -273,6 +281,7 @@ uint16 decode_constant_offset_postbyte() {
     return_address = base_address + offset;
     if (indirect) {
         return_address = read_word_from_memory(return_address);
+        *out_extra_cycles += 3;
     }
 
     return return_address;
