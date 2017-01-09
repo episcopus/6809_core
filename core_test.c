@@ -654,6 +654,31 @@ void get_memory_address_from_postbyte_indexed_constant_8bit_s_indirect_test(void
     assert_int_equal(get_reg_value_16(REG_PC), USER_SPACE_ROOT + 2);
 }
 
+void get_memory_address_from_postbyte_indexed_constant_indirect_u_test(void **state) {
+    (void) state; /* unused */
+
+    uint8 extra_cycles = 1;
+    uint8 code_bytes[] = {
+        0xD4 /* Constant offset of zero from register U, indirect mode */
+    };
+    uint8 indirect_bytes[] = {
+        0xF0,
+        0x0D
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 1 },
+        { 0xCAFE, indirect_bytes, 2 }
+    };
+    load_memory(test_memory, 2);
+    set_reg_value_16(REG_U, 0xCAFE);
+
+    uint16 read_value = get_memory_address_from_postbyte(INDEXED, &extra_cycles);
+
+    assert_int_equal(read_value, 0xF00D);
+    assert_int_equal(extra_cycles, 3);
+    assert_int_equal(get_reg_value_16(REG_PC), USER_SPACE_ROOT + 1);
+}
+
 /* Run a single NOP instruction which should yield 2 cycles */
 void run_cycles_test(void **state) {
     (void) state; /* unused */
