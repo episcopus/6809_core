@@ -679,6 +679,66 @@ void get_memory_address_from_postbyte_indexed_constant_indirect_u_test(void **st
     assert_int_equal(get_reg_value_16(REG_PC), USER_SPACE_ROOT + 1);
 }
 
+void get_memory_address_from_postbyte_indexed_accumulator_a_test(void **state) {
+    (void) state; /* unused */
+
+    uint8 extra_cycles = 1;
+    uint8 code_bytes[] = {
+        0x86 /* A accumulator offset from register X */
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 1 }
+    };
+    load_memory(test_memory, 1);
+    set_reg_value_16(REG_X, 0xCAFF);
+    set_reg_value_8(REG_A, 0xFF);
+
+
+    uint16 read_value = get_memory_address_from_postbyte(INDEXED, &extra_cycles);
+
+    assert_int_equal(read_value, 0xCAFE);
+    assert_int_equal(extra_cycles, 1);
+    assert_int_equal(get_reg_value_16(REG_PC), USER_SPACE_ROOT + 1);
+}
+
+void get_memory_address_from_postbyte_indexed_accumulator_b_test(void **state) {
+    uint8 extra_cycles = 1;
+    uint8 code_bytes[] = {
+        0xA5 /* B accumulator offset from register Y */
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 1 }
+    };
+    load_memory(test_memory, 1);
+    set_reg_value_16(REG_Y, 0xCAFF);
+    set_reg_value_8(REG_B, 0xFF);
+
+    uint16 read_value = get_memory_address_from_postbyte(INDEXED, &extra_cycles);
+
+    assert_int_equal(read_value, 0xCAFE);
+    assert_int_equal(extra_cycles, 1);
+    assert_int_equal(get_reg_value_16(REG_PC), USER_SPACE_ROOT + 1);
+}
+
+void get_memory_address_from_postbyte_indexed_accumulator_d_test(void **state) {
+    uint8 extra_cycles = 1;
+    uint8 code_bytes[] = {
+        0xCB /* D accumulator offset from register U */
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 1 }
+    };
+    load_memory(test_memory, 1);
+    set_reg_value_16(REG_U, 0xCAFF);
+    set_reg_value_16(REG_D, 0xFFFF);
+
+    uint16 read_value = get_memory_address_from_postbyte(INDEXED, &extra_cycles);
+
+    assert_int_equal(read_value, 0xCAFE);
+    assert_int_equal(extra_cycles, 4);
+    assert_int_equal(get_reg_value_16(REG_PC), USER_SPACE_ROOT + 1);
+}
+
 /* Run a single NOP instruction which should yield 2 cycles */
 void run_cycles_test(void **state) {
     (void) state; /* unused */

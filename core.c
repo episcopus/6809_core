@@ -234,6 +234,11 @@ uint16 decode_indexed_addressing_postbyte(uint8* out_extra_cycles) {
         case 0x9:
             return_address = decode_constant_offset_postbyte(out_extra_cycles);
             break;
+        case 0x5:
+        case 0x6:
+        case 0xB:
+            return_address = decode_accumulator_offset_postbyte(out_extra_cycles);
+            break;
         }
     }
 
@@ -279,6 +284,39 @@ uint16 decode_constant_offset_postbyte(uint8* out_extra_cycles) {
         }
     }
 
+    uint16 base_address = get_reg_value_16(tr);
+    return_address = base_address + offset;
+    if (indirect) {
+        return_address = read_word_from_memory(return_address);
+        *out_extra_cycles += 3;
+    }
+
+    return return_address;
+}
+
+uint16 decode_accumulator_offset_postbyte(uint8* out_extra_cycles) {
+    uint8 postbyte = read_byte_from_memory(e_cpu_context.pc++);
+    enum target_register tr = decode_register_from_indexed_postbyte(postbyte);
+    short int offset = 0;
+    uint16 return_address = 0;
+    uint8 indirect = postbyte & 0x10;
+    *out_extra_cycles = 0;
+    uint8 lower_nibble = postbyte & 0xF;
+
+    switch (lower_nibble) {
+    case 0x6:
+        offset = (char) get_reg_value_8(REG_A);
+        *out_extra_cycles = 1;
+        break;
+    case 0x5:
+        offset = (char) get_reg_value_8(REG_B);
+        *out_extra_cycles = 1;
+        break;
+    case 0xB:
+        offset = get_reg_value_16(REG_D);
+        *out_extra_cycles = 4;
+        break;
+    }
     uint16 base_address = get_reg_value_16(tr);
     return_address = base_address + offset;
     if (indirect) {
