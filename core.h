@@ -18,6 +18,7 @@ uint16 decode_indexed_addressing_postbyte();
 enum target_register decode_register_from_indexed_postbyte(uint8 postbyte);
 uint16 decode_constant_offset_postbyte(uint8* out_extra_cycles);
 uint16 decode_accumulator_offset_postbyte(uint8* out_extra_cycles);
+uint16 decode_inc_dec_offset_postbyte(uint8* out_extra_cycles);
 
 uint32 run_cycles(uint32 wanted_cycles);
 void decode_source_target_postbyte(uint8 postbyte, enum target_register* out_source, enum target_register* out_target);

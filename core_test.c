@@ -817,6 +817,44 @@ void get_memory_address_from_postbyte_indexed_accumulator_d_indirect_test(void *
     assert_int_equal(get_reg_value_16(REG_PC), USER_SPACE_ROOT + 1);
 }
 
+void get_memory_address_from_postbyte_indexed_inc_1_test(void **state) {
+    uint8 extra_cycles = 0;
+    uint8 code_bytes[] = {
+        0x80 /* Post-Increment by 1 based on X */
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 1 }
+    };
+    load_memory(test_memory, 1);
+    set_reg_value_16(REG_X, 0xCAFE);
+
+    uint16 read_value = get_memory_address_from_postbyte(INDEXED, &extra_cycles);
+
+    assert_int_equal(read_value, 0xCAFE);
+    assert_int_equal(get_reg_value_16(REG_X), 0xCAFF);
+    assert_int_equal(extra_cycles, 2);
+    assert_int_equal(get_reg_value_16(REG_PC), USER_SPACE_ROOT + 1);
+}
+
+void get_memory_address_from_postbyte_indexed_inc_2_test(void **state) {
+    uint8 extra_cycles = 0;
+    uint8 code_bytes[] = {
+        0xA1 /* Post-Increment by 2 based on Y */
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 1 }
+    };
+    load_memory(test_memory, 1);
+    set_reg_value_16(REG_Y, 0xCAFE);
+
+    uint16 read_value = get_memory_address_from_postbyte(INDEXED, &extra_cycles);
+
+    assert_int_equal(read_value, 0xCAFE);
+    assert_int_equal(get_reg_value_16(REG_Y), 0xCB00);
+    assert_int_equal(extra_cycles, 3);
+    assert_int_equal(get_reg_value_16(REG_PC), USER_SPACE_ROOT + 1);
+}
+
 /* Run a single NOP instruction which should yield 2 cycles */
 void run_cycles_test(void **state) {
     (void) state; /* unused */
