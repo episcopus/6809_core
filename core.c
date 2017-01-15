@@ -224,7 +224,8 @@ uint16 decode_indexed_addressing_postbyte(uint8* out_extra_cycles) {
     }
     else if (postbyte == 0x9F) {
         // Extended Indirect
-        *out_extra_cycles = 5;
+        e_cpu_context.pc++;
+        return_address = decode_extended_indirect(out_extra_cycles);
     }
     else {
         uint8 lower_nibble = postbyte & 0xF;
@@ -416,6 +417,15 @@ uint16 decode_constant_offset_from_pc(uint8* out_extra_cycles) {
         return_address = read_word_from_memory(return_address);
         *out_extra_cycles += 3;
     }
+
+    return return_address;
+}
+
+uint16 decode_extended_indirect(uint8* out_extra_cycles) {
+    *out_extra_cycles = 5;
+    uint16 base_address = read_word_from_memory(e_cpu_context.pc);
+    uint16 return_address = read_word_from_memory(base_address);
+    e_cpu_context.pc += 2;
 
     return return_address;
 }
