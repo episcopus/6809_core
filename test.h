@@ -50,6 +50,14 @@ void get_memory_address_from_postbyte_indexed_accumulator_b_indirect_test(void *
 void get_memory_address_from_postbyte_indexed_accumulator_d_indirect_test(void **state);
 void get_memory_address_from_postbyte_indexed_inc_1_test(void **state);
 void get_memory_address_from_postbyte_indexed_inc_2_test(void **state);
+void get_memory_address_from_postbyte_indexed_dec_1_test(void **state);
+void get_memory_address_from_postbyte_indexed_dec_2_test(void **state);
+void get_memory_address_from_postbyte_indexed_inc_2_indirect_test(void **state);
+void get_memory_address_from_postbyte_indexed_dec_2_indirect_test(void **state);
+void get_memory_address_from_postbyte_indexed_pc_offset_8_test(void **state);
+void get_memory_address_from_postbyte_indexed_pc_offset_16_test(void **state);
+void get_memory_address_from_postbyte_indexed_pc_offset_8_indirect_test(void **state);
+void get_memory_address_from_postbyte_indexed_pc_offset_16_indirect_test(void **state);
 void run_cycles_test(void **state);
 void run_cycles_multiple_test(void **state);
 void run_cycles_notimpl_test(void **state);
@@ -416,6 +424,14 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(get_memory_address_from_postbyte_indexed_accumulator_d_indirect_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(get_memory_address_from_postbyte_indexed_inc_1_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(get_memory_address_from_postbyte_indexed_inc_2_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(get_memory_address_from_postbyte_indexed_dec_1_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(get_memory_address_from_postbyte_indexed_dec_2_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(get_memory_address_from_postbyte_indexed_inc_2_indirect_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(get_memory_address_from_postbyte_indexed_dec_2_indirect_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(get_memory_address_from_postbyte_indexed_pc_offset_8_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(get_memory_address_from_postbyte_indexed_pc_offset_16_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(get_memory_address_from_postbyte_indexed_pc_offset_8_indirect_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(get_memory_address_from_postbyte_indexed_pc_offset_16_indirect_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(decode_source_target_postbyte_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(decode_source_target_postbyte_2_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(decode_source_target_postbyte_invalid_test, test_setup, test_teardown),

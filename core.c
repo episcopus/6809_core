@@ -245,6 +245,10 @@ uint16 decode_indexed_addressing_postbyte(uint8* out_extra_cycles) {
         case 0x3:
             return_address = decode_inc_dec_offset_postbyte(out_extra_cycles);
             break;
+        case 0xC:
+        case 0xD:
+            return_address = decode_constant_offset_from_pc(out_extra_cycles);
+            break;
         }
     }
 
@@ -379,6 +383,38 @@ uint16 decode_inc_dec_offset_postbyte(uint8* out_extra_cycles) {
     if (post_delta != 0) {
         base_address += post_delta;
         set_reg_value_16(tr, base_address);
+    }
+
+    return return_address;
+}
+
+uint16 decode_constant_offset_from_pc(uint8* out_extra_cycles) {
+    uint8 postbyte = read_byte_from_memory(e_cpu_context.pc++);
+    short int offset = 0;
+    uint16 return_address = 0;
+    uint8 indirect = postbyte & 0x10;
+    *out_extra_cycles = 0;
+    uint8 lower_nibble = postbyte & 0xF;
+    char one_byte_offset = 0;
+
+    switch (lower_nibble) {
+    case 0xC:
+        one_byte_offset = (char) read_byte_from_memory(e_cpu_context.pc++);
+        offset = (int) one_byte_offset;
+        *out_extra_cycles = 1;
+        break;
+    case 0xD:
+        offset = (int) read_word_from_memory(e_cpu_context.pc);
+        e_cpu_context.pc += 2;
+        *out_extra_cycles = 5;
+        break;
+    }
+
+    uint16 base_address = get_reg_value_16(REG_PC);
+    return_address = base_address + offset;
+    if (indirect) {
+        return_address = read_word_from_memory(return_address);
+        *out_extra_cycles += 3;
     }
 
     return return_address;
