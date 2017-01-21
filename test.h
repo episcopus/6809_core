@@ -387,7 +387,7 @@ void anda_indexed_test(void **state);
 void andb_indexed_test(void **state);
 void asl_indexed_test(void **state);
 void asr_indexed_test(void **state);
-/* void bita_indexed_test(void **state); */
+void bita_indexed_test(void **state);
 /* void bitb_indexed_test(void **state); */
 /* void clr_indexed_test(void **state); */
 /* void cmpa_indexed_nocarry_test(void **state); */
@@ -805,8 +805,8 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(anda_indexed_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(andb_indexed_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(asl_indexed_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(asr_indexed_test, test_setup, test_teardown)
-    /* cmocka_unit_test_setup_teardown(bita_indexed_test, test_setup, test_teardown), */
+    cmocka_unit_test_setup_teardown(asr_indexed_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(bita_indexed_test, test_setup, test_teardown)
     /* cmocka_unit_test_setup_teardown(bitb_indexed_test, test_setup, test_teardown), */
     /* cmocka_unit_test_setup_teardown(clr_indexed_test, test_setup, test_teardown), */
     /* cmocka_unit_test_setup_teardown(cmpa_indexed_nocarry_test, test_setup, test_teardown), */
