@@ -370,43 +370,43 @@ void bita_indexed_test(void **state) {
     assert_int_equal(post_pc, pre_pc + 3);
 }
 
-/* void bitb_indexed_test(void **state) { */
-/*     (void) state; /\* unused *\/ */
-/*     int pre_pc = e_cpu_context.pc; */
+void bitb_indexed_test(void **state) {
+    (void) state; /* unused */
+    int pre_pc = e_cpu_context.pc;
 
-/*     /\* a shouldn't be messed with *\/ */
-/*     e_cpu_context.d.byte_acc.a = 0xFF; */
-/*     uint8 lower_byte_offset = 0x40; */
+    /* a shouldn't be messed with */
+    e_cpu_context.d.byte_acc.a = 0xFF;
+    uint8 lower_byte_offset = 0x40;
 
-/*     uint8 code_bytes[] = { */
-/*         OP_BITB_I, */
-/*         S_POINTER >> 8, */
-/*         lower_byte_offset */
-/*     }; */
-/*     uint8 data_bytes[] = { */
-/*         0x5 */
-/*     }; */
-/*     struct mem_loader_def test_memory[] = { */
-/*         { USER_SPACE_ROOT, code_bytes, 3 }, */
-/*         { S_POINTER + lower_byte_offset, data_bytes, 1 } */
-/*     }; */
-/*     load_memory(test_memory, 2); */
+    uint8 code_bytes[] = {
+        OP_BITB_I,
+        0x8C,
+        lower_byte_offset
+    };
+    uint8 data_bytes[] = {
+        0x5
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 3 },
+        { USER_SPACE_ROOT + 3 + lower_byte_offset, data_bytes, 1 }
+    };
+    load_memory(test_memory, 2);
 
-/*     e_cpu_context.d.byte_acc.b = 6; */
+    e_cpu_context.d.byte_acc.b = 6;
 
-/*     int cycles = run_cycles(opcode_table[OP_BITB_I].cycle_count); */
-/*     int post_pc = e_cpu_context.pc; */
-/*     /\* The accumulator should not get changed by this operation *\/ */
-/*     assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF); */
-/*     assert_int_equal(read_byte_from_memory(S_POINTER + lower_byte_offset), */
-/*                      0x5); */
-/*     assert_int_equal(e_cpu_context.d.byte_acc.b, 0x6); */
-/*     assert_int_equal(e_cpu_context.cc.n, 0); */
-/*     assert_int_equal(e_cpu_context.cc.z, 0); */
-/*     assert_int_equal(e_cpu_context.cc.v, 0); */
-/*     assert_int_equal(cycles, opcode_table[OP_BITB_I].cycle_count); */
-/*     assert_int_equal(post_pc, pre_pc + 3); */
-/* } */
+    int cycles = run_cycles(opcode_table[OP_BITB_I].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    /* The accumulator should not get changed by this operation */
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF);
+    assert_int_equal(read_byte_from_memory(USER_SPACE_ROOT + 3 + lower_byte_offset),
+                     0x5);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x6);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_int_equal(cycles, opcode_table[OP_BITB_I].cycle_count + 1);
+    assert_int_equal(post_pc, pre_pc + 3);
+}
 
 /* void clr_indexed_test(void **state) { */
 /*     (void) state; /\* unused *\/ */
