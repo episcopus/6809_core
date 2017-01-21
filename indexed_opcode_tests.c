@@ -118,41 +118,41 @@ void adda_indexed_test(void **state) {
     assert_true(post_pc == pre_pc + 3);
 }
 
-/* void addb_indexed_test(void **state) { */
-/*     (void) state; /\* unused *\/ */
-/*     int pre_pc = e_cpu_context.pc; */
+void addb_indexed_test(void **state) {
+    (void) state; /* unused */
+    int pre_pc = e_cpu_context.pc;
 
-/*     /\* a shouldn't be messed with *\/ */
-/*     e_cpu_context.d.byte_acc.a = 0xFF; */
-/*     uint8 lower_byte_address = 0x40; */
+    /* a shouldn't be messed with */
+    e_cpu_context.d.byte_acc.a = 0xFF;
+    uint8 lower_byte_offset = 0x40;
 
-/*     uint8 code_bytes[] = { */
-/*         OP_ADDB_E, */
-/* 0x8C, /* Constant 8-bit offset from PC */
-/*         lower_byte_offset */
-/*     }; */
-/*     uint8 data_bytes[] = { */
-/*         2 */
-/*     }; */
-/*     struct mem_loader_def test_memory[] = { */
-/*         { USER_SPACE_ROOT, code_bytes, 3 }, */
-/*         { S_POINTER + lower_byte_offset, data_bytes, 1 } */
-/*     }; */
-/*     load_memory(test_memory, 2); */
-/*     e_cpu_context.d.byte_acc.b = 1; */
+    uint8 code_bytes[] = {
+        OP_ADDB_I,
+        0x8C, /* Constant 8-bit offset from PC */
+        lower_byte_offset
+    };
+    uint8 data_bytes[] = {
+        2
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 3 },
+        { USER_SPACE_ROOT + 3 + lower_byte_offset, data_bytes, 1 }
+    };
+    load_memory(test_memory, 2);
+    e_cpu_context.d.byte_acc.b = 1;
 
-/*     int cycles = run_cycles(opcode_table[OP_ADDB_E].cycle_count); */
-/*     int post_pc = e_cpu_context.pc; */
-/*     assert_int_equal(e_cpu_context.d.byte_acc.b, 0x3); */
-/*     assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF); */
-/*     assert_int_equal(e_cpu_context.cc.n, 0); */
-/*     assert_int_equal(e_cpu_context.cc.c, 0); */
-/*     assert_int_equal(e_cpu_context.cc.h, 0); */
-/*     assert_int_equal(e_cpu_context.cc.z, 0); */
-/*     assert_int_equal(e_cpu_context.cc.v, 0); */
-/*     assert_int_equal(cycles, opcode_table[OP_ADDB_E].cycle_count); */
-/*     assert_true(post_pc == pre_pc + 3); */
-/* } */
+    int cycles = run_cycles(opcode_table[OP_ADDB_I].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x3);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.c, 0);
+    assert_int_equal(e_cpu_context.cc.h, 0);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_int_equal(cycles, opcode_table[OP_ADDB_I].cycle_count + 1);
+    assert_true(post_pc == pre_pc + 3);
+}
 
 /* void addd_indexed_test(void **state) { */
 /*     (void) state; /\* unused *\/ */
