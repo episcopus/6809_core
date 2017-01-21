@@ -382,7 +382,7 @@ void adca_indexed_test(void **state);
 void adcb_indexed_test(void **state);
 void adda_indexed_test(void **state);
 void addb_indexed_test(void **state);
-/* void addd_indexed_test(void **state); */
+void addd_indexed_test(void **state);
 /* void anda_indexed_test(void **state); */
 /* void andb_indexed_test(void **state); */
 /* void asl_indexed_test(void **state); */
@@ -800,8 +800,8 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(adca_indexed_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(adcb_indexed_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(adda_indexed_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(addb_indexed_test, test_setup, test_teardown)
-    /* cmocka_unit_test_setup_teardown(addd_indexed_test, test_setup, test_teardown), */
+    cmocka_unit_test_setup_teardown(addb_indexed_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(addd_indexed_test, test_setup, test_teardown)
     /* cmocka_unit_test_setup_teardown(anda_indexed_test, test_setup, test_teardown), */
     /* cmocka_unit_test_setup_teardown(andb_indexed_test, test_setup, test_teardown), */
     /* cmocka_unit_test_setup_teardown(asl_indexed_test, test_setup, test_teardown), */

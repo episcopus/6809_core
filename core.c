@@ -162,6 +162,7 @@ uint16 read_word_handler(enum addressing_mode am, uint8* out_extra_cycles) {
     case EXTENDED:
         /* word following instruction is full 16 bit address of
            operand */
+    case INDEXED:
         return_word = read_word_from_memory(word_addr);
         break;
     default:
