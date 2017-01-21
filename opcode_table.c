@@ -167,7 +167,7 @@ const struct opcode_def opcode_table[] = {
     /* 0xA1 */ { "NOTIMPL",      0xA1,            2,  REG_NONE, INHERENT,  notimpl  },
     /* 0xA2 */ { "NOTIMPL",      0xA2,            2,  REG_NONE, INHERENT,  notimpl  },
     /* 0xA3 */ { "NOTIMPL",      0xA3,            2,  REG_NONE, INHERENT,  notimpl  },
-    /* 0xA4 */ { "NOTIMPL",      0xA4,            2,  REG_NONE, INHERENT,  notimpl  },
+    /* 0xA4 */ { "ANDA",         OP_ANDA_I,       4,  REG_A,    INDEXED,   and      },
     /* 0xA5 */ { "NOTIMPL",      0xA5,            2,  REG_NONE, INHERENT,  notimpl  },
     /* 0xA6 */ { "NOTIMPL",      0xA6,            2,  REG_NONE, INHERENT,  notimpl  },
     /* 0xA7 */ { "NOTIMPL",      0xA7,            2,  REG_NONE, INHERENT,  notimpl  },
