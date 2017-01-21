@@ -260,69 +260,69 @@ void andb_indexed_test(void **state) {
     assert_int_equal(post_pc, pre_pc + 3);
 }
 
-/* void asl_indexed_test(void **state) { */
-/*     (void) state; /\* unused *\/ */
-/*     int pre_pc = e_cpu_context.pc; */
+void asl_indexed_test(void **state) {
+    (void) state; /* unused */
+    int pre_pc = e_cpu_context.pc;
 
-/*     uint8 lower_byte_address = 0x40; */
+    uint8 lower_byte_offset = 0x40;
 
-/*     uint8 code_bytes[] = { */
-/*         OP_ASL_E, */
-/*         S_POINTER >> 8, */
-/*         lower_byte_address */
-/*     }; */
-/*     uint8 data_bytes[] = { */
-/*         0x2 */
-/*     }; */
-/*     struct mem_loader_def test_memory[] = { */
-/*         { USER_SPACE_ROOT, code_bytes, 3 }, */
-/*         { S_POINTER + lower_byte_address, data_bytes, 1 } */
-/*     }; */
-/*     load_memory(test_memory, 2); */
+    uint8 code_bytes[] = {
+        OP_ASL_I,
+        0x8C,
+        lower_byte_offset
+    };
+    uint8 data_bytes[] = {
+        0x2
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 3 },
+        { USER_SPACE_ROOT + 3 + lower_byte_offset, data_bytes, 1 }
+    };
+    load_memory(test_memory, 2);
 
-/*     /\* b shouldn't be messed with *\/ */
-/*     e_cpu_context.d.byte_acc.b = 8; */
-/*     int cycles = run_cycles(opcode_table[OP_ASL_E].cycle_count); */
-/*     int post_pc = e_cpu_context.pc; */
+    /* b shouldn't be messed with */
+    e_cpu_context.d.byte_acc.b = 8;
+    int cycles = run_cycles(opcode_table[OP_ASL_I].cycle_count);
+    int post_pc = e_cpu_context.pc;
 
-/*     assert_int_equal(cycles, opcode_table[OP_ASL_E].cycle_count); */
-/*     assert_int_equal(read_byte_from_memory(S_POINTER + lower_byte_address), */
-/*                      0x4); */
-/*     assert_int_equal(e_cpu_context.d.byte_acc.b, 0x8); */
-/*     assert_int_equal(e_cpu_context.cc.c, 0); */
-/*     assert_int_equal(e_cpu_context.cc.n, 0); */
-/*     assert_int_equal(e_cpu_context.cc.z, 0); */
-/*     assert_int_equal(e_cpu_context.cc.v, 0); */
-/*     assert_true(post_pc > pre_pc); */
-/* } */
+    assert_int_equal(cycles, opcode_table[OP_ASL_I].cycle_count + 1);
+    assert_int_equal(read_byte_from_memory(USER_SPACE_ROOT + 3 + lower_byte_offset),
+                     0x4);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x8);
+    assert_int_equal(e_cpu_context.cc.c, 0);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_int_equal(post_pc, pre_pc + 3);
+}
 
 /* void asr_indexed_test(void **state) { */
 /*     (void) state; /\* unused *\/ */
 /*     int pre_pc = e_cpu_context.pc; */
 
-/*     uint8 lower_byte_address = 0x40; */
+/*     uint8 lower_byte_offset = 0x40; */
 
 /*     uint8 code_bytes[] = { */
-/*         OP_ASR_E, */
+/*         OP_ASR_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     uint8 data_bytes[] = { */
 /*         0x2 */
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 3 }, */
-/*         { S_POINTER + lower_byte_address, data_bytes, 1 } */
+/*         { S_POINTER + lower_byte_offset, data_bytes, 1 } */
 /*     }; */
 /*     load_memory(test_memory, 2); */
 
 /*     /\* b shouldn't be messed with *\/ */
 /*     e_cpu_context.d.byte_acc.b = 8; */
-/*     int cycles = run_cycles(opcode_table[OP_ASR_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_table[OP_ASR_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 
-/*     assert_int_equal(cycles, opcode_table[OP_ASR_E].cycle_count); */
-/*     assert_int_equal(read_byte_from_memory(S_POINTER + lower_byte_address), */
+/*     assert_int_equal(cycles, opcode_table[OP_ASR_I].cycle_count); */
+/*     assert_int_equal(read_byte_from_memory(S_POINTER + lower_byte_offset), */
 /*                      0x1); */
 /*     assert_int_equal(e_cpu_context.d.byte_acc.b, 0x8); */
 /*     assert_int_equal(e_cpu_context.cc.c, 0); */
@@ -338,35 +338,35 @@ void andb_indexed_test(void **state) {
 
 /*     /\* b shouldn't be messed with *\/ */
 /*     e_cpu_context.d.byte_acc.b = 0xFF; */
-/*     uint8 lower_byte_address = 0x40; */
+/*     uint8 lower_byte_offset = 0x40; */
 
 /*     uint8 code_bytes[] = { */
-/*         OP_BITA_E, */
+/*         OP_BITA_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     uint8 data_bytes[] = { */
 /*         0x5 */
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 3 }, */
-/*         { S_POINTER + lower_byte_address, data_bytes, 1 } */
+/*         { S_POINTER + lower_byte_offset, data_bytes, 1 } */
 /*     }; */
 /*     load_memory(test_memory, 2); */
 
 /*     e_cpu_context.d.byte_acc.a = 6; */
 
-/*     int cycles = run_cycles(opcode_table[OP_BITA_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_table[OP_BITA_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 /*     /\* The accumulator should not get changed by this operation *\/ */
 /*     assert_int_equal(e_cpu_context.d.byte_acc.a, 6); */
-/*     assert_int_equal(read_byte_from_memory(S_POINTER + lower_byte_address), */
+/*     assert_int_equal(read_byte_from_memory(S_POINTER + lower_byte_offset), */
 /*                      0x5); */
 /*     assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF); */
 /*     assert_int_equal(e_cpu_context.cc.n, 0); */
 /*     assert_int_equal(e_cpu_context.cc.z, 0); */
 /*     assert_int_equal(e_cpu_context.cc.v, 0); */
-/*     assert_int_equal(cycles, opcode_table[OP_BITA_E].cycle_count); */
+/*     assert_int_equal(cycles, opcode_table[OP_BITA_I].cycle_count); */
 /*     assert_true(post_pc == pre_pc + 3); */
 /* } */
 
@@ -376,35 +376,35 @@ void andb_indexed_test(void **state) {
 
 /*     /\* a shouldn't be messed with *\/ */
 /*     e_cpu_context.d.byte_acc.a = 0xFF; */
-/*     uint8 lower_byte_address = 0x40; */
+/*     uint8 lower_byte_offset = 0x40; */
 
 /*     uint8 code_bytes[] = { */
-/*         OP_BITB_E, */
+/*         OP_BITB_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     uint8 data_bytes[] = { */
 /*         0x5 */
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 3 }, */
-/*         { S_POINTER + lower_byte_address, data_bytes, 1 } */
+/*         { S_POINTER + lower_byte_offset, data_bytes, 1 } */
 /*     }; */
 /*     load_memory(test_memory, 2); */
 
 /*     e_cpu_context.d.byte_acc.b = 6; */
 
-/*     int cycles = run_cycles(opcode_table[OP_BITB_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_table[OP_BITB_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 /*     /\* The accumulator should not get changed by this operation *\/ */
 /*     assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF); */
-/*     assert_int_equal(read_byte_from_memory(S_POINTER + lower_byte_address), */
+/*     assert_int_equal(read_byte_from_memory(S_POINTER + lower_byte_offset), */
 /*                      0x5); */
 /*     assert_int_equal(e_cpu_context.d.byte_acc.b, 0x6); */
 /*     assert_int_equal(e_cpu_context.cc.n, 0); */
 /*     assert_int_equal(e_cpu_context.cc.z, 0); */
 /*     assert_int_equal(e_cpu_context.cc.v, 0); */
-/*     assert_int_equal(cycles, opcode_table[OP_BITB_E].cycle_count); */
+/*     assert_int_equal(cycles, opcode_table[OP_BITB_I].cycle_count); */
 /*     assert_int_equal(post_pc, pre_pc + 3); */
 /* } */
 
@@ -412,16 +412,16 @@ void andb_indexed_test(void **state) {
 /*     (void) state; /\* unused *\/ */
 /*     int pre_pc = e_cpu_context.pc; */
 
-/*     uint8 lower_byte_address = 0x40; */
+/*     uint8 lower_byte_offset = 0x40; */
 
-/*     write_byte_to_memory(S_POINTER + lower_byte_address, 0xBB); */
-/*     assert_int_equal(read_byte_from_memory(S_POINTER + lower_byte_address), */
+/*     write_byte_to_memory(S_POINTER + lower_byte_offset, 0xBB); */
+/*     assert_int_equal(read_byte_from_memory(S_POINTER + lower_byte_offset), */
 /*                      0xBB); */
 
 /*     uint8 code_bytes[] = { */
-/*         OP_CLR_E, */
+/*         OP_CLR_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 3 } */
@@ -431,18 +431,18 @@ void andb_indexed_test(void **state) {
 /*     e_cpu_context.d.byte_acc.a = 1; */
 /*     e_cpu_context.d.byte_acc.b = 8; */
 
-/*     int cycles = run_cycles(opcode_table[OP_CLR_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_table[OP_CLR_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 
-/*     assert_int_equal(cycles, opcode_table[OP_CLR_E].cycle_count); */
+/*     assert_int_equal(cycles, opcode_table[OP_CLR_I].cycle_count); */
 /*     assert_int_equal(e_cpu_context.d.byte_acc.a, 1); */
 /*     assert_int_equal(e_cpu_context.d.byte_acc.b, 8); */
-/*     assert_int_equal(read_byte_from_memory(S_POINTER + lower_byte_address), 0); */
+/*     assert_int_equal(read_byte_from_memory(S_POINTER + lower_byte_offset), 0); */
 /*     assert_int_equal(e_cpu_context.cc.c, 0); */
 /*     assert_int_equal(e_cpu_context.cc.v, 0); */
 /*     assert_int_equal(e_cpu_context.cc.n, 0); */
 /*     assert_int_equal(e_cpu_context.cc.z, 1); */
-/*     assert_int_equal(cycles, opcode_table[OP_CLR_E].cycle_count); */
+/*     assert_int_equal(cycles, opcode_table[OP_CLR_I].cycle_count); */
 /*     assert_int_equal(post_pc, pre_pc + 3); */
 /* } */
 
@@ -453,23 +453,23 @@ void andb_indexed_test(void **state) {
 /*     /\* b shouldn't be messed with *\/ */
 /*     e_cpu_context.d.byte_acc.b = 0xFF; */
 
-/*     uint8 lower_byte_address = 0x40; */
+/*     uint8 lower_byte_offset = 0x40; */
 /*     uint8 code_bytes[] = { */
-/*         OP_CMPA_E, */
+/*         OP_CMPA_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     uint8 data_bytes[] = { */
 /*         0x11 */
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 3 }, */
-/*         { S_POINTER + lower_byte_address, data_bytes, 1 } */
+/*         { S_POINTER + lower_byte_offset, data_bytes, 1 } */
 /*     }; */
 /*     load_memory(test_memory, 2); */
 /*     e_cpu_context.d.byte_acc.a = 0xFF; */
 
-/*     int cycles = run_cycles(opcode_table[OP_CMPA_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_table[OP_CMPA_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 /*     assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF); */
 /*     assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF); */
@@ -477,7 +477,7 @@ void andb_indexed_test(void **state) {
 /*     assert_int_equal(e_cpu_context.cc.c, 0); */
 /*     assert_int_equal(e_cpu_context.cc.z, 0); */
 /*     assert_int_equal(e_cpu_context.cc.v, 0); */
-/*     assert_int_equal(cycles, opcode_table[OP_CMPA_E].cycle_count); */
+/*     assert_int_equal(cycles, opcode_table[OP_CMPA_I].cycle_count); */
 /*     assert_true(post_pc == pre_pc + 3); */
 /* } */
 
@@ -488,23 +488,23 @@ void andb_indexed_test(void **state) {
 /*     /\* a shouldn't be messed with *\/ */
 /*     e_cpu_context.d.byte_acc.a = 0xFF; */
 
-/*     uint8 lower_byte_address = 0x40; */
+/*     uint8 lower_byte_offset = 0x40; */
 /*     uint8 code_bytes[] = { */
-/*         OP_CMPB_E, */
+/*         OP_CMPB_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     uint8 data_bytes[] = { */
 /*         0x11 */
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 3 }, */
-/*         { S_POINTER + lower_byte_address, data_bytes, 1 } */
+/*         { S_POINTER + lower_byte_offset, data_bytes, 1 } */
 /*     }; */
 /*     load_memory(test_memory, 2); */
 /*     e_cpu_context.d.byte_acc.b = 0xFF; */
 
-/*     int cycles = run_cycles(opcode_table[OP_CMPB_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_table[OP_CMPB_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 /*     assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF); */
 /*     assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF); */
@@ -512,7 +512,7 @@ void andb_indexed_test(void **state) {
 /*     assert_int_equal(e_cpu_context.cc.c, 0); */
 /*     assert_int_equal(e_cpu_context.cc.z, 0); */
 /*     assert_int_equal(e_cpu_context.cc.v, 0); */
-/*     assert_int_equal(cycles, opcode_table[OP_CMPB_E].cycle_count); */
+/*     assert_int_equal(cycles, opcode_table[OP_CMPB_I].cycle_count); */
 /*     assert_true(post_pc == pre_pc + 3); */
 /* } */
 
@@ -520,13 +520,13 @@ void andb_indexed_test(void **state) {
 /*     (void) state; /\* unused *\/ */
 /*     int pre_pc = e_cpu_context.pc; */
 
-/*     uint8 lower_byte_address = 0x40; */
+/*     uint8 lower_byte_offset = 0x40; */
 /*     e_cpu_context.dp = S_POINTER >> 8; */
 /*     uint8 code_bytes[] = { */
-/*         OP_EXTENDED_X10, */
-/*         OP_CMPD_E, */
+/*         OP_IXTENDED_X10, */
+/*         OP_CMPD_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     uint8 data_bytes[] = { */
 /*         0x12, */
@@ -534,19 +534,19 @@ void andb_indexed_test(void **state) {
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 4 }, */
-/*         { S_POINTER + lower_byte_address, data_bytes, 2 } */
+/*         { S_POINTER + lower_byte_offset, data_bytes, 2 } */
 /*     }; */
 /*     load_memory(test_memory, 2); */
 /*     e_cpu_context.d.d = 0xFFFF; */
 
-/*     int cycles = run_cycles(opcode_ext_x10_table[OP_CMPD_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_ext_x10_table[OP_CMPD_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 /*     assert_int_equal(e_cpu_context.d.d, 0xFFFF); */
 /*     assert_int_equal(e_cpu_context.cc.n, 1); */
 /*     assert_int_equal(e_cpu_context.cc.c, 0); */
 /*     assert_int_equal(e_cpu_context.cc.z, 0); */
 /*     assert_int_equal(e_cpu_context.cc.v, 0); */
-/*     assert_int_equal(cycles, opcode_ext_x10_table[OP_CMPD_E].cycle_count); */
+/*     assert_int_equal(cycles, opcode_ext_x10_table[OP_CMPD_I].cycle_count); */
 /*     assert_true(post_pc == pre_pc + 4); */
 /* } */
 
@@ -554,12 +554,12 @@ void andb_indexed_test(void **state) {
 /*     (void) state; /\* unused *\/ */
 /*     int pre_pc = e_cpu_context.pc; */
 
-/*     uint8 lower_byte_address = 0x40; */
+/*     uint8 lower_byte_offset = 0x40; */
 /*     uint8 code_bytes[] = { */
-/*         OP_EXTENDED_X11, */
-/*         OP_CMPS_E, */
+/*         OP_IXTENDED_X11, */
+/*         OP_CMPS_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     uint8 data_bytes[] = { */
 /*         0x12, */
@@ -567,19 +567,19 @@ void andb_indexed_test(void **state) {
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 4 }, */
-/*         { S_POINTER + lower_byte_address, data_bytes, 2 } */
+/*         { S_POINTER + lower_byte_offset, data_bytes, 2 } */
 /*     }; */
 /*     load_memory(test_memory, 2); */
 /*     e_cpu_context.s = 0xFFFF; */
 
-/*     int cycles = run_cycles(opcode_ext_x11_table[OP_CMPS_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_ext_x11_table[OP_CMPS_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 /*     assert_int_equal(e_cpu_context.s, 0xFFFF); */
 /*     assert_int_equal(e_cpu_context.cc.n, 1); */
 /*     assert_int_equal(e_cpu_context.cc.c, 0); */
 /*     assert_int_equal(e_cpu_context.cc.z, 0); */
 /*     assert_int_equal(e_cpu_context.cc.v, 0); */
-/*     assert_int_equal(cycles, opcode_ext_x11_table[OP_CMPS_E].cycle_count); */
+/*     assert_int_equal(cycles, opcode_ext_x11_table[OP_CMPS_I].cycle_count); */
 /*     assert_true(post_pc == pre_pc + 4); */
 /* } */
 
@@ -587,13 +587,13 @@ void andb_indexed_test(void **state) {
 /*     (void) state; /\* unused *\/ */
 /*     int pre_pc = e_cpu_context.pc; */
 
-/*     uint8 lower_byte_address = 0x40; */
+/*     uint8 lower_byte_offset = 0x40; */
 /*     e_cpu_context.dp = S_POINTER >> 8; */
 /*     uint8 code_bytes[] = { */
-/*         OP_EXTENDED_X11, */
-/*         OP_CMPU_E, */
+/*         OP_IXTENDED_X11, */
+/*         OP_CMPU_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     uint8 data_bytes[] = { */
 /*         0x7A, */
@@ -601,20 +601,20 @@ void andb_indexed_test(void **state) {
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 4 }, */
-/*         { S_POINTER + lower_byte_address, data_bytes, 2 } */
+/*         { S_POINTER + lower_byte_offset, data_bytes, 2 } */
 /*     }; */
 
 /*     load_memory(test_memory, 2); */
 /*     e_cpu_context.u = 0x2727; */
 
-/*     int cycles = run_cycles(opcode_ext_x11_table[OP_CMPU_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_ext_x11_table[OP_CMPU_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 /*     assert_int_equal(e_cpu_context.u, 0x2727); */
 /*     assert_int_equal(e_cpu_context.cc.n, 1); */
 /*     assert_int_equal(e_cpu_context.cc.c, 1); */
 /*     assert_int_equal(e_cpu_context.cc.z, 0); */
 /*     assert_int_equal(e_cpu_context.cc.v, 1); */
-/*     assert_int_equal(cycles, opcode_ext_x11_table[OP_CMPU_E].cycle_count); */
+/*     assert_int_equal(cycles, opcode_ext_x11_table[OP_CMPU_I].cycle_count); */
 /*     assert_true(post_pc == pre_pc + 4); */
 /* } */
 
@@ -622,12 +622,12 @@ void andb_indexed_test(void **state) {
 /*     (void) state; /\* unused *\/ */
 /*     int pre_pc = e_cpu_context.pc; */
 
-/*     uint8 lower_byte_address = 0x40; */
+/*     uint8 lower_byte_offset = 0x40; */
 /*     e_cpu_context.dp = S_POINTER >> 8; */
 /*     uint8 code_bytes[] = { */
-/*         OP_CMPX_E, */
+/*         OP_CMPX_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     uint8 data_bytes[] = { */
 /*         0xEE, */
@@ -635,20 +635,20 @@ void andb_indexed_test(void **state) {
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 3 }, */
-/*         { S_POINTER + lower_byte_address, data_bytes, 2 } */
+/*         { S_POINTER + lower_byte_offset, data_bytes, 2 } */
 /*     }; */
 
 /*     load_memory(test_memory, 2); */
 /*     e_cpu_context.x = 0xFFFF; */
 
-/*     int cycles = run_cycles(opcode_table[OP_CMPX_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_table[OP_CMPX_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 /*     assert_int_equal(e_cpu_context.x, 0xFFFF); */
 /*     assert_int_equal(e_cpu_context.cc.n, 0); */
 /*     assert_int_equal(e_cpu_context.cc.c, 0); */
 /*     assert_int_equal(e_cpu_context.cc.z, 0); */
 /*     assert_int_equal(e_cpu_context.cc.v, 1); */
-/*     assert_int_equal(cycles, opcode_table[OP_CMPX_E].cycle_count); */
+/*     assert_int_equal(cycles, opcode_table[OP_CMPX_I].cycle_count); */
 /*     assert_true(post_pc == pre_pc + 3); */
 /* } */
 
@@ -656,12 +656,12 @@ void andb_indexed_test(void **state) {
 /*     (void) state; /\* unused *\/ */
 /*     int pre_pc = e_cpu_context.pc; */
 
-/*     uint8 lower_byte_address = 0x40; */
+/*     uint8 lower_byte_offset = 0x40; */
 /*     uint8 code_bytes[] = { */
-/*         OP_EXTENDED_X10, */
-/*         OP_CMPY_E, */
+/*         OP_IXTENDED_X10, */
+/*         OP_CMPY_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     uint8 data_bytes[] = { */
 /*         0x69, */
@@ -669,20 +669,20 @@ void andb_indexed_test(void **state) {
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 4 }, */
-/*         { S_POINTER + lower_byte_address, data_bytes, 2 } */
+/*         { S_POINTER + lower_byte_offset, data_bytes, 2 } */
 /*     }; */
 
 /*     load_memory(test_memory, 2); */
 /*     e_cpu_context.y = 0x6969; */
 
-/*     int cycles = run_cycles(opcode_ext_x10_table[OP_CMPY_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_ext_x10_table[OP_CMPY_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 /*     assert_int_equal(e_cpu_context.y, 0x6969); */
 /*     assert_int_equal(e_cpu_context.cc.n, 0); */
 /*     assert_int_equal(e_cpu_context.cc.c, 0); */
 /*     assert_int_equal(e_cpu_context.cc.z, 1); */
 /*     assert_int_equal(e_cpu_context.cc.v, 0); */
-/*     assert_int_equal(cycles, opcode_ext_x10_table[OP_CMPY_E].cycle_count); */
+/*     assert_int_equal(cycles, opcode_ext_x10_table[OP_CMPY_I].cycle_count); */
 /*     assert_true(post_pc == pre_pc + 4); */
 /* } */
 
@@ -690,26 +690,26 @@ void andb_indexed_test(void **state) {
 /*     (void) state; /\* unused *\/ */
 /*     int pre_pc = e_cpu_context.pc; */
 
-/*     uint8 lower_byte_address = 0x40; */
+/*     uint8 lower_byte_offset = 0x40; */
 /*     uint8 code_bytes[] = { */
-/*         OP_COM_E, */
+/*         OP_COM_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     uint8 data_bytes[] = { */
 /*         0x1 */
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 3 }, */
-/*         { S_POINTER + lower_byte_address, data_bytes, 1 } */
+/*         { S_POINTER + lower_byte_offset, data_bytes, 1 } */
 /*     }; */
 /*     load_memory(test_memory, 2); */
 
-/*     int cycles = run_cycles(opcode_table[OP_COM_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_table[OP_COM_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 
-/*     assert_int_equal(cycles, opcode_table[OP_COM_E].cycle_count); */
-/*     assert_int_equal(read_byte_from_memory(S_POINTER + lower_byte_address), */
+/*     assert_int_equal(cycles, opcode_table[OP_COM_I].cycle_count); */
+/*     assert_int_equal(read_byte_from_memory(S_POINTER + lower_byte_offset), */
 /*                      0xFE); */
 /*     assert_int_equal(e_cpu_context.cc.c, 1); */
 /*     assert_int_equal(e_cpu_context.cc.v, 0); */
@@ -722,26 +722,26 @@ void andb_indexed_test(void **state) {
 /*     (void) state; /\* unused *\/ */
 /*     int pre_pc = e_cpu_context.pc; */
 
-/*     uint8 lower_byte_address = 0x40; */
+/*     uint8 lower_byte_offset = 0x40; */
 /*     uint8 code_bytes[] = { */
-/*         OP_DEC_E, */
+/*         OP_DEC_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     uint8 data_bytes[] = { */
 /*         0x45 */
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 3 }, */
-/*         { S_POINTER + lower_byte_address, data_bytes, 1 } */
+/*         { S_POINTER + lower_byte_offset, data_bytes, 1 } */
 /*     }; */
 /*     load_memory(test_memory, 2); */
 
-/*     int cycles = run_cycles(opcode_table[OP_DEC_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_table[OP_DEC_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 
-/*     assert_int_equal(cycles, opcode_table[OP_DEC_E].cycle_count); */
-/*     assert_int_equal(read_byte_from_memory(S_POINTER + lower_byte_address), */
+/*     assert_int_equal(cycles, opcode_table[OP_DEC_I].cycle_count); */
+/*     assert_int_equal(read_byte_from_memory(S_POINTER + lower_byte_offset), */
 /*                      0x44); */
 /*     assert_int_equal(e_cpu_context.cc.n, 0); */
 /*     assert_int_equal(e_cpu_context.cc.z, 0); */
@@ -753,18 +753,18 @@ void andb_indexed_test(void **state) {
 /*     (void) state; /\* unused *\/ */
 /*     int pre_pc = e_cpu_context.pc; */
 
-/*     uint8 lower_byte_address = 0x40; */
+/*     uint8 lower_byte_offset = 0x40; */
 /*     uint8 code_bytes[] = { */
-/*         OP_EORA_E, */
+/*         OP_IORA_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     uint8 data_bytes[] = { */
 /*         0x5 */
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 3 }, */
-/*         { S_POINTER + lower_byte_address, data_bytes, 1 } */
+/*         { S_POINTER + lower_byte_offset, data_bytes, 1 } */
 /*     }; */
 /*     load_memory(test_memory, 2); */
 
@@ -772,14 +772,14 @@ void andb_indexed_test(void **state) {
 /*     e_cpu_context.d.byte_acc.b = 0xFF; */
 /*     e_cpu_context.d.byte_acc.a = 4; */
 
-/*     int cycles = run_cycles(opcode_table[OP_EORA_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_table[OP_IORA_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 /*     assert_int_equal(e_cpu_context.cc.n, 0); */
 /*     assert_int_equal(e_cpu_context.d.byte_acc.a, 1); */
 /*     assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF); */
 /*     assert_int_equal(e_cpu_context.cc.z, 0); */
 /*     assert_int_equal(e_cpu_context.cc.v, 0); */
-/*     assert_int_equal(cycles, opcode_table[OP_EORA_E].cycle_count); */
+/*     assert_int_equal(cycles, opcode_table[OP_IORA_I].cycle_count); */
 /*     assert_true(post_pc == pre_pc + 3); */
 /* } */
 
@@ -787,18 +787,18 @@ void andb_indexed_test(void **state) {
 /*     (void) state; /\* unused *\/ */
 /*     int pre_pc = e_cpu_context.pc; */
 
-/*     uint8 lower_byte_address = 0x40; */
+/*     uint8 lower_byte_offset = 0x40; */
 /*     uint8 code_bytes[] = { */
-/*         OP_EORB_E, */
+/*         OP_IORB_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     uint8 data_bytes[] = { */
 /*         0x5 */
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 3 }, */
-/*         { S_POINTER + lower_byte_address, data_bytes, 1 } */
+/*         { S_POINTER + lower_byte_offset, data_bytes, 1 } */
 /*     }; */
 /*     load_memory(test_memory, 2); */
 
@@ -806,14 +806,14 @@ void andb_indexed_test(void **state) {
 /*     e_cpu_context.d.byte_acc.a = 0xFF; */
 /*     e_cpu_context.d.byte_acc.b = 4; */
 
-/*     int cycles = run_cycles(opcode_table[OP_EORB_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_table[OP_IORB_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 /*     assert_int_equal(e_cpu_context.cc.n, 0); */
 /*     assert_int_equal(e_cpu_context.d.byte_acc.b, 1); */
 /*     assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF); */
 /*     assert_int_equal(e_cpu_context.cc.z, 0); */
 /*     assert_int_equal(e_cpu_context.cc.v, 0); */
-/*     assert_int_equal(cycles, opcode_table[OP_EORB_E].cycle_count); */
+/*     assert_int_equal(cycles, opcode_table[OP_IORB_I].cycle_count); */
 /*     assert_true(post_pc == pre_pc + 3); */
 /* } */
 
@@ -821,26 +821,26 @@ void andb_indexed_test(void **state) {
 /*     (void) state; /\* unused *\/ */
 /*     int pre_pc = e_cpu_context.pc; */
 
-/*     uint8 lower_byte_address = 0x40; */
+/*     uint8 lower_byte_offset = 0x40; */
 /*     uint8 code_bytes[] = { */
-/*         OP_INC_E, */
+/*         OP_INC_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     uint8 data_bytes[] = { */
 /*         0x45 */
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 3 }, */
-/*         { S_POINTER + lower_byte_address, data_bytes, 1 } */
+/*         { S_POINTER + lower_byte_offset, data_bytes, 1 } */
 /*     }; */
 /*     load_memory(test_memory, 2); */
 
-/*     int cycles = run_cycles(opcode_table[OP_INC_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_table[OP_INC_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 
-/*     assert_int_equal(cycles, opcode_table[OP_INC_E].cycle_count); */
-/*     assert_int_equal(read_byte_from_memory(S_POINTER + lower_byte_address), */
+/*     assert_int_equal(cycles, opcode_table[OP_INC_I].cycle_count); */
+/*     assert_int_equal(read_byte_from_memory(S_POINTER + lower_byte_offset), */
 /*                      0x46); */
 /*     assert_int_equal(e_cpu_context.cc.n, 0); */
 /*     assert_int_equal(e_cpu_context.cc.z, 0); */
@@ -851,11 +851,11 @@ void andb_indexed_test(void **state) {
 /* void jmp_indexed_test(void **state) { */
 /*     (void) state; /\* unused *\/ */
 
-/*     uint8 lower_byte_address = 0x40; */
+/*     uint8 lower_byte_offset = 0x40; */
 /*     uint8 code_bytes[] = { */
-/*         OP_JMP_E, */
+/*         OP_JMP_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     uint8 data_bytes[] = { */
 /*         0x45, */
@@ -863,26 +863,26 @@ void andb_indexed_test(void **state) {
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 3 }, */
-/*         { S_POINTER + lower_byte_address, data_bytes, 2 } */
+/*         { S_POINTER + lower_byte_offset, data_bytes, 2 } */
 /*     }; */
 /*     load_memory(test_memory, 2); */
 
-/*     int cycles = run_cycles(opcode_table[OP_JMP_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_table[OP_JMP_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 
-/*     assert_int_equal(cycles, opcode_table[OP_JMP_E].cycle_count); */
-/*     assert_int_equal(post_pc, S_POINTER | lower_byte_address); */
+/*     assert_int_equal(cycles, opcode_table[OP_JMP_I].cycle_count); */
+/*     assert_int_equal(post_pc, S_POINTER | lower_byte_offset); */
 /* } */
 
 /* void jsr_indexed_test(void **state) { */
 /*     (void) state; /\* unused *\/ */
 
 /*     uint16 pre_stack_pointer = e_cpu_context.s; */
-/*     uint8 lower_byte_address = 0x40; */
+/*     uint8 lower_byte_offset = 0x40; */
 /*     uint8 code_bytes[] = { */
-/*         OP_JSR_E, */
+/*         OP_JSR_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     uint8 data_bytes[] = { */
 /*         0x45, */
@@ -890,16 +890,16 @@ void andb_indexed_test(void **state) {
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 3 }, */
-/*         { S_POINTER + lower_byte_address, data_bytes, 2 } */
+/*         { S_POINTER + lower_byte_offset, data_bytes, 2 } */
 /*     }; */
 /*     load_memory(test_memory, 2); */
 
-/*     int cycles = run_cycles(opcode_table[OP_JSR_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_table[OP_JSR_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 /*     uint16 post_stack_pointer = e_cpu_context.s; */
 
-/*     assert_int_equal(cycles, opcode_table[OP_JSR_E].cycle_count); */
-/*     assert_int_equal(post_pc, S_POINTER | lower_byte_address); */
+/*     assert_int_equal(cycles, opcode_table[OP_JSR_I].cycle_count); */
+/*     assert_int_equal(post_pc, S_POINTER | lower_byte_offset); */
 /*     assert_int_equal(post_stack_pointer, pre_stack_pointer - 2); */
 /*     assert_int_equal(read_word_from_memory(post_stack_pointer), */
 /*                      USER_SPACE_ROOT + 3); */
@@ -909,26 +909,26 @@ void andb_indexed_test(void **state) {
 /*     (void) state; /\* unused *\/ */
 /*     int pre_pc = e_cpu_context.pc; */
 
-/*     uint8 lower_byte_address = 0x40; */
+/*     uint8 lower_byte_offset = 0x40; */
 /*     uint8 code_bytes[] = { */
-/*         OP_LDA_E, */
+/*         OP_LDA_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     uint8 data_bytes[] = { */
 /*         0x1F */
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 3 }, */
-/*         { S_POINTER + lower_byte_address, data_bytes, 1 } */
+/*         { S_POINTER + lower_byte_offset, data_bytes, 1 } */
 /*     }; */
 /*     load_memory(test_memory, 2); */
 
-/*     int cycles = run_cycles(opcode_table[OP_LDA_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_table[OP_LDA_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 /*     assert_int_equal(e_cpu_context.d.byte_acc.a, 0x1F); */
 /*     assert_int_equal(e_cpu_context.d.byte_acc.b, 0); */
-/*     assert_int_equal(cycles, opcode_table[OP_LDA_E].cycle_count); */
+/*     assert_int_equal(cycles, opcode_table[OP_LDA_I].cycle_count); */
 /*     assert_int_equal(post_pc, pre_pc + 3); */
 /* } */
 
@@ -936,26 +936,26 @@ void andb_indexed_test(void **state) {
 /*     (void) state; /\* unused *\/ */
 /*     int pre_pc = e_cpu_context.pc; */
 
-/*     uint8 lower_byte_address = 0x40; */
+/*     uint8 lower_byte_offset = 0x40; */
 /*     uint8 code_bytes[] = { */
-/*         OP_LDB_E, */
+/*         OP_LDB_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     uint8 data_bytes[] = { */
 /*         0x1F */
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 3 }, */
-/*         { S_POINTER + lower_byte_address, data_bytes, 1 } */
+/*         { S_POINTER + lower_byte_offset, data_bytes, 1 } */
 /*     }; */
 /*     load_memory(test_memory, 2); */
 
-/*     int cycles = run_cycles(opcode_table[OP_LDB_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_table[OP_LDB_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 /*     assert_int_equal(e_cpu_context.d.byte_acc.a, 0); */
 /*     assert_int_equal(e_cpu_context.d.byte_acc.b, 0x1F); */
-/*     assert_int_equal(cycles, opcode_table[OP_LDB_E].cycle_count); */
+/*     assert_int_equal(cycles, opcode_table[OP_LDB_I].cycle_count); */
 /*     assert_int_equal(post_pc, pre_pc + 3); */
 /* } */
 
@@ -963,11 +963,11 @@ void andb_indexed_test(void **state) {
 /*     (void) state; /\* unused *\/ */
 /*     int pre_pc = e_cpu_context.pc; */
 
-/*     uint8 lower_byte_address = 0x40; */
+/*     uint8 lower_byte_offset = 0x40; */
 /*     uint8 code_bytes[] = { */
-/*         OP_LDD_E, */
+/*         OP_LDD_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     uint8 data_bytes[] = { */
 /*         0xF0, */
@@ -975,14 +975,14 @@ void andb_indexed_test(void **state) {
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 3 }, */
-/*         { S_POINTER + lower_byte_address, data_bytes, 2 } */
+/*         { S_POINTER + lower_byte_offset, data_bytes, 2 } */
 /*     }; */
 /*     load_memory(test_memory, 2); */
 
-/*     int cycles = run_cycles(opcode_table[OP_LDD_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_table[OP_LDD_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 /*     assert_int_equal(e_cpu_context.d.d, 0xF00D); */
-/*     assert_int_equal(cycles, opcode_table[OP_LDD_E].cycle_count); */
+/*     assert_int_equal(cycles, opcode_table[OP_LDD_I].cycle_count); */
 /*     assert_true(post_pc == pre_pc + 3); */
 /* } */
 
@@ -990,12 +990,12 @@ void andb_indexed_test(void **state) {
 /*     (void) state; /\* unused *\/ */
 /*     int pre_pc = e_cpu_context.pc; */
 
-/*     uint8 lower_byte_address = 0x40; */
+/*     uint8 lower_byte_offset = 0x40; */
 /*     uint8 code_bytes[] = { */
-/*         OP_EXTENDED_X10, */
-/*         OP_LDS_E, */
+/*         OP_IXTENDED_X10, */
+/*         OP_LDS_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     uint8 data_bytes[] = { */
 /*         0xF0, */
@@ -1003,14 +1003,14 @@ void andb_indexed_test(void **state) {
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 4 }, */
-/*         { S_POINTER + lower_byte_address, data_bytes, 2 } */
+/*         { S_POINTER + lower_byte_offset, data_bytes, 2 } */
 /*     }; */
 /*     load_memory(test_memory, 2); */
 
-/*     int cycles = run_cycles(opcode_ext_x10_table[OP_LDS_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_ext_x10_table[OP_LDS_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 /*     assert_int_equal(e_cpu_context.s, 0xF00D); */
-/*     assert_int_equal(cycles, opcode_ext_x10_table[OP_LDS_E].cycle_count); */
+/*     assert_int_equal(cycles, opcode_ext_x10_table[OP_LDS_I].cycle_count); */
 /*     assert_true(post_pc == pre_pc + 4); */
 /* } */
 
@@ -1018,11 +1018,11 @@ void andb_indexed_test(void **state) {
 /*     (void) state; /\* unused *\/ */
 /*     int pre_pc = e_cpu_context.pc; */
 
-/*     uint8 lower_byte_address = 0x40; */
+/*     uint8 lower_byte_offset = 0x40; */
 /*     uint8 code_bytes[] = { */
-/*         OP_LDU_E, */
+/*         OP_LDU_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     uint8 data_bytes[] = { */
 /*         0xF0, */
@@ -1030,14 +1030,14 @@ void andb_indexed_test(void **state) {
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 3 }, */
-/*         { S_POINTER + lower_byte_address, data_bytes, 2 } */
+/*         { S_POINTER + lower_byte_offset, data_bytes, 2 } */
 /*     }; */
 /*     load_memory(test_memory, 2); */
 
-/*     int cycles = run_cycles(opcode_table[OP_LDU_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_table[OP_LDU_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 /*     assert_int_equal(e_cpu_context.u, 0xF00D); */
-/*     assert_int_equal(cycles, opcode_table[OP_LDU_E].cycle_count); */
+/*     assert_int_equal(cycles, opcode_table[OP_LDU_I].cycle_count); */
 /*     assert_true(post_pc == pre_pc + 3); */
 /* } */
 
@@ -1045,11 +1045,11 @@ void andb_indexed_test(void **state) {
 /*     (void) state; /\* unused *\/ */
 /*     int pre_pc = e_cpu_context.pc; */
 
-/*     uint8 lower_byte_address = 0x40; */
+/*     uint8 lower_byte_offset = 0x40; */
 /*     uint8 code_bytes[] = { */
-/*         OP_LDX_E, */
+/*         OP_LDX_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     uint8 data_bytes[] = { */
 /*         0xF0, */
@@ -1057,14 +1057,14 @@ void andb_indexed_test(void **state) {
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 3 }, */
-/*         { S_POINTER + lower_byte_address, data_bytes, 2 } */
+/*         { S_POINTER + lower_byte_offset, data_bytes, 2 } */
 /*     }; */
 /*     load_memory(test_memory, 2); */
 
-/*     int cycles = run_cycles(opcode_table[OP_LDX_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_table[OP_LDX_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 /*     assert_int_equal(e_cpu_context.x, 0xF00D); */
-/*     assert_int_equal(cycles, opcode_table[OP_LDX_E].cycle_count); */
+/*     assert_int_equal(cycles, opcode_table[OP_LDX_I].cycle_count); */
 /*     assert_true(post_pc == pre_pc + 3); */
 /* } */
 
@@ -1072,12 +1072,12 @@ void andb_indexed_test(void **state) {
 /*     (void) state; /\* unused *\/ */
 /*     int pre_pc = e_cpu_context.pc; */
 
-/*     uint8 lower_byte_address = 0x40; */
+/*     uint8 lower_byte_offset = 0x40; */
 /*     uint8 code_bytes[] = { */
-/*         OP_EXTENDED_X10, */
-/*         OP_LDY_E, */
+/*         OP_IXTENDED_X10, */
+/*         OP_LDY_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     uint8 data_bytes[] = { */
 /*         0xF0, */
@@ -1085,14 +1085,14 @@ void andb_indexed_test(void **state) {
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 4 }, */
-/*         { S_POINTER + lower_byte_address, data_bytes, 2 } */
+/*         { S_POINTER + lower_byte_offset, data_bytes, 2 } */
 /*     }; */
 /*     load_memory(test_memory, 2); */
 
-/*     int cycles = run_cycles(opcode_ext_x10_table[OP_LDY_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_ext_x10_table[OP_LDY_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 /*     assert_int_equal(e_cpu_context.y, 0xF00D); */
-/*     assert_int_equal(cycles, opcode_ext_x10_table[OP_LDY_E].cycle_count); */
+/*     assert_int_equal(cycles, opcode_ext_x10_table[OP_LDY_I].cycle_count); */
 /*     assert_true(post_pc == pre_pc + 4); */
 /* } */
 
@@ -1100,26 +1100,26 @@ void andb_indexed_test(void **state) {
 /*     (void) state; /\* unused *\/ */
 /*     int pre_pc = e_cpu_context.pc; */
 
-/*     uint8 lower_byte_address = 0x40; */
+/*     uint8 lower_byte_offset = 0x40; */
 /*     uint8 code_bytes[] = { */
-/*         OP_NEG_E, */
+/*         OP_NEG_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     uint8 data_bytes[] = { */
 /*         0x1 */
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 3 }, */
-/*         { S_POINTER + lower_byte_address, data_bytes, 1 } */
+/*         { S_POINTER + lower_byte_offset, data_bytes, 1 } */
 /*     }; */
 /*     load_memory(test_memory, 2); */
 
-/*     int cycles = run_cycles(opcode_table[OP_NEG_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_table[OP_NEG_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 
-/*     assert_int_equal(cycles, opcode_table[OP_NEG_E].cycle_count); */
-/*     assert_int_equal(read_byte_from_memory(S_POINTER + lower_byte_address), */
+/*     assert_int_equal(cycles, opcode_table[OP_NEG_I].cycle_count); */
+/*     assert_int_equal(read_byte_from_memory(S_POINTER + lower_byte_offset), */
 /*                      0xFF); */
 /*     assert_int_equal(e_cpu_context.cc.c, 1); */
 /*     assert_int_equal(e_cpu_context.cc.v, 0); */
@@ -1132,18 +1132,18 @@ void andb_indexed_test(void **state) {
 /*     (void) state; /\* unused *\/ */
 /*     int pre_pc = e_cpu_context.pc; */
 
-/*     uint8 lower_byte_address = 0x40; */
+/*     uint8 lower_byte_offset = 0x40; */
 /*     uint8 code_bytes[] = { */
-/*         OP_ORA_E, */
+/*         OP_ORA_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     uint8 data_bytes[] = { */
 /*         0x5 */
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 3 }, */
-/*         { S_POINTER + lower_byte_address, data_bytes, 1 } */
+/*         { S_POINTER + lower_byte_offset, data_bytes, 1 } */
 /*     }; */
 /*     load_memory(test_memory, 2); */
 
@@ -1151,14 +1151,14 @@ void andb_indexed_test(void **state) {
 /*     /\* b shouldn't be messed with *\/ */
 /*     e_cpu_context.d.byte_acc.b = 0xFF; */
 
-/*     int cycles = run_cycles(opcode_table[OP_ORA_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_table[OP_ORA_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 /*     assert_int_equal(e_cpu_context.d.byte_acc.a, 0xD); */
 /*     assert_int_equal(e_cpu_context.d.byte_acc.b, 0xFF); */
 /*     assert_int_equal(e_cpu_context.cc.n, 0); */
 /*     assert_int_equal(e_cpu_context.cc.z, 0); */
 /*     assert_int_equal(e_cpu_context.cc.v, 0); */
-/*     assert_int_equal(cycles, opcode_table[OP_ORA_E].cycle_count); */
+/*     assert_int_equal(cycles, opcode_table[OP_ORA_I].cycle_count); */
 /*     assert_true(post_pc == pre_pc + 3); */
 /* } */
 
@@ -1166,18 +1166,18 @@ void andb_indexed_test(void **state) {
 /*     (void) state; /\* unused *\/ */
 /*     int pre_pc = e_cpu_context.pc; */
 
-/*     uint8 lower_byte_address = 0x40; */
+/*     uint8 lower_byte_offset = 0x40; */
 /*     uint8 code_bytes[] = { */
-/*         OP_ORB_E, */
+/*         OP_ORB_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     uint8 data_bytes[] = { */
 /*         0x5 */
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 3 }, */
-/*         { S_POINTER + lower_byte_address, data_bytes, 1 } */
+/*         { S_POINTER + lower_byte_offset, data_bytes, 1 } */
 /*     }; */
 /*     load_memory(test_memory, 2); */
 
@@ -1185,14 +1185,14 @@ void andb_indexed_test(void **state) {
 /*     e_cpu_context.d.byte_acc.a = 0xFF; */
 /*     e_cpu_context.d.byte_acc.b = 8; */
 
-/*     int cycles = run_cycles(opcode_table[OP_ORB_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_table[OP_ORB_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 /*     assert_int_equal(e_cpu_context.d.byte_acc.b, 0xD); */
 /*     assert_int_equal(e_cpu_context.d.byte_acc.a, 0xFF); */
 /*     assert_int_equal(e_cpu_context.cc.n, 0); */
 /*     assert_int_equal(e_cpu_context.cc.z, 0); */
 /*     assert_int_equal(e_cpu_context.cc.v, 0); */
-/*     assert_int_equal(cycles, opcode_table[OP_ORB_E].cycle_count); */
+/*     assert_int_equal(cycles, opcode_table[OP_ORB_I].cycle_count); */
 /*     assert_true(post_pc == pre_pc + 3); */
 /* } */
 
@@ -1200,26 +1200,26 @@ void andb_indexed_test(void **state) {
 /*     (void) state; /\* unused *\/ */
 /*     int pre_pc = e_cpu_context.pc; */
 
-/*     uint8 lower_byte_address = 0x40; */
+/*     uint8 lower_byte_offset = 0x40; */
 /*     uint8 code_bytes[] = { */
-/*         OP_ROL_E, */
+/*         OP_ROL_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     uint8 data_bytes[] = { */
 /*         0x2 */
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 3 }, */
-/*         { S_POINTER + lower_byte_address, data_bytes, 1 } */
+/*         { S_POINTER + lower_byte_offset, data_bytes, 1 } */
 /*     }; */
 /*     load_memory(test_memory, 2); */
 
-/*     int cycles = run_cycles(opcode_table[OP_ROL_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_table[OP_ROL_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 
-/*     assert_int_equal(cycles, opcode_table[OP_ROL_E].cycle_count); */
-/*     assert_int_equal(read_byte_from_memory(S_POINTER + lower_byte_address), */
+/*     assert_int_equal(cycles, opcode_table[OP_ROL_I].cycle_count); */
+/*     assert_int_equal(read_byte_from_memory(S_POINTER + lower_byte_offset), */
 /*                      0x4); */
 /*     assert_int_equal(e_cpu_context.cc.c, 0); */
 /*     assert_int_equal(e_cpu_context.cc.n, 0); */
@@ -1232,26 +1232,26 @@ void andb_indexed_test(void **state) {
 /*     (void) state; /\* unused *\/ */
 /*     int pre_pc = e_cpu_context.pc; */
 
-/*     uint8 lower_byte_address = 0x40; */
+/*     uint8 lower_byte_offset = 0x40; */
 /*     uint8 code_bytes[] = { */
-/*         OP_ROR_E, */
+/*         OP_ROR_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     uint8 data_bytes[] = { */
 /*         0x2 */
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 3 }, */
-/*         { S_POINTER + lower_byte_address, data_bytes, 1 } */
+/*         { S_POINTER + lower_byte_offset, data_bytes, 1 } */
 /*     }; */
 /*     load_memory(test_memory, 2); */
 
-/*     int cycles = run_cycles(opcode_table[OP_ROR_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_table[OP_ROR_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 
-/*     assert_int_equal(cycles, opcode_table[OP_ROR_E].cycle_count); */
-/*     assert_int_equal(read_byte_from_memory(S_POINTER + lower_byte_address), */
+/*     assert_int_equal(cycles, opcode_table[OP_ROR_I].cycle_count); */
+/*     assert_int_equal(read_byte_from_memory(S_POINTER + lower_byte_offset), */
 /*                      0x1); */
 /*     assert_int_equal(e_cpu_context.cc.c, 0); */
 /*     assert_int_equal(e_cpu_context.cc.n, 0); */
@@ -1264,18 +1264,18 @@ void andb_indexed_test(void **state) {
 /*     (void) state; /\* unused *\/ */
 /*     int pre_pc = e_cpu_context.pc; */
 
-/*     uint8 lower_byte_address = 0x40; */
+/*     uint8 lower_byte_offset = 0x40; */
 /*     uint8 code_bytes[] = { */
-/*         OP_SBCA_E, */
+/*         OP_SBCA_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     uint8 data_bytes[] = { */
 /*         0x4 */
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 3 }, */
-/*         { S_POINTER + lower_byte_address, data_bytes, 1 } */
+/*         { S_POINTER + lower_byte_offset, data_bytes, 1 } */
 /*     }; */
 /*     load_memory(test_memory, 2); */
 
@@ -1285,7 +1285,7 @@ void andb_indexed_test(void **state) {
 /*     e_cpu_context.cc.c = 1; */
 /*     set_reg_value_8(REG_A, 6); */
 
-/*     int cycles = run_cycles(opcode_table[OP_SBCA_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_table[OP_SBCA_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 /*     assert_int_equal(get_reg_value_8(REG_A), 1); */
 /*     assert_int_equal(get_reg_value_8(REG_B), 0xFF); */
@@ -1293,7 +1293,7 @@ void andb_indexed_test(void **state) {
 /*     assert_int_equal(e_cpu_context.cc.c, 0); */
 /*     assert_int_equal(e_cpu_context.cc.z, 0); */
 /*     assert_int_equal(e_cpu_context.cc.v, 0); */
-/*     assert_int_equal(cycles, opcode_table[OP_SBCA_E].cycle_count); */
+/*     assert_int_equal(cycles, opcode_table[OP_SBCA_I].cycle_count); */
 /*     assert_true(post_pc == pre_pc + 3); */
 /* } */
 
@@ -1301,18 +1301,18 @@ void andb_indexed_test(void **state) {
 /*     (void) state; /\* unused *\/ */
 /*     int pre_pc = e_cpu_context.pc; */
 
-/*     uint8 lower_byte_address = 0x40; */
+/*     uint8 lower_byte_offset = 0x40; */
 /*     uint8 code_bytes[] = { */
-/*         OP_SBCB_E, */
+/*         OP_SBCB_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     uint8 data_bytes[] = { */
 /*         0x4 */
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 3 }, */
-/*         { S_POINTER + lower_byte_address, data_bytes, 1 } */
+/*         { S_POINTER + lower_byte_offset, data_bytes, 1 } */
 /*     }; */
 /*     load_memory(test_memory, 2); */
 
@@ -1321,7 +1321,7 @@ void andb_indexed_test(void **state) {
 /*     e_cpu_context.cc.c = 1; */
 /*     set_reg_value_8(REG_B, 6); */
 
-/*     int cycles = run_cycles(opcode_table[OP_SBCB_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_table[OP_SBCB_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 /*     assert_int_equal(get_reg_value_8(REG_B), 1); */
 /*     assert_int_equal(get_reg_value_8(REG_A), 0xFF); */
@@ -1329,7 +1329,7 @@ void andb_indexed_test(void **state) {
 /*     assert_int_equal(e_cpu_context.cc.c, 0); */
 /*     assert_int_equal(e_cpu_context.cc.z, 0); */
 /*     assert_int_equal(e_cpu_context.cc.v, 0); */
-/*     assert_int_equal(cycles, opcode_table[OP_SBCB_E].cycle_count); */
+/*     assert_int_equal(cycles, opcode_table[OP_SBCB_I].cycle_count); */
 /*     assert_true(post_pc == pre_pc + 3); */
 /* } */
 
@@ -1337,13 +1337,13 @@ void andb_indexed_test(void **state) {
 /*     (void) state; /\* unused *\/ */
 /*     int pre_pc = e_cpu_context.pc; */
 
-/*     uint8 lower_byte_address = 0x40; */
-/*     assert_int_equal(read_byte_from_memory(S_POINTER + lower_byte_address), */
+/*     uint8 lower_byte_offset = 0x40; */
+/*     assert_int_equal(read_byte_from_memory(S_POINTER + lower_byte_offset), */
 /*                      0); */
 /*     uint8 code_bytes[] = { */
-/*         OP_STA_E, */
+/*         OP_STA_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 3 } */
@@ -1351,12 +1351,12 @@ void andb_indexed_test(void **state) {
 /*     load_memory(test_memory, 1); */
 /*     set_reg_value_8(REG_A, 0x69); */
 
-/*     int cycles = run_cycles(opcode_table[OP_STA_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_table[OP_STA_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 /*     assert_int_equal(e_cpu_context.d.byte_acc.a, 0x69); */
-/*     assert_int_equal(read_byte_from_memory(S_POINTER + lower_byte_address), */
+/*     assert_int_equal(read_byte_from_memory(S_POINTER + lower_byte_offset), */
 /*                      0x69); */
-/*     assert_int_equal(cycles, opcode_table[OP_STA_E].cycle_count); */
+/*     assert_int_equal(cycles, opcode_table[OP_STA_I].cycle_count); */
 /*     assert_int_equal(post_pc, pre_pc + 3); */
 /* } */
 
@@ -1364,13 +1364,13 @@ void andb_indexed_test(void **state) {
 /*     (void) state; /\* unused *\/ */
 /*     int pre_pc = e_cpu_context.pc; */
 
-/*     uint8 lower_byte_address = 0x40; */
-/*     assert_int_equal(read_byte_from_memory(S_POINTER + lower_byte_address), */
+/*     uint8 lower_byte_offset = 0x40; */
+/*     assert_int_equal(read_byte_from_memory(S_POINTER + lower_byte_offset), */
 /*                      0); */
 /*     uint8 code_bytes[] = { */
-/*         OP_STB_E, */
+/*         OP_STB_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 3 } */
@@ -1378,12 +1378,12 @@ void andb_indexed_test(void **state) {
 /*     load_memory(test_memory, 1); */
 /*     set_reg_value_8(REG_B, 0x69); */
 
-/*     int cycles = run_cycles(opcode_table[OP_STB_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_table[OP_STB_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 /*     assert_int_equal(e_cpu_context.d.byte_acc.b, 0x69); */
-/*     assert_int_equal(read_byte_from_memory(S_POINTER + lower_byte_address), */
+/*     assert_int_equal(read_byte_from_memory(S_POINTER + lower_byte_offset), */
 /*                      0x69); */
-/*     assert_int_equal(cycles, opcode_table[OP_STB_E].cycle_count); */
+/*     assert_int_equal(cycles, opcode_table[OP_STB_I].cycle_count); */
 /*     assert_int_equal(post_pc, pre_pc + 3); */
 /* } */
 
@@ -1391,13 +1391,13 @@ void andb_indexed_test(void **state) {
 /*     (void) state; /\* unused *\/ */
 /*     int pre_pc = e_cpu_context.pc; */
 
-/*     uint8 lower_byte_address = 0x40; */
-/*     assert_int_equal(read_word_from_memory(S_POINTER + lower_byte_address), */
+/*     uint8 lower_byte_offset = 0x40; */
+/*     assert_int_equal(read_word_from_memory(S_POINTER + lower_byte_offset), */
 /*                      0); */
 /*     uint8 code_bytes[] = { */
-/*         OP_STD_E, */
+/*         OP_STD_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 3 } */
@@ -1405,12 +1405,12 @@ void andb_indexed_test(void **state) {
 /*     load_memory(test_memory, 1); */
 /*     set_reg_value_16(REG_D, 0x1969); */
 
-/*     int cycles = run_cycles(opcode_table[OP_STD_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_table[OP_STD_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 /*     assert_int_equal(get_reg_value_16(REG_D), 0x1969); */
-/*     assert_int_equal(read_word_from_memory(S_POINTER + lower_byte_address), */
+/*     assert_int_equal(read_word_from_memory(S_POINTER + lower_byte_offset), */
 /*                      0x1969); */
-/*     assert_int_equal(cycles, opcode_table[OP_STD_E].cycle_count); */
+/*     assert_int_equal(cycles, opcode_table[OP_STD_I].cycle_count); */
 /*     assert_int_equal(post_pc, pre_pc + 3); */
 /* } */
 
@@ -1418,14 +1418,14 @@ void andb_indexed_test(void **state) {
 /*     (void) state; /\* unused *\/ */
 /*     int pre_pc = e_cpu_context.pc; */
 
-/*     uint8 lower_byte_address = 0x40; */
-/*     assert_int_equal(read_word_from_memory(S_POINTER + lower_byte_address), */
+/*     uint8 lower_byte_offset = 0x40; */
+/*     assert_int_equal(read_word_from_memory(S_POINTER + lower_byte_offset), */
 /*                      0); */
 /*     uint8 code_bytes[] = { */
-/*         OP_EXTENDED_X10, */
-/*         OP_STS_E, */
+/*         OP_IXTENDED_X10, */
+/*         OP_STS_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 4 } */
@@ -1433,12 +1433,12 @@ void andb_indexed_test(void **state) {
 /*     load_memory(test_memory, 1); */
 /*     set_reg_value_16(REG_S, 0x1969); */
 
-/*     int cycles = run_cycles(opcode_ext_x10_table[OP_STS_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_ext_x10_table[OP_STS_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 /*     assert_int_equal(get_reg_value_16(REG_S), 0x1969); */
-/*     assert_int_equal(read_word_from_memory(S_POINTER + lower_byte_address), */
+/*     assert_int_equal(read_word_from_memory(S_POINTER + lower_byte_offset), */
 /*                      0x1969); */
-/*     assert_int_equal(cycles, opcode_ext_x10_table[OP_STS_E].cycle_count); */
+/*     assert_int_equal(cycles, opcode_ext_x10_table[OP_STS_I].cycle_count); */
 /*     assert_int_equal(post_pc, pre_pc + 4); */
 /* } */
 
@@ -1446,13 +1446,13 @@ void andb_indexed_test(void **state) {
 /*     (void) state; /\* unused *\/ */
 /*     int pre_pc = e_cpu_context.pc; */
 
-/*     uint8 lower_byte_address = 0x40; */
-/*     assert_int_equal(read_word_from_memory(S_POINTER + lower_byte_address), */
+/*     uint8 lower_byte_offset = 0x40; */
+/*     assert_int_equal(read_word_from_memory(S_POINTER + lower_byte_offset), */
 /*                      0); */
 /*     uint8 code_bytes[] = { */
-/*         OP_STU_E, */
+/*         OP_STU_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 3 } */
@@ -1460,12 +1460,12 @@ void andb_indexed_test(void **state) {
 /*     load_memory(test_memory, 1); */
 /*     set_reg_value_16(REG_U, 0x1969); */
 
-/*     int cycles = run_cycles(opcode_table[OP_STU_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_table[OP_STU_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 /*     assert_int_equal(get_reg_value_16(REG_U), 0x1969); */
-/*     assert_int_equal(read_word_from_memory(S_POINTER + lower_byte_address), */
+/*     assert_int_equal(read_word_from_memory(S_POINTER + lower_byte_offset), */
 /*                      0x1969); */
-/*     assert_int_equal(cycles, opcode_table[OP_STU_E].cycle_count); */
+/*     assert_int_equal(cycles, opcode_table[OP_STU_I].cycle_count); */
 /*     assert_int_equal(post_pc, pre_pc + 3); */
 /* } */
 
@@ -1473,13 +1473,13 @@ void andb_indexed_test(void **state) {
 /*     (void) state; /\* unused *\/ */
 /*     int pre_pc = e_cpu_context.pc; */
 
-/*     uint8 lower_byte_address = 0x40; */
-/*     assert_int_equal(read_word_from_memory(S_POINTER + lower_byte_address), */
+/*     uint8 lower_byte_offset = 0x40; */
+/*     assert_int_equal(read_word_from_memory(S_POINTER + lower_byte_offset), */
 /*                      0); */
 /*     uint8 code_bytes[] = { */
-/*         OP_STX_E, */
+/*         OP_STX_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 3 } */
@@ -1487,12 +1487,12 @@ void andb_indexed_test(void **state) {
 /*     load_memory(test_memory, 1); */
 /*     set_reg_value_16(REG_X, 0x1969); */
 
-/*     int cycles = run_cycles(opcode_table[OP_STX_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_table[OP_STX_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 /*     assert_int_equal(get_reg_value_16(REG_X), 0x1969); */
-/*     assert_int_equal(read_word_from_memory(S_POINTER + lower_byte_address), */
+/*     assert_int_equal(read_word_from_memory(S_POINTER + lower_byte_offset), */
 /*                      0x1969); */
-/*     assert_int_equal(cycles, opcode_table[OP_STX_E].cycle_count); */
+/*     assert_int_equal(cycles, opcode_table[OP_STX_I].cycle_count); */
 /*     assert_int_equal(post_pc, pre_pc + 3); */
 /* } */
 
@@ -1500,14 +1500,14 @@ void andb_indexed_test(void **state) {
 /*     (void) state; /\* unused *\/ */
 /*     int pre_pc = e_cpu_context.pc; */
 
-/*     uint8 lower_byte_address = 0x40; */
-/*     assert_int_equal(read_word_from_memory(S_POINTER + lower_byte_address), */
+/*     uint8 lower_byte_offset = 0x40; */
+/*     assert_int_equal(read_word_from_memory(S_POINTER + lower_byte_offset), */
 /*                      0); */
 /*     uint8 code_bytes[] = { */
-/*         OP_EXTENDED_X10, */
-/*         OP_STY_E, */
+/*         OP_IXTENDED_X10, */
+/*         OP_STY_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 4 } */
@@ -1515,12 +1515,12 @@ void andb_indexed_test(void **state) {
 /*     load_memory(test_memory, 1); */
 /*     set_reg_value_16(REG_Y, 0x1969); */
 
-/*     int cycles = run_cycles(opcode_ext_x10_table[OP_STY_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_ext_x10_table[OP_STY_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 /*     assert_int_equal(get_reg_value_16(REG_Y), 0x1969); */
-/*     assert_int_equal(read_word_from_memory(S_POINTER + lower_byte_address), */
+/*     assert_int_equal(read_word_from_memory(S_POINTER + lower_byte_offset), */
 /*                      0x1969); */
-/*     assert_int_equal(cycles, opcode_ext_x10_table[OP_STY_E].cycle_count); */
+/*     assert_int_equal(cycles, opcode_ext_x10_table[OP_STY_I].cycle_count); */
 /*     assert_int_equal(post_pc, pre_pc + 4); */
 /* } */
 
@@ -1528,18 +1528,18 @@ void andb_indexed_test(void **state) {
 /*     (void) state; /\* unused *\/ */
 /*     int pre_pc = e_cpu_context.pc; */
 
-/*     uint8 lower_byte_address = 0x40; */
+/*     uint8 lower_byte_offset = 0x40; */
 /*     uint8 code_bytes[] = { */
-/*         OP_SUBA_E, */
+/*         OP_SUBA_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     uint8 data_bytes[] = { */
 /*         0x4 */
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 3 }, */
-/*         { S_POINTER + lower_byte_address, data_bytes, 1 } */
+/*         { S_POINTER + lower_byte_offset, data_bytes, 1 } */
 /*     }; */
 /*     load_memory(test_memory, 2); */
 
@@ -1547,7 +1547,7 @@ void andb_indexed_test(void **state) {
 /*     set_reg_value_8(REG_B, 0xFF); */
 /*     set_reg_value_8(REG_A, 6); */
 
-/*     int cycles = run_cycles(opcode_table[OP_SUBA_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_table[OP_SUBA_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 /*     assert_int_equal(get_reg_value_8(REG_A), 2); */
 /*     assert_int_equal(get_reg_value_8(REG_B), 0xFF); */
@@ -1555,7 +1555,7 @@ void andb_indexed_test(void **state) {
 /*     assert_int_equal(e_cpu_context.cc.c, 0); */
 /*     assert_int_equal(e_cpu_context.cc.z, 0); */
 /*     assert_int_equal(e_cpu_context.cc.v, 0); */
-/*     assert_int_equal(cycles, opcode_table[OP_SUBA_E].cycle_count); */
+/*     assert_int_equal(cycles, opcode_table[OP_SUBA_I].cycle_count); */
 /*     assert_true(post_pc == pre_pc + 3); */
 /* } */
 
@@ -1563,18 +1563,18 @@ void andb_indexed_test(void **state) {
 /*     (void) state; /\* unused *\/ */
 /*     int pre_pc = e_cpu_context.pc; */
 
-/*     uint8 lower_byte_address = 0x40; */
+/*     uint8 lower_byte_offset = 0x40; */
 /*     uint8 code_bytes[] = { */
-/*         OP_SUBB_E, */
+/*         OP_SUBB_I, */
 /*         S_POINTER >> 8, */
-/*         lower_byte_address */
+/*         lower_byte_offset */
 /*     }; */
 /*     uint8 data_bytes[] = { */
 /*         0x4 */
 /*     }; */
 /*     struct mem_loader_def test_memory[] = { */
 /*         { USER_SPACE_ROOT, code_bytes, 3 }, */
-/*         { S_POINTER + lower_byte_address, data_bytes, 1 } */
+/*         { S_POINTER + lower_byte_offset, data_bytes, 1 } */
 /*     }; */
 /*     load_memory(test_memory, 2); */
 
@@ -1582,7 +1582,7 @@ void andb_indexed_test(void **state) {
 /*     set_reg_value_8(REG_A, 0xFF); */
 /*     set_reg_value_8(REG_B, 6); */
 
-/*     int cycles = run_cycles(opcode_table[OP_SUBB_E].cycle_count); */
+/*     int cycles = run_cycles(opcode_table[OP_SUBB_I].cycle_count); */
 /*     int post_pc = e_cpu_context.pc; */
 /*     assert_int_equal(get_reg_value_8(REG_B), 2); */
 /*     assert_int_equal(get_reg_value_8(REG_A), 0xFF); */
@@ -1590,7 +1590,7 @@ void andb_indexed_test(void **state) {
 /*     assert_int_equal(e_cpu_context.cc.c, 0); */
 /*     assert_int_equal(e_cpu_context.cc.z, 0); */
 /*     assert_int_equal(e_cpu_context.cc.v, 0); */
-/*     assert_int_equal(cycles, opcode_table[OP_SUBB_E].cycle_count); */
+/*     assert_int_equal(cycles, opcode_table[OP_SUBB_I].cycle_count); */
 /*     assert_true(post_pc == pre_pc + 3); */
 /* } */
 
@@ -1598,11 +1598,11 @@ void andb_indexed_test(void **state) {
 /*      (void) state; /\* unused *\/ */
 /*      int pre_pc = e_cpu_context.pc; */
 
-/*      uint8 lower_byte_address = 0x40; */
+/*      uint8 lower_byte_offset = 0x40; */
 /*      uint8 code_bytes[] = { */
-/*           OP_SUBD_E, */
+/*           OP_SUBD_I, */
 /*           S_POINTER >> 8, */
-/*           lower_byte_address */
+/*           lower_byte_offset */
 /*      }; */
 /*      uint8 data_bytes[] = { */
 /*           0x0, */
@@ -1610,20 +1610,20 @@ void andb_indexed_test(void **state) {
 /*      }; */
 /*      struct mem_loader_def test_memory[] = { */
 /*           { USER_SPACE_ROOT, code_bytes, 3 }, */
-/*           { S_POINTER + lower_byte_address, data_bytes, 2 } */
+/*           { S_POINTER + lower_byte_offset, data_bytes, 2 } */
 /*      }; */
 /*      load_memory(test_memory, 2); */
 
 /*      set_reg_value_16(REG_D, 6); */
 
-/*      int cycles = run_cycles(opcode_table[OP_SUBD_E].cycle_count); */
+/*      int cycles = run_cycles(opcode_table[OP_SUBD_I].cycle_count); */
 /*      int post_pc = e_cpu_context.pc; */
 /*      assert_int_equal(get_reg_value_16(REG_D), 2); */
 /*      assert_int_equal(e_cpu_context.cc.n, 0); */
 /*      assert_int_equal(e_cpu_context.cc.c, 0); */
 /*      assert_int_equal(e_cpu_context.cc.z, 0); */
 /*      assert_int_equal(e_cpu_context.cc.v, 0); */
-/*      assert_int_equal(cycles, opcode_table[OP_SUBD_E].cycle_count); */
+/*      assert_int_equal(cycles, opcode_table[OP_SUBD_I].cycle_count); */
 /*      assert_true(post_pc == pre_pc + 3); */
 /* } */
 
@@ -1631,26 +1631,26 @@ void andb_indexed_test(void **state) {
 /*      (void) state; /\* unused *\/ */
 /*      int pre_pc = e_cpu_context.pc; */
 
-/*      uint8 lower_byte_address = 0x40; */
+/*      uint8 lower_byte_offset = 0x40; */
 /*      uint8 code_bytes[] = { */
-/*           OP_TST_E, */
+/*           OP_TST_I, */
 /*           S_POINTER >> 8, */
-/*           lower_byte_address */
+/*           lower_byte_offset */
 /*      }; */
 /*      uint8 data_bytes[] = { */
 /*           0x0 */
 /*      }; */
 /*      struct mem_loader_def test_memory[] = { */
 /*           { USER_SPACE_ROOT, code_bytes, 3 }, */
-/*           { S_POINTER + lower_byte_address, data_bytes, 1 } */
+/*           { S_POINTER + lower_byte_offset, data_bytes, 1 } */
 /*      }; */
 /*      load_memory(test_memory, 2); */
 
 /*      e_cpu_context.cc.v = 1; */
-/*      int cycles = run_cycles(opcode_table[OP_TST_E].cycle_count); */
+/*      int cycles = run_cycles(opcode_table[OP_TST_I].cycle_count); */
 /*      int post_pc = e_cpu_context.pc; */
 
-/*      assert_int_equal(cycles, opcode_table[OP_TST_E].cycle_count); */
+/*      assert_int_equal(cycles, opcode_table[OP_TST_I].cycle_count); */
 /*      assert_int_equal(e_cpu_context.cc.n, 0); */
 /*      assert_int_equal(e_cpu_context.cc.z, 1); */
 /*      assert_int_equal(e_cpu_context.cc.v, 0); */
