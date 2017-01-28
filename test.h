@@ -392,7 +392,7 @@ void bitb_indexed_test(void **state);
 void clr_indexed_test(void **state);
 void cmpa_indexed_nocarry_test(void **state);
 void cmpb_indexed_nocarry_test(void **state);
-/* void cmpd_indexed_nocarry_test(void **state); */
+void cmpd_indexed_nocarry_test(void **state);
 /* void cmps_indexed_nocarry_test(void **state); */
 /* void cmpu_indexed_nocarry_test(void **state); */
 /* void cmpx_indexed_overflow_test(void **state); */
@@ -810,8 +810,8 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(bitb_indexed_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(clr_indexed_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(cmpa_indexed_nocarry_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(cmpb_indexed_nocarry_test, test_setup, test_teardown)
-    /* cmocka_unit_test_setup_teardown(cmpd_indexed_nocarry_test, test_setup, test_teardown), */
+    cmocka_unit_test_setup_teardown(cmpb_indexed_nocarry_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(cmpd_indexed_nocarry_test, test_setup, test_teardown)
     /* cmocka_unit_test_setup_teardown(cmps_indexed_nocarry_test, test_setup, test_teardown), */
     /* cmocka_unit_test_setup_teardown(cmpu_indexed_nocarry_test, test_setup, test_teardown), */
     /* cmocka_unit_test_setup_teardown(cmpx_indexed_overflow_test, test_setup, test_teardown), */
