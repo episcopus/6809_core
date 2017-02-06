@@ -213,6 +213,7 @@ extern void mock_assert(const int result, const char* const expression,
 #define OP_CMPU   0x83
 #define OP_CMPU_D 0x93
 #define OP_CMPS_D 0x9C
+#define OP_CMPU_I 0xA3
 #define OP_CMPS_I 0xAC
 #define OP_CMPU_E 0xB3
 #define OP_CMPS_E 0xBC
