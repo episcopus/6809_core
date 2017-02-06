@@ -532,7 +532,7 @@ void cmpd_indexed_nocarry_test(void **state) {
     };
     struct mem_loader_def test_memory[] = {
         { USER_SPACE_ROOT, code_bytes, 4 },
-        { USER_SPACE_ROOT + 3 + lower_byte_offset, data_bytes, 2 }
+        { USER_SPACE_ROOT + 4 + lower_byte_offset, data_bytes, 2 }
     };
     load_memory(test_memory, 2);
     e_cpu_context.d.d = 0xFFFF;
@@ -565,7 +565,7 @@ void cmps_indexed_nocarry_test(void **state) {
     };
     struct mem_loader_def test_memory[] = {
         { USER_SPACE_ROOT, code_bytes, 4 },
-        { USER_SPACE_ROOT + 3 + lower_byte_offset, data_bytes, 2 }
+        { USER_SPACE_ROOT + 4 + lower_byte_offset, data_bytes, 2 }
     };
     load_memory(test_memory, 2);
     e_cpu_context.s = 0xFFFF;
@@ -598,7 +598,7 @@ void cmpu_indexed_nocarry_test(void **state) {
     };
     struct mem_loader_def test_memory[] = {
         { USER_SPACE_ROOT, code_bytes, 4 },
-        { USER_SPACE_ROOT + 3 + lower_byte_offset, data_bytes, 2 }
+        { USER_SPACE_ROOT + 4 + lower_byte_offset, data_bytes, 2 }
     };
 
     load_memory(test_memory, 2);
@@ -648,39 +648,39 @@ void cmpx_indexed_overflow_test(void **state) {
     assert_int_equal(post_pc, pre_pc + 3);
 }
 
-/* void cmpy_indexed_zero_test(void **state) { */
-/*     (void) state; /\* unused *\/ */
-/*     int pre_pc = e_cpu_context.pc; */
+void cmpy_indexed_zero_test(void **state) {
+    (void) state; /* unused */
+    int pre_pc = e_cpu_context.pc;
 
-/*     uint8 lower_byte_offset = 0x40; */
-/*     uint8 code_bytes[] = { */
-/*         OP_IXTENDED_X10, */
-/*         OP_CMPY_I, */
-/*         S_POINTER >> 8, */
-/*         lower_byte_offset */
-/*     }; */
-/*     uint8 data_bytes[] = { */
-/*         0x69, */
-/*         0x69 */
-/*     }; */
-/*     struct mem_loader_def test_memory[] = { */
-/*         { USER_SPACE_ROOT, code_bytes, 4 }, */
-/*         { S_POINTER + lower_byte_offset, data_bytes, 2 } */
-/*     }; */
+    uint8 lower_byte_offset = 0x40;
+    uint8 code_bytes[] = {
+        OP_EXTENDED_X10,
+        OP_CMPY_I,
+        0x8C,
+        lower_byte_offset
+    };
+    uint8 data_bytes[] = {
+        0x69,
+        0x69
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 4 },
+        { USER_SPACE_ROOT + 4 + lower_byte_offset, data_bytes, 2 }
+    };
 
-/*     load_memory(test_memory, 2); */
-/*     e_cpu_context.y = 0x6969; */
+    load_memory(test_memory, 2);
+    e_cpu_context.y = 0x6969;
 
-/*     int cycles = run_cycles(opcode_ext_x10_table[OP_CMPY_I].cycle_count); */
-/*     int post_pc = e_cpu_context.pc; */
-/*     assert_int_equal(e_cpu_context.y, 0x6969); */
-/*     assert_int_equal(e_cpu_context.cc.n, 0); */
-/*     assert_int_equal(e_cpu_context.cc.c, 0); */
-/*     assert_int_equal(e_cpu_context.cc.z, 1); */
-/*     assert_int_equal(e_cpu_context.cc.v, 0); */
-/*     assert_int_equal(cycles, opcode_ext_x10_table[OP_CMPY_I].cycle_count); */
-/*     assert_true(post_pc == pre_pc + 4); */
-/* } */
+    int cycles = run_cycles(opcode_ext_x10_table[OP_CMPY_I].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.y, 0x6969);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.c, 0);
+    assert_int_equal(e_cpu_context.cc.z, 1);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_int_equal(cycles, opcode_ext_x10_table[OP_CMPY_I].cycle_count + 1);
+    assert_int_equal(post_pc, pre_pc + 4);
+}
 
 /* void com_indexed_test(void **state) { */
 /*     (void) state; /\* unused *\/ */
