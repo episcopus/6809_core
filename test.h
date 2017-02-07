@@ -398,7 +398,7 @@ void cmpu_indexed_nocarry_test(void **state);
 void cmpx_indexed_overflow_test(void **state);
 void cmpy_indexed_zero_test(void **state);
 void com_indexed_test(void **state);
-/* void dec_indexed_test(void **state); */
+void dec_indexed_test(void **state);
 /* void eora_indexed_test(void **state); */
 /* void eorb_indexed_test(void **state); */
 /* void inc_indexed_test(void **state); */
@@ -816,8 +816,8 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(cmpu_indexed_nocarry_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(cmpx_indexed_overflow_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(cmpy_indexed_zero_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(com_indexed_test, test_setup, test_teardown)
-    /* cmocka_unit_test_setup_teardown(dec_indexed_test, test_setup, test_teardown), */
+    cmocka_unit_test_setup_teardown(com_indexed_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(dec_indexed_test, test_setup, test_teardown)
     /* cmocka_unit_test_setup_teardown(eora_indexed_test, test_setup, test_teardown), */
     /* cmocka_unit_test_setup_teardown(eorb_indexed_test, test_setup, test_teardown), */
     /* cmocka_unit_test_setup_teardown(inc_indexed_test, test_setup, test_teardown), */
