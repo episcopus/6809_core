@@ -172,6 +172,7 @@ extern void mock_assert(const int result, const char* const expression,
 #define OP_ADDD_I       0xE3
 #define OP_ANDB_I       0xE4
 #define OP_BITB_I       0xE5
+#define OP_EORB_I       0xE8
 #define OP_ADCB_I       0xE9
 #define OP_ADDB_I       0xEB
 #define OP_SUBB_E       0xF0
