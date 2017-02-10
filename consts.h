@@ -180,6 +180,7 @@ extern void mock_assert(const int result, const char* const expression,
 #define OP_EORB_I       0xE8
 #define OP_ADCB_I       0xE9
 #define OP_ADDB_I       0xEB
+#define OP_LDD_I        0xEC
 #define OP_SUBB_E       0xF0
 #define OP_CMPB_E       0xF1
 #define OP_SBCB_E       0xF2
