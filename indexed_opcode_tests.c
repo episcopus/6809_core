@@ -870,36 +870,36 @@ void jmp_indexed_test(void **state) {
     assert_int_equal(post_pc, USER_SPACE_ROOT + 3 + lower_byte_offset);
 }
 
-/* void jsr_indexed_test(void **state) { */
-/*     (void) state; /\* unused *\/ */
+void jsr_indexed_test(void **state) {
+    (void) state; /* unused */
 
-/*     uint16 pre_stack_pointer = e_cpu_context.s; */
-/*     uint8 lower_byte_offset = 0x40; */
-/*     uint8 code_bytes[] = { */
-/*         OP_JSR_I, */
-/*         S_POINTER >> 8, */
-/*         lower_byte_offset */
-/*     }; */
-/*     uint8 data_bytes[] = { */
-/*         0x45, */
-/*         0x45 */
-/*     }; */
-/*     struct mem_loader_def test_memory[] = { */
-/*         { USER_SPACE_ROOT, code_bytes, 3 }, */
-/*         { S_POINTER + lower_byte_offset, data_bytes, 2 } */
-/*     }; */
-/*     load_memory(test_memory, 2); */
+    uint16 pre_stack_pointer = e_cpu_context.s;
+    uint8 lower_byte_offset = 0x40;
+    uint8 code_bytes[] = {
+        OP_JSR_I,
+        0x8C,
+        lower_byte_offset
+    };
+    uint8 data_bytes[] = {
+        0x45,
+        0x45
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 3 },
+        { USER_SPACE_ROOT + 3 + lower_byte_offset, data_bytes, 2 }
+    };
+    load_memory(test_memory, 2);
 
-/*     int cycles = run_cycles(opcode_table[OP_JSR_I].cycle_count); */
-/*     int post_pc = e_cpu_context.pc; */
-/*     uint16 post_stack_pointer = e_cpu_context.s; */
+    int cycles = run_cycles(opcode_table[OP_JSR_I].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    uint16 post_stack_pointer = e_cpu_context.s;
 
-/*     assert_int_equal(cycles, opcode_table[OP_JSR_I].cycle_count); */
-/*     assert_int_equal(post_pc, S_POINTER | lower_byte_offset); */
-/*     assert_int_equal(post_stack_pointer, pre_stack_pointer - 2); */
-/*     assert_int_equal(read_word_from_memory(post_stack_pointer), */
-/*                      USER_SPACE_ROOT + 3); */
-/* } */
+    assert_int_equal(cycles, opcode_table[OP_JSR_I].cycle_count + 1);
+    assert_int_equal(post_pc, USER_SPACE_ROOT + 3 + lower_byte_offset);
+    assert_int_equal(post_stack_pointer, pre_stack_pointer - 2);
+    assert_int_equal(read_word_from_memory(post_stack_pointer),
+                     USER_SPACE_ROOT + 3);
+}
 
 /* void lda_indexed_test(void **state) { */
 /*     (void) state; /\* unused *\/ */
