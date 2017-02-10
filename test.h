@@ -407,7 +407,7 @@ void jsr_indexed_test(void **state);
 void lda_indexed_test(void **state);
 void ldb_indexed_test(void **state);
 void ldd_indexed_test(void **state);
-/* void lds_idexed_test(void **state); */
+void lds_indexed_test(void **state);
 /* void ldu_indexed_test(void **state); */
 /* void ldx_indexed_test(void **state); */
 /* void ldy_indexed_test(void **state); */
@@ -825,8 +825,8 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(jsr_indexed_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(lda_indexed_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(ldb_indexed_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(ldd_indexed_test, test_setup, test_teardown)
-    /* cmocka_unit_test_setup_teardown(lds_indexed_test, test_setup, test_teardown), */
+    cmocka_unit_test_setup_teardown(ldd_indexed_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(lds_indexed_test, test_setup, test_teardown)
     /* cmocka_unit_test_setup_teardown(ldu_indexed_test, test_setup, test_teardown), */
     /* cmocka_unit_test_setup_teardown(ldx_indexed_test, test_setup, test_teardown), */
     /* cmocka_unit_test_setup_teardown(ldy_indexed_test, test_setup, test_teardown), */
