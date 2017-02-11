@@ -803,6 +803,20 @@ int ld16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     return this_opcode_table[opcode].cycle_count + extra_cycles;
 }
 
+/* Load Effective Address */
+int lea(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
+    e_cpu_context.pc++;
+
+    uint8 extra_cycles = 0;
+    uint16 out_addr = get_memory_address_from_postbyte(a_m, &extra_cycles);
+    set_reg_value_16(t_r, out_addr);
+    if (t_r == REG_X || t_r == REG_Y) {
+        e_cpu_context.cc.z = !out_addr;
+    }
+
+    return opcode_table[opcode].cycle_count + extra_cycles;
+}
+
 /* Logical Shift Right of 8-Bit Accumulator or Memory Byte */
 int lsr(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     (void) a_m; /* unused */

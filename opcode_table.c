@@ -53,7 +53,7 @@ const struct opcode_def opcode_table[] = {
     /* 0x2F */ { "NOTIMPL",      0x2F,            2,  REG_NONE, INHERENT,  notimpl  },
     /* 0x30 */ { "NOTIMPL",      0x30,            2,  REG_NONE, INHERENT,  notimpl  },
     /* 0x31 */ { "NOTIMPL",      0x31,            2,  REG_NONE, INHERENT,  notimpl  },
-    /* 0x32 */ { "NOTIMPL",      0x32,            2,  REG_NONE, INHERENT,  notimpl  },
+    /* 0x32 */ { "LEAS",         OP_LEAS_I,       4,  REG_S,    INDEXED,   lea      },
     /* 0x33 */ { "NOTIMPL",      0x33,            2,  REG_NONE, INHERENT,  notimpl  },
     /* 0x34 */ { "PSHS",         OP_PSHS,         5,  REG_S,    IMMEDIATE, psh      },
     /* 0x35 */ { "PULS",         OP_PULS,         5,  REG_S,    IMMEDIATE, pul      },
