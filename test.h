@@ -415,6 +415,7 @@ void leas_indexed_test(void **state);
 void leau_indexed_test(void **state);
 void leax_indexed_test(void **state);
 void leay_indexed_test(void **state);
+void lsr_indexed_test(void **state);
 /* void neg_indexed_test(void **state); */
 /* void ora_indexed_test(void **state); */
 /* void orb_indexed_test(void **state); */
@@ -837,7 +838,8 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(leas_indexed_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(leau_indexed_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(leax_indexed_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(leay_indexed_test, test_setup, test_teardown)
+    cmocka_unit_test_setup_teardown(leay_indexed_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(lsr_indexed_test, test_setup, test_teardown)
     /* cmocka_unit_test_setup_teardown(neg_indexed_test, test_setup, test_teardown), */
     /* cmocka_unit_test_setup_teardown(ora_indexed_test, test_setup, test_teardown), */
     /* cmocka_unit_test_setup_teardown(orb_indexed_test, test_setup, test_teardown), */
