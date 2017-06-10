@@ -268,7 +268,7 @@ void asl_indexed_test(void **state) {
 
     uint8 code_bytes[] = {
         OP_ASL_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     uint8 data_bytes[] = {
@@ -304,7 +304,7 @@ void asr_indexed_test(void **state) {
 
     uint8 code_bytes[] = {
         OP_ASR_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     uint8 data_bytes[] = {
@@ -342,7 +342,7 @@ void bita_indexed_test(void **state) {
 
     uint8 code_bytes[] = {
         OP_BITA_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     uint8 data_bytes[] = {
@@ -380,7 +380,7 @@ void bitb_indexed_test(void **state) {
 
     uint8 code_bytes[] = {
         OP_BITB_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     uint8 data_bytes[] = {
@@ -420,7 +420,7 @@ void clr_indexed_test(void **state) {
 
     uint8 code_bytes[] = {
         OP_CLR_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     struct mem_loader_def test_memory[] = {
@@ -455,7 +455,7 @@ void cmpa_indexed_nocarry_test(void **state) {
     uint8 lower_byte_offset = 0x40;
     uint8 code_bytes[] = {
         OP_CMPA_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     uint8 data_bytes[] = {
@@ -490,7 +490,7 @@ void cmpb_indexed_nocarry_test(void **state) {
     uint8 lower_byte_offset = 0x40;
     uint8 code_bytes[] = {
         OP_CMPB_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     uint8 data_bytes[] = {
@@ -523,7 +523,7 @@ void cmpd_indexed_nocarry_test(void **state) {
     uint8 code_bytes[] = {
         OP_EXTENDED_X10,
         OP_CMPD_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     uint8 data_bytes[] = {
@@ -556,7 +556,7 @@ void cmps_indexed_nocarry_test(void **state) {
     uint8 code_bytes[] = {
         OP_EXTENDED_X11,
         OP_CMPS_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     uint8 data_bytes[] = {
@@ -589,7 +589,7 @@ void cmpu_indexed_nocarry_test(void **state) {
     uint8 code_bytes[] = {
         OP_EXTENDED_X11,
         OP_CMPU_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     uint8 data_bytes[] = {
@@ -622,7 +622,7 @@ void cmpx_indexed_overflow_test(void **state) {
     uint8 lower_byte_offset = 0x40;
     uint8 code_bytes[] = {
         OP_CMPX_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     uint8 data_bytes[] = {
@@ -656,7 +656,7 @@ void cmpy_indexed_zero_test(void **state) {
     uint8 code_bytes[] = {
         OP_EXTENDED_X10,
         OP_CMPY_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     uint8 data_bytes[] = {
@@ -689,7 +689,7 @@ void com_indexed_test(void **state) {
     uint8 lower_byte_offset = 0x40;
     uint8 code_bytes[] = {
         OP_COM_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     uint8 data_bytes[] = {
@@ -721,7 +721,7 @@ void dec_indexed_test(void **state) {
     uint8 lower_byte_offset = 0x40;
     uint8 code_bytes[] = {
         OP_DEC_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     uint8 data_bytes[] = {
@@ -752,7 +752,7 @@ void eora_indexed_test(void **state) {
     uint8 lower_byte_offset = 0x40;
     uint8 code_bytes[] = {
         OP_EORA_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     uint8 data_bytes[] = {
@@ -786,7 +786,7 @@ void eorb_indexed_test(void **state) {
     uint8 lower_byte_offset = 0x40;
     uint8 code_bytes[] = {
         OP_EORB_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     uint8 data_bytes[] = {
@@ -820,7 +820,7 @@ void inc_indexed_test(void **state) {
     uint8 lower_byte_offset = 0x40;
     uint8 code_bytes[] = {
         OP_INC_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     uint8 data_bytes[] = {
@@ -850,7 +850,7 @@ void jmp_indexed_test(void **state) {
     uint8 lower_byte_offset = 0x40;
     uint8 code_bytes[] = {
         OP_JMP_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     uint8 data_bytes[] = {
@@ -877,7 +877,7 @@ void jsr_indexed_test(void **state) {
     uint8 lower_byte_offset = 0x40;
     uint8 code_bytes[] = {
         OP_JSR_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     uint8 data_bytes[] = {
@@ -908,7 +908,7 @@ void lda_indexed_test(void **state) {
     uint8 lower_byte_offset = 0x40;
     uint8 code_bytes[] = {
         OP_LDA_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     uint8 data_bytes[] = {
@@ -935,7 +935,7 @@ void ldb_indexed_test(void **state) {
     uint8 lower_byte_offset = 0x40;
     uint8 code_bytes[] = {
         OP_LDB_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     uint8 data_bytes[] = {
@@ -962,7 +962,7 @@ void ldd_indexed_test(void **state) {
     uint8 lower_byte_offset = 0x40;
     uint8 code_bytes[] = {
         OP_LDD_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     uint8 data_bytes[] = {
@@ -990,7 +990,7 @@ void lds_indexed_test(void **state) {
     uint8 code_bytes[] = {
         OP_EXTENDED_X10,
         OP_LDS_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     uint8 data_bytes[] = {
@@ -1017,7 +1017,7 @@ void ldu_indexed_test(void **state) {
     uint8 lower_byte_offset = 0x40;
     uint8 code_bytes[] = {
         OP_LDU_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     uint8 data_bytes[] = {
@@ -1044,7 +1044,7 @@ void ldx_indexed_test(void **state) {
     uint8 lower_byte_offset = 0x40;
     uint8 code_bytes[] = {
         OP_LDX_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     uint8 data_bytes[] = {
@@ -1072,7 +1072,7 @@ void ldy_indexed_test(void **state) {
     uint8 code_bytes[] = {
         OP_EXTENDED_X10,
         OP_LDY_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     uint8 data_bytes[] = {
@@ -1099,7 +1099,7 @@ void leas_indexed_test(void **state) {
     uint8 lower_byte_offset = 0x40;
     uint8 code_bytes[] = {
         OP_LEAS_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     uint8 data_bytes[] = {
@@ -1127,7 +1127,7 @@ void leau_indexed_test(void **state) {
     uint8 lower_byte_offset = 0x40;
     uint8 code_bytes[] = {
         OP_LEAU_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     uint8 data_bytes[] = {
@@ -1155,7 +1155,7 @@ void leax_indexed_test(void **state) {
     uint8 lower_byte_offset = 0x40;
     uint8 code_bytes[] = {
         OP_LEAX_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     uint8 data_bytes[] = {
@@ -1183,7 +1183,7 @@ void leay_indexed_test(void **state) {
     uint8 lower_byte_offset = 0x40;
     uint8 code_bytes[] = {
         OP_LEAY_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     uint8 data_bytes[] = {
@@ -1212,7 +1212,7 @@ void lsr_indexed_test(void **state) {
 
     uint8 code_bytes[] = {
         OP_LSR_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     uint8 data_bytes[] = {
@@ -1247,7 +1247,7 @@ void neg_indexed_test(void **state) {
     uint8 lower_byte_offset = 0x40;
     uint8 code_bytes[] = {
         OP_NEG_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     uint8 data_bytes[] = {
@@ -1279,7 +1279,7 @@ void ora_indexed_test(void **state) {
     uint8 lower_byte_offset = 0x40;
     uint8 code_bytes[] = {
         OP_ORA_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     uint8 data_bytes[] = {
@@ -1313,7 +1313,7 @@ void orb_indexed_test(void **state) {
     uint8 lower_byte_offset = 0x40;
     uint8 code_bytes[] = {
         OP_ORB_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     uint8 data_bytes[] = {
@@ -1347,7 +1347,7 @@ void rol_indexed_test(void **state) {
     uint8 lower_byte_offset = 0x40;
     uint8 code_bytes[] = {
         OP_ROL_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     uint8 data_bytes[] = {
@@ -1379,7 +1379,7 @@ void ror_indexed_test(void **state) {
     uint8 lower_byte_offset = 0x40;
     uint8 code_bytes[] = {
         OP_ROR_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     uint8 data_bytes[] = {
@@ -1411,7 +1411,7 @@ void sbca_indexed_test(void **state) {
     uint8 lower_byte_offset = 0x40;
     uint8 code_bytes[] = {
         OP_SBCA_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     uint8 data_bytes[] = {
@@ -1448,7 +1448,7 @@ void sbcb_indexed_test(void **state) {
     uint8 lower_byte_offset = 0x40;
     uint8 code_bytes[] = {
         OP_SBCB_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     uint8 data_bytes[] = {
@@ -1486,7 +1486,7 @@ void sta_indexed_test(void **state) {
                      0);
     uint8 code_bytes[] = {
         OP_STA_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     struct mem_loader_def test_memory[] = {
@@ -1513,7 +1513,7 @@ void stb_indexed_test(void **state) {
                      0);
     uint8 code_bytes[] = {
         OP_STB_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     struct mem_loader_def test_memory[] = {
@@ -1540,7 +1540,7 @@ void std_indexed_test(void **state) {
                      0);
     uint8 code_bytes[] = {
         OP_STD_I,
-        0x8C,
+        0x8C, /* Constant 8-bit offset from PC */
         lower_byte_offset
     };
     struct mem_loader_def test_memory[] = {
@@ -1558,33 +1558,33 @@ void std_indexed_test(void **state) {
     assert_int_equal(post_pc, pre_pc + 3);
 }
 
-/* void sts_indexed_test(void **state) { */
-/*     (void) state; /\* unused *\/ */
-/*     int pre_pc = e_cpu_context.pc; */
+void sts_indexed_test(void **state) {
+    (void) state; /* unused */
+    int pre_pc = e_cpu_context.pc;
 
-/*     uint8 lower_byte_offset = 0x40; */
-/*     assert_int_equal(read_word_from_memory(S_POINTER + lower_byte_offset), */
-/*                      0); */
-/*     uint8 code_bytes[] = { */
-/*         OP_IXTENDED_X10, */
-/*         OP_STS_I, */
-/*         S_POINTER >> 8, */
-/*         lower_byte_offset */
-/*     }; */
-/*     struct mem_loader_def test_memory[] = { */
-/*         { USER_SPACE_ROOT, code_bytes, 4 } */
-/*     }; */
-/*     load_memory(test_memory, 1); */
-/*     set_reg_value_16(REG_S, 0x1969); */
+    uint8 lower_byte_offset = 0x40;
+    assert_int_equal(read_word_from_memory(USER_SPACE_ROOT + 4 + lower_byte_offset ),
+                     0);
+    uint8 code_bytes[] = {
+        OP_EXTENDED_X10,
+        OP_STS_I,
+        0x8C, /* Constant 8-bit offset from PC */
+        lower_byte_offset
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 4 }
+    };
+    load_memory(test_memory, 1);
+    set_reg_value_16(REG_S, 0x1969);
 
-/*     int cycles = run_cycles(opcode_ext_x10_table[OP_STS_I].cycle_count); */
-/*     int post_pc = e_cpu_context.pc; */
-/*     assert_int_equal(get_reg_value_16(REG_S), 0x1969); */
-/*     assert_int_equal(read_word_from_memory(S_POINTER + lower_byte_offset), */
-/*                      0x1969); */
-/*     assert_int_equal(cycles, opcode_ext_x10_table[OP_STS_I].cycle_count); */
-/*     assert_int_equal(post_pc, pre_pc + 4); */
-/* } */
+    int cycles = run_cycles(opcode_ext_x10_table[OP_STS_I].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(get_reg_value_16(REG_S), 0x1969);
+    assert_int_equal(read_word_from_memory(USER_SPACE_ROOT + 4 + lower_byte_offset),
+                     0x1969);
+    assert_int_equal(cycles, opcode_ext_x10_table[OP_STS_I].cycle_count + 1);
+    assert_int_equal(post_pc, pre_pc + 4);
+}
 
 /* void stu_indexed_test(void **state) { */
 /*     (void) state; /\* unused *\/ */
