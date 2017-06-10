@@ -105,7 +105,7 @@ const struct opcode_def opcode_table[] = {
     /* 0x63 */ { "COM",          OP_COM_I,        6,  REG_NONE, INDEXED,   com      },
     /* 0x64 */ { "LSR",          OP_LSR_I,        6,  REG_NONE, INDEXED,   lsr      },
     /* 0x65 */ { "NOTIMPL",      0x65,            2,  REG_NONE, INHERENT,  notimpl  },
-    /* 0x66 */ { "NOTIMPL",      0x66,            2,  REG_NONE, INHERENT,  notimpl  },
+    /* 0x66 */ { "ROR",          OP_ROR_I,        6,  REG_NONE, INDEXED,   ror      },
     /* 0x67 */ { "ASR",          OP_ASR_I,        6,  REG_NONE, INDEXED,   asr      },
     /* 0x68 */ { "ASL",          OP_ASL_I,        6,  REG_NONE, INDEXED,   asl      },
     /* 0x69 */ { "ROL",          OP_ROL_I,        6,  REG_NONE, INDEXED,   rol      },
