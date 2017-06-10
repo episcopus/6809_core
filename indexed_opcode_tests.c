@@ -1531,32 +1531,32 @@ void stb_indexed_test(void **state) {
     assert_int_equal(post_pc, pre_pc + 3);
 }
 
-/* void std_indexed_test(void **state) { */
-/*     (void) state; /\* unused *\/ */
-/*     int pre_pc = e_cpu_context.pc; */
+void std_indexed_test(void **state) {
+    (void) state; /* unused */
+    int pre_pc = e_cpu_context.pc;
 
-/*     uint8 lower_byte_offset = 0x40; */
-/*     assert_int_equal(read_word_from_memory(S_POINTER + lower_byte_offset), */
-/*                      0); */
-/*     uint8 code_bytes[] = { */
-/*         OP_STD_I, */
-/*         S_POINTER >> 8, */
-/*         lower_byte_offset */
-/*     }; */
-/*     struct mem_loader_def test_memory[] = { */
-/*         { USER_SPACE_ROOT, code_bytes, 3 } */
-/*     }; */
-/*     load_memory(test_memory, 1); */
-/*     set_reg_value_16(REG_D, 0x1969); */
+    uint8 lower_byte_offset = 0x40;
+    assert_int_equal(read_word_from_memory(USER_SPACE_ROOT + 3 + lower_byte_offset),
+                     0);
+    uint8 code_bytes[] = {
+        OP_STD_I,
+        0x8C,
+        lower_byte_offset
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 3 }
+    };
+    load_memory(test_memory, 1);
+    set_reg_value_16(REG_D, 0x1969);
 
-/*     int cycles = run_cycles(opcode_table[OP_STD_I].cycle_count); */
-/*     int post_pc = e_cpu_context.pc; */
-/*     assert_int_equal(get_reg_value_16(REG_D), 0x1969); */
-/*     assert_int_equal(read_word_from_memory(S_POINTER + lower_byte_offset), */
-/*                      0x1969); */
-/*     assert_int_equal(cycles, opcode_table[OP_STD_I].cycle_count); */
-/*     assert_int_equal(post_pc, pre_pc + 3); */
-/* } */
+    int cycles = run_cycles(opcode_table[OP_STD_I].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(get_reg_value_16(REG_D), 0x1969);
+    assert_int_equal(read_word_from_memory(USER_SPACE_ROOT + 3 + lower_byte_offset),
+                     0x1969);
+    assert_int_equal(cycles, opcode_table[OP_STD_I].cycle_count + 1);
+    assert_int_equal(post_pc, pre_pc + 3);
+}
 
 /* void sts_indexed_test(void **state) { */
 /*     (void) state; /\* unused *\/ */
