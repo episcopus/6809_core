@@ -421,7 +421,7 @@ void ora_indexed_test(void **state);
 void orb_indexed_test(void **state);
 void rol_indexed_test(void **state);
 void ror_indexed_test(void **state);
-/* void sbca_indexed_test(void ** state); */
+void sbca_indexed_test(void ** state);
 /* void sbcb_indexed_test(void ** state); */
 /* void sta_indexed_test(void **state); */
 /* void stb_indexed_test(void **state); */
@@ -844,8 +844,8 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(ora_indexed_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(orb_indexed_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(rol_indexed_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(ror_indexed_test, test_setup, test_teardown)
-    /* cmocka_unit_test_setup_teardown(sbca_indexed_test, test_setup, test_teardown), */
+    cmocka_unit_test_setup_teardown(ror_indexed_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(sbca_indexed_test, test_setup, test_teardown)
     /* cmocka_unit_test_setup_teardown(sbcb_indexed_test, test_setup, test_teardown), */
     /* cmocka_unit_test_setup_teardown(sta_indexed_test, test_setup, test_teardown), */
     /* cmocka_unit_test_setup_teardown(stb_indexed_test, test_setup, test_teardown), */
