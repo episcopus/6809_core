@@ -1441,41 +1441,41 @@ void sbca_indexed_test(void **state) {
     assert_true(post_pc == pre_pc + 3);
 }
 
-/* void sbcb_indexed_test(void **state) { */
-/*     (void) state; /\* unused *\/ */
-/*     int pre_pc = e_cpu_context.pc; */
+void sbcb_indexed_test(void **state) {
+    (void) state; /* unused */
+    int pre_pc = e_cpu_context.pc;
 
-/*     uint8 lower_byte_offset = 0x40; */
-/*     uint8 code_bytes[] = { */
-/*         OP_SBCB_I, */
-/*         S_POINTER >> 8, */
-/*         lower_byte_offset */
-/*     }; */
-/*     uint8 data_bytes[] = { */
-/*         0x4 */
-/*     }; */
-/*     struct mem_loader_def test_memory[] = { */
-/*         { USER_SPACE_ROOT, code_bytes, 3 }, */
-/*         { S_POINTER + lower_byte_offset, data_bytes, 1 } */
-/*     }; */
-/*     load_memory(test_memory, 2); */
+    uint8 lower_byte_offset = 0x40;
+    uint8 code_bytes[] = {
+        OP_SBCB_I,
+        0x8C,
+        lower_byte_offset
+    };
+    uint8 data_bytes[] = {
+        0x4
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 3 },
+        { USER_SPACE_ROOT + 3 + lower_byte_offset, data_bytes, 1 }
+    };
+    load_memory(test_memory, 2);
 
-/*     /\* a shouldn't be messed with *\/ */
-/*     set_reg_value_8(REG_A, 0xFF); */
-/*     e_cpu_context.cc.c = 1; */
-/*     set_reg_value_8(REG_B, 6); */
+    /* a shouldn't be messed with */
+    set_reg_value_8(REG_A, 0xFF);
+    e_cpu_context.cc.c = 1;
+    set_reg_value_8(REG_B, 6);
 
-/*     int cycles = run_cycles(opcode_table[OP_SBCB_I].cycle_count); */
-/*     int post_pc = e_cpu_context.pc; */
-/*     assert_int_equal(get_reg_value_8(REG_B), 1); */
-/*     assert_int_equal(get_reg_value_8(REG_A), 0xFF); */
-/*     assert_int_equal(e_cpu_context.cc.n, 0); */
-/*     assert_int_equal(e_cpu_context.cc.c, 0); */
-/*     assert_int_equal(e_cpu_context.cc.z, 0); */
-/*     assert_int_equal(e_cpu_context.cc.v, 0); */
-/*     assert_int_equal(cycles, opcode_table[OP_SBCB_I].cycle_count); */
-/*     assert_true(post_pc == pre_pc + 3); */
-/* } */
+    int cycles = run_cycles(opcode_table[OP_SBCB_I].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(get_reg_value_8(REG_B), 1);
+    assert_int_equal(get_reg_value_8(REG_A), 0xFF);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.c, 0);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_int_equal(cycles, opcode_table[OP_SBCB_I].cycle_count + 1);
+    assert_true(post_pc == pre_pc + 3);
+}
 
 /* void sta_indexed_test(void **state) { */
 /*     (void) state; /\* unused *\/ */
