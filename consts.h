@@ -229,6 +229,7 @@ extern void mock_assert(const int result, const char* const expression,
 #define OP_CMPD_I 0xA3
 #define OP_CMPY_I 0xAC
 #define OP_LDY_I  0xAE
+#define OP_STY_I  0xAF
 #define OP_CMPD_E 0xB3
 #define OP_CMPY_E 0xBC
 #define OP_LDY_E  0xBE
