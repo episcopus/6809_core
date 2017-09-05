@@ -432,7 +432,7 @@ void stx_indexed_test(void **state);
 void sty_indexed_test(void **state);
 void suba_indexed_test(void ** state);
 void subb_indexed_test(void ** state);
-/* void subd_indexed_test(void ** state); */
+void subd_indexed_test(void ** state);
 /* void tst_indexed_test(void **state); */
 
 const struct CMUnitTest tests[] = {
@@ -855,7 +855,7 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(stx_indexed_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(sty_indexed_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(suba_indexed_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(subb_indexed_test, test_setup, test_teardown)
-    /* cmocka_unit_test_setup_teardown(subd_indexed_test, test_setup, test_teardown), */
+    cmocka_unit_test_setup_teardown(subb_indexed_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(subd_indexed_test, test_setup, test_teardown)
     /* cmocka_unit_test_setup_teardown(tst_indexed_test, test_setup, test_teardown) */
 };

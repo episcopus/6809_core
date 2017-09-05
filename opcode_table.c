@@ -166,7 +166,7 @@ const struct opcode_def opcode_table[] = {
     /* 0xA0 */ { "SUBA",         OP_SUBA_I,       4,  REG_A,    INDEXED,   sub      },
     /* 0xA1 */ { "CMPA",         OP_CMPA_I,       4,  REG_A,    INDEXED,   cmp      },
     /* 0xA2 */ { "SBCA",         OP_SBCA_I,       4,  REG_A,    INDEXED,   sbc      },
-    /* 0xA3 */ { "NOTIMPL",      0xA3,            2,  REG_NONE, INHERENT,  notimpl  },
+    /* 0xA3 */ { "SUBD",         OP_SUBD_I,       6,  REG_D,    INDEXED,   sub16    },
     /* 0xA4 */ { "ANDA",         OP_ANDA_I,       4,  REG_A,    INDEXED,   and      },
     /* 0xA5 */ { "BITA",         OP_BITA_I,       4,  REG_A,    INDEXED,   bit      },
     /* 0xA6 */ { "LDA",          OP_LDA_I,        4,  REG_A,    INDEXED,   ld       },
