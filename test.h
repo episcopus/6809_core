@@ -435,6 +435,12 @@ void subb_indexed_test(void ** state);
 void subd_indexed_test(void ** state);
 void tst_indexed_test(void **state);
 
+/* Branch tests */
+void bcc_basic_test(void **state);
+void bcc_non_branch_test(void **state);
+void bcc_negative_offset_test(void **state);
+void bcc_negative_offset_non_branch_test(void **state);
+
 const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(core_init_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(test_e_flag, test_setup, test_teardown),
@@ -857,5 +863,10 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(suba_indexed_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(subb_indexed_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(subd_indexed_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(tst_indexed_test, test_setup, test_teardown)
+    cmocka_unit_test_setup_teardown(tst_indexed_test, test_setup, test_teardown),
+
+    cmocka_unit_test_setup_teardown(bcc_basic_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(bcc_non_branch_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(bcc_negative_offset_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(bcc_negative_offset_non_branch_test, test_setup, test_teardown)
 };
