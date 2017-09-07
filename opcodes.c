@@ -302,22 +302,42 @@ int bit(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
 int branch(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;
     uint8 extra_cycles = 0;
-    char short_offset = 0;
-    uint16 post_byte_addr = e_cpu_context.pc++;
-    /* char long_offset = 0; */
+    short int offset = 0;
 
     switch (opcode) {
     case OP_BCC:
-        if (!e_cpu_context.cc.c) {
-            short_offset = (char) read_byte_from_memory(post_byte_addr);
+        offset = (char) read_byte_from_memory(e_cpu_context.pc++);
+        if (e_cpu_context.cc.c) {
+            /* Reverse logic here to make it always read the postbyte (offset)
+               and advance the PC, nullifying the branch in the negative
+               logic case. */
+            offset = 0;
         }
         break;
     }
 
-    if (short_offset != 0) {
-        e_cpu_context.pc += short_offset;
+    e_cpu_context.pc += offset;
+    return opcode_table[opcode].cycle_count + extra_cycles;
+}
+
+/* Handler for all long branching opcodes */
+int lbranch(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
+    e_cpu_context.pc++;
+    uint8 extra_cycles = 0;
+    short int offset = 0;
+
+    switch (opcode) {
+    case OP_LBCC:
+        if (!e_cpu_context.cc.c) {
+            offset = (short int) read_word_from_memory(e_cpu_context.pc);
+            e_cpu_context.pc += 2;
+            /* The 6809 requires an extra cycle if the branch is taken. */
+            extra_cycles++;
+        }
+        break;
     }
 
+    e_cpu_context.pc += offset;
     return opcode_table[opcode].cycle_count + extra_cycles;
 }
 
