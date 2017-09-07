@@ -321,7 +321,7 @@ int branch(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
 }
 
 /* Handler for all long branching opcodes */
-int lbranch(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
+int branch16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;
     uint8 extra_cycles = 0;
     short int offset = 0;

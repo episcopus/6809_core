@@ -13,7 +13,7 @@ int asr(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int asr(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int bit(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int branch(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
-int lbranch(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
+int branch16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int clr(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int cmp(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int cmp16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
