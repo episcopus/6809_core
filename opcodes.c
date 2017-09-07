@@ -325,12 +325,18 @@ int lbranch(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;
     uint8 extra_cycles = 0;
     short int offset = 0;
+    /* Need to reference the correct opcode table for the cycle lookup at the
+       end of the function. Almost all branch operations are on the 0x10 table. */
+    struct opcode_def* this_opcode_table = opcode_ext_x10_table;
 
     switch (opcode) {
     case OP_LBCC:
-        if (!e_cpu_context.cc.c) {
-            offset = (short int) read_word_from_memory(e_cpu_context.pc);
-            e_cpu_context.pc += 2;
+        offset = (short int) read_word_from_memory(e_cpu_context.pc);
+        e_cpu_context.pc += 2;
+        if (e_cpu_context.cc.c) {
+            offset = 0;
+        }
+        else {
             /* The 6809 requires an extra cycle if the branch is taken. */
             extra_cycles++;
         }
@@ -338,7 +344,7 @@ int lbranch(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     }
 
     e_cpu_context.pc += offset;
-    return opcode_table[opcode].cycle_count + extra_cycles;
+    return this_opcode_table[opcode].cycle_count + extra_cycles;
 }
 
 /* Load Zero into Accumulator */
