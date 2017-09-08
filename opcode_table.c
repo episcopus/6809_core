@@ -40,7 +40,7 @@ const struct opcode_def opcode_table[] = {
     /* 0x22 */ { "NOTIMPL",      0x22,            2,  REG_NONE, INHERENT,  notimpl  },
     /* 0x23 */ { "NOTIMPL",      0x23,            2,  REG_NONE, INHERENT,  notimpl  },
     /* 0x24 */ { "BCC",          OP_BCC,          3,  REG_NONE, INHERENT,  branch   },
-    /* 0x25 */ { "NOTIMPL",      0x25,            2,  REG_NONE, INHERENT,  notimpl  },
+    /* 0x25 */ { "BCS",          OP_BCS,          3,  REG_NONE, INHERENT,  branch   },
     /* 0x26 */ { "NOTIMPL",      0x26,            2,  REG_NONE, INHERENT,  notimpl  },
     /* 0x27 */ { "NOTIMPL",      0x27,            2,  REG_NONE, INHERENT,  notimpl  },
     /* 0x28 */ { "NOTIMPL",      0x28,            2,  REG_NONE, INHERENT,  notimpl  },

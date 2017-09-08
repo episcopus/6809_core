@@ -303,14 +303,19 @@ int branch(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;
     uint8 extra_cycles = 0;
     short int offset = 0;
+    offset = (char) read_byte_from_memory(e_cpu_context.pc++);
 
     switch (opcode) {
     case OP_BCC:
-        offset = (char) read_byte_from_memory(e_cpu_context.pc++);
         if (e_cpu_context.cc.c) {
             /* Reverse logic here to make it always read the postbyte (offset)
                and advance the PC, nullifying the branch in the negative
                logic case. */
+            offset = 0;
+        }
+        break;
+    case OP_BCS:
+        if (!e_cpu_context.cc.c) {
             offset = 0;
         }
         break;
