@@ -446,6 +446,8 @@ void lbcc_negative_offset_test(void **state);
 void lbcc_negative_offset_non_branch_test(void **state);
 void bcs_basic_test(void **state);
 void bcs_non_branch_test(void **state);
+void lbcs_basic_test(void **state);
+void lbcs_non_branch_test(void **state);
 
 const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(core_init_test, test_setup, test_teardown),
@@ -880,5 +882,7 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(lbcc_negative_offset_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(lbcc_negative_offset_non_branch_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(bcs_basic_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(bcs_non_branch_test, test_setup, test_teardown)
+    cmocka_unit_test_setup_teardown(bcs_non_branch_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(lbcs_basic_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(lbcs_non_branch_test, test_setup, test_teardown)
 };
