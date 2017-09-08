@@ -21,9 +21,9 @@ uint16 decode_accumulator_offset_postbyte(uint8* out_extra_cycles);
 uint16 decode_inc_dec_offset_postbyte(uint8* out_extra_cycles);
 uint16 decode_constant_offset_from_pc(uint8* out_extra_cycles);
 uint16 decode_extended_indirect(uint8* out_extra_cycles);
+void decode_source_target_postbyte(uint8 postbyte, enum target_register* out_source, enum target_register* out_target);
 
 uint32 run_cycles(uint32 wanted_cycles);
-void decode_source_target_postbyte(uint8 postbyte, enum target_register* out_source, enum target_register* out_target);
 
 enum reg_size get_reg_size(enum target_register reg);
 uint8 get_reg_value_8(enum target_register reg);
