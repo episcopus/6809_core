@@ -364,6 +364,15 @@ int branch16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
             extra_cycles++;
         }
         break;
+    case OP_LBEQ:
+        if (!e_cpu_context.cc.z) {
+            offset = 0;
+        }
+        else {
+            /* The 6809 requires an extra cycle if the branch is taken. */
+            extra_cycles++;
+        }
+        break;
     }
 
     e_cpu_context.pc += offset;
