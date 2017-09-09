@@ -39,6 +39,7 @@ extern void mock_assert(const int result, const char* const expression,
 #define OP_NOP          0x12
 #define OP_LBRA         0x16
 #define OP_DAA          0x19
+#define OP_BRN          0x21
 #define OP_ORCC         0x1A
 #define OP_ANDCC        0x1C
 #define OP_SEX          0x1D
