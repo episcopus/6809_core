@@ -295,7 +295,7 @@ const struct opcode_def opcode_ext_x10_table[] = {
     { "NOTIMPL", 0x1E,      2, REG_NONE, INHERENT,  notimpl },
     { "NOTIMPL", 0x1F,      2, REG_NONE, INHERENT,  notimpl },
     { "NOTIMPL", 0x20,      2, REG_NONE, INHERENT,  notimpl },
-    { "NOTIMPL", 0x21,      2, REG_NONE, INHERENT,  notimpl },
+    { "LBRN",    OP_LBRN,   5, REG_NONE, INHERENT,  branch16 },
     { "LBHI",    OP_LBHI,   5, REG_NONE, INHERENT,  branch16 },
     { "LBLS",    OP_LBLS,   5, REG_NONE, INHERENT,  branch16 },
     { "LBCC",    OP_LBCC,   5, REG_NONE, INHERENT,  branch16 },
