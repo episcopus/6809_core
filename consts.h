@@ -50,6 +50,7 @@ extern void mock_assert(const int result, const char* const expression,
 #define OP_BCS          0x25
 #define OP_BEQ          0x27
 #define OP_BGE          0x2C
+#define OP_BLT          0x2D
 #define OP_BGT          0x2E
 #define OP_BLE          0x2F
 #define OP_LEAX_I       0x30
