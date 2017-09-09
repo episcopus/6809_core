@@ -420,6 +420,15 @@ int branch16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
             extra_cycles++;
         }
         break;
+    case OP_LBLE:
+        if ((e_cpu_context.cc.n == e_cpu_context.cc.v) && e_cpu_context.cc.z == 0) {
+            offset = 0;
+        }
+        else {
+            /* The 6809 requires an extra cycle if the branch is taken. */
+            extra_cycles++;
+        }
+        break;
     default:
         /* Invalid jump instruction. */
         assert(FALSE);
