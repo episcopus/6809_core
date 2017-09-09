@@ -344,6 +344,11 @@ int branch(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
             offset = 0;
         }
         break;
+    case OP_BLS:
+        if (!e_cpu_context.cc.z && !e_cpu_context.cc.c) {
+            offset = 0;
+        }
+        break;
     default:
         /* Invalid jump instruction. */
         assert(FALSE);
