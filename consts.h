@@ -45,10 +45,12 @@ extern void mock_assert(const int result, const char* const expression,
 #define OP_TFR          0x1F
 #define OP_BHI          0x22
 #define OP_BCC          0x24
+#define OP_BHS          0x24
 #define OP_BCS          0x25
 #define OP_BEQ          0x27
 #define OP_BGE          0x2C
 #define OP_BGT          0x2E
+#define OP_BLE          0x2F
 #define OP_LEAX_I       0x30
 #define OP_LEAY_I       0x31
 #define OP_LEAS_I       0x32
@@ -231,6 +233,7 @@ extern void mock_assert(const int result, const char* const expression,
 
 #define OP_LBHI   0x22
 #define OP_LBCC   0x24
+#define OP_LBHS   0x24
 #define OP_LBCS   0x25
 #define OP_LBEQ   0x27
 #define OP_LBGE   0x2C
