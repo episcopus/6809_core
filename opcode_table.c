@@ -25,7 +25,7 @@ const struct opcode_def opcode_table[] = {
     /* 0x13 */ { "NOTIMPL",      0x13,            2,  REG_NONE, INHERENT,  notimpl  },
     /* 0x14 */ { "NOTIMPL",      0x14,            2,  REG_NONE, INHERENT,  notimpl  },
     /* 0x15 */ { "NOTIMPL",      0x15,            2,  REG_NONE, INHERENT,  notimpl  },
-    /* 0x16 */ { "NOTIMPL",      0x16,            2,  REG_NONE, INHERENT,  notimpl  },
+    /* 0x16 */ { "LBRA",         OP_LBRA,         5,  REG_NONE, INHERENT,  branch16  },
     /* 0x17 */ { "NOTIMPL",      0x17,            2,  REG_NONE, INHERENT,  notimpl  },
     /* 0x18 */ { "NOTIMPL",      0x18,            2,  REG_NONE, INHERENT,  notimpl  },
     /* 0x19 */ { "DAA",          OP_DAA,          2,  REG_NONE, INHERENT,  daa      },

@@ -501,6 +501,8 @@ int branch16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
             extra_cycles++;
         }
         break;
+    case OP_LBRA:
+        break;
     default:
         /* Invalid jump instruction. */
         assert(FALSE);
