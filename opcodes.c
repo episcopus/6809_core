@@ -307,6 +307,7 @@ int branch(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
 
     switch (opcode) {
     case OP_BCC:
+        /* Branch If Carry Clear */
         if (e_cpu_context.cc.c) {
             /* Reverse logic here to make it always read the postbyte (offset)
                and advance the PC, nullifying the branch in the negative
@@ -315,76 +316,92 @@ int branch(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
         }
         break;
     case OP_BCS:
+        /* Branch If Carry Set */
         if (!e_cpu_context.cc.c) {
             offset = 0;
         }
         break;
     case OP_BEQ:
+        /* Branch If Equal to Zero */
         if (!e_cpu_context.cc.z) {
             offset = 0;
         }
         break;
     case OP_BGE:
+        /* Branch If Greater than or Equal to Zero */
         if (e_cpu_context.cc.n != e_cpu_context.cc.v) {
             offset = 0;
         }
         break;
     case OP_BGT:
+        /* Branch If Greater Than Zero */
         if ((e_cpu_context.cc.n != e_cpu_context.cc.v) || e_cpu_context.cc.z) {
             offset = 0;
         }
         break;
     case OP_BHI:
+        /* Branch If Higher */
         if (e_cpu_context.cc.z || e_cpu_context.cc.c) {
             offset = 0;
         }
         break;
     case OP_BLE:
+        /* Branch If Less than or Equal to Zero */
         if ((e_cpu_context.cc.n == e_cpu_context.cc.v) && e_cpu_context.cc.z == 0) {
             offset = 0;
         }
         break;
     case OP_BLS:
+        /* Branch If Lower or Same */
         if (!e_cpu_context.cc.z && !e_cpu_context.cc.c) {
             offset = 0;
         }
         break;
     case OP_BLT:
+        /* Branch If Less Than Zero */
         if (e_cpu_context.cc.n == e_cpu_context.cc.v) {
             offset = 0;
         }
         break;
     case OP_BMI:
+        /* Branch If Minus */
         if (!e_cpu_context.cc.n) {
             offset = 0;
         }
         break;
     case OP_BNE:
+        /* Branch If Not Equal to Zero */
         if (e_cpu_context.cc.z) {
             offset = 0;
         }
         break;
     case OP_BPL:
+        /* Branch If Plus */
         if (e_cpu_context.cc.n) {
             offset = 0;
         }
         break;
     case OP_BRA:
+        /* Branch Always */
         break;
     case OP_BRN:
+        /* Branch Never */
         offset = 0;
         break;
     case OP_BSR:
+        /* Branch to Subroutine */
         /* Save current PC onto hardware stack */
         e_cpu_context.s -= 2;
         write_word_to_memory(e_cpu_context.s, e_cpu_context.pc);
         break;
     case OP_BVC:
+        /* Branch If Overflow Clear */
         if (e_cpu_context.cc.v) {
             offset = 0;
         }
         break;
     case OP_BVS:
+        /* Branch If Overflow Set */
         if (!e_cpu_context.cc.v) {
             offset = 0;
         }
@@ -412,6 +429,7 @@ int branch16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
 
     switch (opcode) {
     case OP_LBCC:
+        /* Long Branch If Carry Clear */
         if (e_cpu_context.cc.c) {
             offset = 0;
         }
@@ -421,6 +439,7 @@ int branch16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
         }
         break;
     case OP_LBCS:
+        /* Long Branch If Carry Set */
         if (!e_cpu_context.cc.c) {
             offset = 0;
         }
@@ -430,6 +449,7 @@ int branch16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
         }
         break;
     case OP_LBEQ:
+        /* Long Branch If Equal to Zero */
         if (!e_cpu_context.cc.z) {
             offset = 0;
         }
@@ -439,6 +459,7 @@ int branch16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
         }
         break;
     case OP_LBGE:
+        /* Long Branch If Greater than or Equal to Zero */
         if (e_cpu_context.cc.n != e_cpu_context.cc.v) {
             offset = 0;
         }
@@ -448,6 +469,7 @@ int branch16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
         }
         break;
     case OP_LBGT:
+        /* Long Branch If Greater Than Zero */
         if ((e_cpu_context.cc.n != e_cpu_context.cc.v) || e_cpu_context.cc.z) {
             offset = 0;
         }
@@ -457,6 +479,7 @@ int branch16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
         }
         break;
     case OP_LBHI:
+        /* Long Branch If Higher */
         if (e_cpu_context.cc.z || e_cpu_context.cc.c) {
             offset = 0;
         }
@@ -466,6 +489,7 @@ int branch16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
         }
         break;
     case OP_LBLE:
+        /* Long Branch If Less than or Equal to Zero */
         if ((e_cpu_context.cc.n == e_cpu_context.cc.v) && e_cpu_context.cc.z == 0) {
             offset = 0;
         }
@@ -475,6 +499,7 @@ int branch16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
         }
         break;
     case OP_LBLS:
+        /* Long Branch If Lower or Same */
         if (!e_cpu_context.cc.z && !e_cpu_context.cc.c) {
             offset = 0;
         }
@@ -484,6 +509,7 @@ int branch16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
         }
         break;
     case OP_LBLT:
+        /* Long Branch If Less Than Zero */
         if (e_cpu_context.cc.n == e_cpu_context.cc.v) {
             offset = 0;
         }
@@ -493,6 +519,7 @@ int branch16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
         }
         break;
     case OP_LBMI:
+        /* Long Branch If Minus */
         if (!e_cpu_context.cc.n) {
             offset = 0;
         }
@@ -502,6 +529,7 @@ int branch16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
         }
         break;
     case OP_LBNE:
+        /* Long Branch If Not Equal to Zero */
         if (e_cpu_context.cc.z) {
             offset = 0;
         }
@@ -511,6 +539,7 @@ int branch16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
         }
         break;
     case OP_LBPL:
+        /* Long Branch If Plus */
         if (e_cpu_context.cc.n) {
             offset = 0;
         }
@@ -520,16 +549,20 @@ int branch16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
         }
         break;
     case OP_LBRA:
+        /* Long Branch Always */
         break;
     case OP_LBRN:
+        /* Long Branch Never */
         offset = 0;
         break;
     case OP_LBSR:
+        /* Long Branch to Subroutine */
         /* Save current PC onto hardware stack */
         e_cpu_context.s -= 2;
         write_word_to_memory(e_cpu_context.s, e_cpu_context.pc);
         break;
     case OP_LBVC:
+        /* Long Branch If Overflow Clear */
         if (e_cpu_context.cc.v) {
             offset = 0;
         }
@@ -539,6 +572,7 @@ int branch16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
         }
         break;
     case OP_LBVS:
+        /* Long Branch If Overflow Set */
         if (!e_cpu_context.cc.v) {
             offset = 0;
         }
