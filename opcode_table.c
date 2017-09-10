@@ -44,7 +44,7 @@ const struct opcode_def opcode_table[] = {
     /* 0x26 */ { "BNE",          OP_BNE,          3,  REG_NONE, INHERENT,  branch   },
     /* 0x27 */ { "BEQ",          OP_BEQ,          3,  REG_NONE, INHERENT,  branch   },
     /* 0x28 */ { "BVC",          OP_BVC,          3,  REG_NONE, INHERENT,  branch   },
-    /* 0x29 */ { "NOTIMPL",      0x29,            2,  REG_NONE, INHERENT,  notimpl  },
+    /* 0x29 */ { "BVS",          OP_BVS,          3,  REG_NONE, INHERENT,  branch   },
     /* 0x2A */ { "BPL",          OP_BPL,          3,  REG_NONE, INHERENT,  branch   },
     /* 0x2B */ { "BMI",          OP_BMI,          3,  REG_NONE, INHERENT,  branch   },
     /* 0x2C */ { "BGE",          OP_BGE,          3,  REG_NONE, INHERENT,  branch   },
