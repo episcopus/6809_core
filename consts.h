@@ -38,6 +38,7 @@ extern void mock_assert(const int result, const char* const expression,
 #define OP_EXTENDED_X11 0x11
 #define OP_NOP          0x12
 #define OP_LBRA         0x16
+#define OP_LBSR         0x17
 #define OP_DAA          0x19
 #define OP_BRN          0x21
 #define OP_ORCC         0x1A
@@ -53,6 +54,7 @@ extern void mock_assert(const int result, const char* const expression,
 #define OP_BCS          0x25
 #define OP_BNE          0x26
 #define OP_BEQ          0x27
+#define OP_BVC          0x28
 #define OP_BPL          0x2A
 #define OP_BMI          0x2B
 #define OP_BGE          0x2C
@@ -126,6 +128,7 @@ extern void mock_assert(const int result, const char* const expression,
 #define OP_ORA          0x8A
 #define OP_ADDA         0x8B
 #define OP_CMPX         0x8C
+#define OP_BSR          0x8D
 #define OP_LDX          0x8E
 #define OP_SUBA_D       0x90
 #define OP_CMPA_D       0x91

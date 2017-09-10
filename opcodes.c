@@ -374,6 +374,16 @@ int branch(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     case OP_BRN:
         offset = 0;
         break;
+    case OP_BSR:
+        /* Save current PC onto hardware stack */
+        e_cpu_context.s -= 2;
+        write_word_to_memory(e_cpu_context.s, e_cpu_context.pc);
+        break;
+    case OP_BVC:
+        if (e_cpu_context.cc.v) {
+            offset = 0;
+        }
+        break;
     default:
         /* Invalid jump instruction. */
         assert(FALSE);
@@ -508,6 +518,11 @@ int branch16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
         break;
     case OP_LBRN:
         offset = 0;
+        break;
+    case OP_LBSR:
+        /* Save current PC onto hardware stack */
+        e_cpu_context.s -= 2;
+        write_word_to_memory(e_cpu_context.s, e_cpu_context.pc);
         break;
     default:
         /* Invalid jump instruction. */

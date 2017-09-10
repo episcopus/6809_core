@@ -490,6 +490,10 @@ void bra_basic_test(void **state);
 void lbra_basic_test(void **state);
 void brn_basic_test(void **state);
 void lbrn_basic_test(void **state);
+void bsr_basic_test(void **state);
+void lbsr_basic_test(void **state);
+void bvc_basic_test(void **state);
+void bvc_non_branch_test(void **state);
 
 const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(core_init_test, test_setup, test_teardown),
@@ -968,5 +972,9 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(bra_basic_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(lbra_basic_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(brn_basic_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(lbrn_basic_test, test_setup, test_teardown)
+    cmocka_unit_test_setup_teardown(lbrn_basic_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(bsr_basic_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(lbsr_basic_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(bvc_basic_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(bvc_non_branch_test, test_setup, test_teardown)
 };
