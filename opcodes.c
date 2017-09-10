@@ -524,6 +524,15 @@ int branch16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
         e_cpu_context.s -= 2;
         write_word_to_memory(e_cpu_context.s, e_cpu_context.pc);
         break;
+    case OP_LBVC:
+        if (e_cpu_context.cc.v) {
+            offset = 0;
+        }
+        else {
+            /* The 6809 requires an extra cycle if the branch is taken. */
+            extra_cycles++;
+        }
+        break;
     default:
         /* Invalid jump instruction. */
         assert(FALSE);
