@@ -252,6 +252,7 @@ extern void mock_assert(const int result, const char* const expression,
 #define OP_LBNE   0x26
 #define OP_LBEQ   0x27
 #define OP_LBVC   0x28
+#define OP_LBVS   0X29
 #define OP_LBPL   0x2A
 #define OP_LBMI   0x2B
 #define OP_LBGE   0x2C
