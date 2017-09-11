@@ -9,8 +9,10 @@ CFLAGS = -I. -Wall -g
 default: $(TARGET)
 all: default
 
-OBJECTS = $(patsubst %.c, $(BUILD_DIR)%.o, $(wildcard *.c))
-HEADERS = $(wildcard *.h)
+OBJECTS = $(patsubst %.c, $(BUILD_DIR)%.o, $(wildcard *.c)) \
+	$(patsubst %.c, $(BUILD_DIR)%.o, $(wildcard tests/*.c)) \
+	$(patsubst %.c, $(BUILD_DIR)%.o, $(wildcard tests/unit/*.c))
+HEADERS = $(wildcard *.h) $(wildcard tests/*.h)
 
 $(BUILD_DIR)%.o: %.c $(HEADERS)
 	$(CC) $(CFLAGS) -c $< -o $@
