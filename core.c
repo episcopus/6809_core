@@ -44,6 +44,103 @@ void core_destroy() {
     free(e_cpu_context.memory);
 }
 
+
+enum reg_size get_reg_size(enum target_register reg) {
+    switch (reg) {
+    case REG_A:
+    case REG_B:
+    case REG_DP:
+    case REG_CC:
+        return REG_SIZE_8;
+    case REG_NONE:
+        return REG_SIZE_INVALID;
+    default:
+        return REG_SIZE_16;
+    }
+}
+
+uint8 get_reg_value_8(enum target_register reg) {
+    switch (reg) {
+    case REG_A:
+        return e_cpu_context.d.byte_acc.a;
+    case REG_B:
+        return e_cpu_context.d.byte_acc.b;
+    case REG_DP:
+        return e_cpu_context.dp;
+    case REG_CC:
+        return *((uint8*) (&e_cpu_context.cc));
+    default:
+        assert(FALSE);
+        return 0xFF;
+    }
+}
+
+uint16 get_reg_value_16(enum target_register reg) {
+    switch (reg) {
+    case REG_X:
+        return e_cpu_context.x;
+    case REG_Y:
+        return e_cpu_context.y;
+    case REG_U:
+        return e_cpu_context.u;
+    case REG_S:
+        return e_cpu_context.s;
+    case REG_PC:
+        return e_cpu_context.pc;
+    case REG_D:
+        return e_cpu_context.d.d;
+    default:
+        assert(FALSE);
+        return 0xFFFF;
+    }
+}
+
+void set_reg_value_8(enum target_register reg, uint8 value) {
+    switch (reg) {
+    case REG_A:
+        e_cpu_context.d.byte_acc.a = value;
+        return;
+    case REG_B:
+        e_cpu_context.d.byte_acc.b = value;
+        return;
+    case REG_DP:
+        e_cpu_context.dp = value;
+        return;
+    case REG_CC:
+        *((uint8*) (&e_cpu_context.cc)) = value;
+        return;
+    default:
+        assert(FALSE);
+        return;
+    }
+}
+
+void set_reg_value_16(enum target_register reg, uint16 value) {
+    switch (reg) {
+    case REG_X:
+        e_cpu_context.x = value;
+        return;
+    case REG_Y:
+        e_cpu_context.y = value;
+        return;
+    case REG_U:
+        e_cpu_context.u = value;
+        return;
+    case REG_S:
+        e_cpu_context.s = value;
+        return;
+    case REG_PC:
+        e_cpu_context.pc = value;
+        return;
+    case REG_D:
+        e_cpu_context.d.d = value;
+        return;
+    default:
+        assert(FALSE);
+        return;
+    }
+}
+
 int load_memory(struct mem_loader_def* defs, uint8 num_defs) {
     if (num_defs == 0) {
         return 0;
@@ -534,98 +631,95 @@ void decode_source_target_postbyte(uint8 postbyte, enum target_register* out_sou
     *out_target = decode_target_register_from_postbyte(lower_nibble);
 }
 
-enum reg_size get_reg_size(enum target_register reg) {
-    switch (reg) {
-    case REG_A:
-    case REG_B:
-    case REG_DP:
-    case REG_CC:
-        return REG_SIZE_8;
-    case REG_NONE:
-        return REG_SIZE_INVALID;
-    default:
-        return REG_SIZE_16;
+uint16 init_from_decb_memory(const uint8* buffer, uint16 buffer_size) {
+    /*
+    From the LWASM documentation:
+
+    A DECB binary is compatible with the LOADM command in Disk Extended
+    Basic on the CoCo. They are also compatible with CLOADM from
+    Extended Color Basic. These binaries include the load address of
+    the binary as well as encoding an execution address. These binaries
+    may contain multiple loadable sections, each of which has its own
+    load address.
+
+    Each binary starts with a preamble. Each preamble is five bytes
+    long. The first byte is zero. The next two bytes specify the number
+    of bytes to load and the last two bytes specify the address to load
+    the bytes at. Then, a string of bytes follows. After this string of
+    bytes, there may be another preamble or a postamble. A postamble is
+    also five bytes in length. The first byte of the postamble is $FF,
+    the next two are zero, and the last two are the execution address
+    for the binary.
+    */
+
+    uint16 read_bytes = 0;
+    uint16 read_preambles = 0;
+    uint16 new_pc = 0;
+    while (read_bytes < buffer_size) {
+        uint16 bytes_to_read = 0;
+        uint16 target_address = 0;
+        uint16 local_read_bytes = 0;
+        /* Attempt to read a preamble or postamble */
+        if (buffer[read_bytes] != 0 && buffer[read_bytes] != 0xFF) {
+            /* Invalid, expected 0 or 0xFF */
+            assert(FALSE);
+            break;
+        }
+
+        if (buffer[read_bytes] == 0) {
+            if (read_bytes + 5 >= buffer_size) {
+                /* Invalid, not enough size for preamble */
+                assert(FALSE);
+                break;
+            }
+
+            /* It's a preamble so read in that chunk */
+            read_bytes++;
+
+            /* Convert low endian assumed value to big endian */
+            bytes_to_read = buffer[read_bytes] << 8 | buffer[read_bytes + 1];
+            read_bytes += 2;
+            target_address = buffer[read_bytes] << 8 | buffer[read_bytes + 1];
+            read_bytes += 2;
+            if (read_bytes + bytes_to_read >= buffer_size) {
+                /* Invalid, not enough size for buffer */
+                assert(FALSE);
+                break;
+            }
+
+            while (local_read_bytes < bytes_to_read) {
+                write_byte_to_memory(target_address + local_read_bytes,
+                                     buffer[read_bytes++]);
+                local_read_bytes++;
+            }
+
+            read_preambles++;
+        }
+        else {
+            if (read_bytes + 5 >= buffer_size) {
+                /* Invalid, not enough size for postamble */
+                assert(FALSE);
+                break;
+            }
+
+            /* It's a postamble so just make sure it's alright and process
+               address */
+            read_bytes++;
+
+            if (buffer[read_bytes] != 0 && buffer[read_bytes + 1] != 0) {
+                /* Invalid, expected 0 or 0xFF */
+                assert(FALSE);
+                break;
+            }
+
+            read_bytes += 2;
+            new_pc = buffer[read_bytes] << 8 | buffer[read_bytes + 1];
+            read_bytes += 2;
+        }
     }
+
+    e_cpu_context.pc = new_pc;
+    return read_preambles;
 }
 
-uint8 get_reg_value_8(enum target_register reg) {
-    switch (reg) {
-    case REG_A:
-        return e_cpu_context.d.byte_acc.a;
-    case REG_B:
-        return e_cpu_context.d.byte_acc.b;
-    case REG_DP:
-        return e_cpu_context.dp;
-    case REG_CC:
-        return *((uint8*) (&e_cpu_context.cc));
-    default:
-        assert(FALSE);
-        return 0xFF;
-    }
-}
-
-uint16 get_reg_value_16(enum target_register reg) {
-    switch (reg) {
-    case REG_X:
-        return e_cpu_context.x;
-    case REG_Y:
-        return e_cpu_context.y;
-    case REG_U:
-        return e_cpu_context.u;
-    case REG_S:
-        return e_cpu_context.s;
-    case REG_PC:
-        return e_cpu_context.pc;
-    case REG_D:
-        return e_cpu_context.d.d;
-    default:
-        assert(FALSE);
-        return 0xFFFF;
-    }
-}
-
-void set_reg_value_8(enum target_register reg, uint8 value) {
-    switch (reg) {
-    case REG_A:
-        e_cpu_context.d.byte_acc.a = value;
-        return;
-    case REG_B:
-        e_cpu_context.d.byte_acc.b = value;
-        return;
-    case REG_DP:
-        e_cpu_context.dp = value;
-        return;
-    case REG_CC:
-        *((uint8*) (&e_cpu_context.cc)) = value;
-        return;
-    default:
-        assert(FALSE);
-        return;
-    }
-}
-
-void set_reg_value_16(enum target_register reg, uint16 value) {
-    switch (reg) {
-    case REG_X:
-        e_cpu_context.x = value;
-        return;
-    case REG_Y:
-        e_cpu_context.y = value;
-        return;
-    case REG_U:
-        e_cpu_context.u = value;
-        return;
-    case REG_S:
-        e_cpu_context.s = value;
-        return;
-    case REG_PC:
-        e_cpu_context.pc = value;
-        return;
-    case REG_D:
-        e_cpu_context.d.d = value;
-        return;
-    default:
-        assert(FALSE);
-        return;
-    }
-}
+/* uint16 init_from_decb_file(const char* filename); */
