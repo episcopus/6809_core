@@ -1199,3 +1199,66 @@ void set_reg_value_16_test(void **state) {
     assert_int_equal(val, 0x7812);
     assert_int_equal(get_reg_value_16(REG_S), S_POINTER);
 }
+
+void init_from_decb_memory_test(void **state) {
+    (void) state; /* unused */
+
+    /* Trivial program that copies one byte of memory from one place
+       to the next in DECB binary format:
+
+                            (8-bit_data_transf):00001         ;; 8-BIT DATA TRANSFER
+                            (8-bit_data_transf):00002         ;; Purpose: Move the contents of memory location $5000 to memory location $5001.
+                            (8-bit_data_transf):00003
+                            (8-bit_data_transf):00004                 org     $5000
+      5000 69               (8-bit_data_transf):00005                 fcb     $69
+                            (8-bit_data_transf):00006
+                            (8-bit_data_transf):00007                 org     $2000
+      2000 B65000           (8-bit_data_transf):00008                 lda     $5000
+      2003 B75001           (8-bit_data_transf):00009                 sta     $5001
+                            (8-bit_data_transf):00010                 end     $2000
+    */
+
+    /* first preamble and payload, one byte (0x69) loaded at 0x5000 */
+    uint8 payload[] = { 0x00, 0x00, 0x01, 0x50, 0x00, \
+                        0x69, \
+                        /* second preamble and payload, with the two instruction program */
+                        0x00, 0x00, 0x06, 0x20, 0x00, \
+                        0xB6, 0x50, 0x00, 0xB7, 0x50, 0x01, \
+                        /* Postamble with 0x2000 initial PC to be set */
+                        0xFF, 0x00, 0x00, 0x20, 0x00 };
+    uint16 payload_size = sizeof(payload);
+
+    uint16 num_preambles = init_from_decb_memory(payload, payload_size);
+
+    assert_int_equal(num_preambles, 2);
+    assert_int_equal(read_byte_from_memory(0x5000), 0x69);
+    assert_int_equal(e_cpu_context.pc, 0x2000);
+    assert_int_equal((uint16) read_byte_from_memory(e_cpu_context.pc),
+                     (uint16) OP_LDA_E);
+    assert_int_equal((uint16) read_byte_from_memory(e_cpu_context.pc + 3),
+                     (uint16) OP_STA_E);
+}
+
+void init_from_decb_memory_run_cycles_test(void **state) {
+    (void) state; /* unused */
+
+    /* This is the first mini emulation end-to-end test use case!
+
+       Trivial program that copies one byte of memory from one place
+       to the next in DECB binary format, see init_from_decb_memory_test() */
+    uint8 payload[] = { 0x00, 0x00, 0x01, 0x50, 0x00, \
+                        0x69, \
+                        0x00, 0x00, 0x06, 0x20, 0x00, \
+                        0xB6, 0x50, 0x00, 0xB7, 0x50, 0x01, \
+                        0xFF, 0x00, 0x00, 0x20, 0x00 };
+    uint16 payload_size = sizeof(payload);
+
+    init_from_decb_memory(payload, payload_size);
+    uint16 num_cycles = run_cycles(opcode_table[OP_LDA_E].cycle_count +
+                                   opcode_table[OP_STA_E].cycle_count);
+
+    assert_int_equal(read_byte_from_memory(0x5001), 0x69);
+    assert_int_equal(e_cpu_context.pc, 0x2006);
+    assert_int_equal(num_cycles, opcode_table[OP_LDA_E].cycle_count +
+                     opcode_table[OP_STA_E].cycle_count);
+}

@@ -667,7 +667,7 @@ uint16 init_from_decb_memory(const uint8* buffer, uint16 buffer_size) {
         }
 
         if (buffer[read_bytes] == 0) {
-            if (read_bytes + 5 >= buffer_size) {
+            if (read_bytes + 4 >= buffer_size) {
                 /* Invalid, not enough size for preamble */
                 assert(FALSE);
                 break;
@@ -696,7 +696,7 @@ uint16 init_from_decb_memory(const uint8* buffer, uint16 buffer_size) {
             read_preambles++;
         }
         else {
-            if (read_bytes + 5 >= buffer_size) {
+            if (read_bytes + 4 >= buffer_size) {
                 /* Invalid, not enough size for postamble */
                 assert(FALSE);
                 break;
