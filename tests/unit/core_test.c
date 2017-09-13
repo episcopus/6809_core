@@ -1228,7 +1228,6 @@ void perform_memory_checks(struct test_check* checks, size_t len) {
     }
 
     for (int i=0; i<len; i++) {
-        printf("%d: %x, %x\n", i, checks[i].address, checks[i].value);
         assert_int_equal(checks[i].value,
                          read_byte_from_memory(checks[i].address));
     }
@@ -1450,12 +1449,26 @@ void init_from_decb_file_error_test(void **state) {
     assert_int_equal(num_preambles, 0);
 }
 
-void get_test_program_path_test(void **state) {
+void program_8_bit_addition_program_test(void **state) {
     (void) state; /* unused */
 
-    char* program_path = get_test_program_path("8-bit_data_transfer.bin");
-    if (program_path) {
-        printf("program_path = %s\n", program_path);
-    }
+    struct test_check checks[] = {
+        { 0x5000, 0x38 },
+        { 0x5001, 0x2B },
+        { 0x5002, 0x63 }
+    };
+
+    char* program_path = get_test_program_path("8-bit_addition.bin");
+    init_from_decb_file(program_path);
     free(program_path);
+
+    uint16 num_cycles = run_cycles(opcode_table[OP_LDA_E].cycle_count +
+                                   opcode_table[OP_ADDA_E].cycle_count +
+                                   opcode_table[OP_STA_E].cycle_count);
+    perform_memory_checks(checks, sizeof(checks) / sizeof(checks[0]));
+    assert_int_equal(e_cpu_context.pc, 0x2009);
+    assert_int_equal(num_cycles, opcode_table[OP_LDA_E].cycle_count +
+                     opcode_table[OP_ADDA_E].cycle_count +
+                     opcode_table[OP_STA_E].cycle_count);
+
 }

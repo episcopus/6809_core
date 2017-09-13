@@ -1,5 +1,5 @@
 ;; 8-BIT DATA TRANSFER
-;; Purpose: Move the contents of memory location 0040 to memory location 0041.
+;; Purpose: Move the contents of memory location $5000 to memory location $5001.
 
         org     $5000
         fcb     $69
