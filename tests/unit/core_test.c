@@ -10,7 +10,7 @@
 
 extern struct cpu_state e_cpu_context;
 extern struct opcode_def opcode_table[];
-const char* root_test_path = "/tests/program/";
+const char* root_test_path = "/build/tests/program/";
 
 int test_setup(void **state) {
     (void) state; /* unused */
@@ -1397,7 +1397,7 @@ void init_from_decb_memory_invalid_postamble_byte_wrong_test(void **state) {
 void init_from_decb_file_basic_test(void **state) {
     (void) state; /* unused */
 
-    char* program_path = get_test_program_path("8-bit_data_transfer.out");
+    char* program_path = get_test_program_path("8-bit_data_transfer.bin");
     int num_preambles = init_from_decb_file(program_path);
     free(program_path);
 
@@ -1407,7 +1407,7 @@ void init_from_decb_file_basic_test(void **state) {
 void init_from_decb_file_basic_run_cycles_test(void **state) {
     (void) state; /* unused */
 
-    char* program_path = get_test_program_path("8-bit_data_transfer.out");
+    char* program_path = get_test_program_path("8-bit_data_transfer.bin");
     init_from_decb_file(program_path);
     free(program_path);
 
@@ -1432,7 +1432,7 @@ void init_from_decb_file_error_test(void **state) {
 void get_test_program_path_test(void **state) {
     (void) state; /* unused */
 
-    char* program_path = get_test_program_path("8-bit_data_transfer.out");
+    char* program_path = get_test_program_path("8-bit_data_transfer.bin");
     if (program_path) {
         printf("program_path = %s\n", program_path);
     }
