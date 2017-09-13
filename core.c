@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "core.h"
 
@@ -663,6 +664,7 @@ uint16 init_from_decb_memory(const uint8* buffer, uint16 buffer_size) {
         if (buffer[read_bytes] != 0 && buffer[read_bytes] != 0xFF) {
             /* Invalid, expected 0 or 0xFF */
             assert(FALSE);
+            read_preambles = 0;
             break;
         }
 
@@ -670,6 +672,7 @@ uint16 init_from_decb_memory(const uint8* buffer, uint16 buffer_size) {
             if (read_bytes + 4 >= buffer_size) {
                 /* Invalid, not enough size for preamble */
                 assert(FALSE);
+                read_preambles = 0;
                 break;
             }
 
@@ -684,6 +687,7 @@ uint16 init_from_decb_memory(const uint8* buffer, uint16 buffer_size) {
             if (read_bytes + bytes_to_read >= buffer_size) {
                 /* Invalid, not enough size for buffer */
                 assert(FALSE);
+                read_preambles = 0;
                 break;
             }
 
@@ -696,9 +700,10 @@ uint16 init_from_decb_memory(const uint8* buffer, uint16 buffer_size) {
             read_preambles++;
         }
         else {
-            if (read_bytes + 4 >= buffer_size) {
+            if (read_bytes + 4 != buffer_size - 1) {
                 /* Invalid, not enough size for postamble */
                 assert(FALSE);
+                read_preambles = 0;
                 break;
             }
 
@@ -706,9 +711,10 @@ uint16 init_from_decb_memory(const uint8* buffer, uint16 buffer_size) {
                address */
             read_bytes++;
 
-            if (buffer[read_bytes] != 0 && buffer[read_bytes + 1] != 0) {
+            if (buffer[read_bytes] != 0 || buffer[read_bytes + 1] != 0) {
                 /* Invalid, expected 0 or 0xFF */
                 assert(FALSE);
+                read_preambles = 0;
                 break;
             }
 
@@ -722,4 +728,6 @@ uint16 init_from_decb_memory(const uint8* buffer, uint16 buffer_size) {
     return read_preambles;
 }
 
-/* uint16 init_from_decb_file(const char* filename); */
+uint16 init_from_decb_file(const char* filename) {
+    /* FILE* handle = fopen(filename, "rb"); */
+}

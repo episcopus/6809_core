@@ -1262,3 +1262,112 @@ void init_from_decb_memory_run_cycles_test(void **state) {
     assert_int_equal(num_cycles, opcode_table[OP_LDA_E].cycle_count +
                      opcode_table[OP_STA_E].cycle_count);
 }
+
+void init_from_decb_memory_invalid_preamble_test(void **state) {
+    (void) state; /* unused */
+
+    /* 0x0 is expected at the start of each preamble  */
+    uint8 payload[] = { 0x01, 0x00, 0x01, 0x50, 0x00, \
+                        0x69, \
+                        0x00, 0x00, 0x06, 0x20, 0x00, \
+                        0xB6, 0x50, 0x00, 0xB7, 0x50, 0x01, \
+                        0xFF, 0x00, 0x00, 0x20, 0x00 };
+    uint16 payload_size = sizeof(payload);
+
+    expect_assert_failure(init_from_decb_memory(payload, payload_size));
+}
+
+void init_from_decb_memory_invalid_preamble_2_test(void **state) {
+    (void) state; /* unused */
+
+    /* 0x0 is expected at the start of each preamble  */
+    uint8 payload[] = { 0x00, 0x00, 0x01, 0x50, 0x00, \
+                        0x69, \
+                        0x01, 0x00, 0x06, 0x20, 0x00, \
+                        0xB6, 0x50, 0x00, 0xB7, 0x50, 0x01, \
+                        0xFF, 0x00, 0x00, 0x20, 0x00 };
+    uint16 payload_size = sizeof(payload);
+
+    expect_assert_failure(init_from_decb_memory(payload, payload_size));
+}
+
+void init_from_decb_memory_invalid_postamble_test(void **state) {
+    (void) state; /* unused */
+
+    /* 0xFE is expected at the start of each postamble  */
+    uint8 payload[] = { 0x00, 0x00, 0x01, 0x50, 0x00, \
+                        0x69, \
+                        0x00, 0x00, 0x06, 0x20, 0x00, \
+                        0xB6, 0x50, 0x00, 0xB7, 0x50, 0x01, \
+                        0xFE, 0x00, 0x00, 0x20, 0x00 };
+    uint16 payload_size = sizeof(payload);
+
+    expect_assert_failure(init_from_decb_memory(payload, payload_size));
+}
+
+void init_from_decb_memory_invalid_preamble_length_test(void **state) {
+    (void) state; /* unused */
+
+    /* Preambles are 5 bytes long followed by the payload and the postamble and
+       stuff */
+    uint8 payload[] = { 0x00, 0x00, 0x01, 0x50 };
+    uint16 payload_size = sizeof(payload);
+
+    expect_assert_failure(init_from_decb_memory(payload, payload_size));
+}
+
+void init_from_decb_memory_invalid_payload_size_test(void **state) {
+    (void) state; /* unused */
+
+    /* First preamble payload size is erroneous  */
+    uint8 payload[] = { 0x00, 0x81, 0x69, 0x50, 0x00, \
+                        0x69, \
+                        0x00, 0x00, 0x06, 0x20, 0x00, \
+                        0xB6, 0x50, 0x00, 0xB7, 0x50, 0x01, \
+                        0xFE, 0x00, 0x00, 0x20, 0x00 };
+    uint16 payload_size = sizeof(payload);
+
+    expect_assert_failure(init_from_decb_memory(payload, payload_size));
+}
+
+void init_from_decb_memory_invalid_postamble_too_short_test(void **state) {
+    (void) state; /* unused */
+
+    /* Postamble is too short  */
+    uint8 payload[] = { 0x00, 0x00, 0x01, 0x50, 0x00, \
+                        0x69, \
+                        0x00, 0x00, 0x06, 0x20, 0x00, \
+                        0xB6, 0x50, 0x00, 0xB7, 0x50, 0x01, \
+                        0xFF, 0x00, 0x00, 0x20 };
+    uint16 payload_size = sizeof(payload);
+
+    expect_assert_failure(init_from_decb_memory(payload, payload_size));
+}
+
+void init_from_decb_memory_invalid_postamble_too_long_test(void **state) {
+    (void) state; /* unused */
+
+    /* Postamble is too short  */
+    uint8 payload[] = { 0x00, 0x00, 0x01, 0x50, 0x00, \
+                        0x69, \
+                        0x00, 0x00, 0x06, 0x20, 0x00, \
+                        0xB6, 0x50, 0x00, 0xB7, 0x50, 0x01, \
+                        0xFF, 0x00, 0x00, 0x20, 0x00, 0x00 };
+    uint16 payload_size = sizeof(payload);
+
+    expect_assert_failure(init_from_decb_memory(payload, payload_size));
+}
+
+void init_from_decb_memory_invalid_postamble_byte_wrong_test(void **state) {
+    (void) state; /* unused */
+
+    /* Postamble is too short  */
+    uint8 payload[] = { 0x00, 0x00, 0x01, 0x50, 0x00, \
+                        0x69, \
+                        0x00, 0x00, 0x06, 0x20, 0x00, \
+                        0xB6, 0x50, 0x00, 0xB7, 0x50, 0x01, \
+                        0xFF, 0x00, 0x01, 0x20, 0x00 };
+    uint16 payload_size = sizeof(payload);
+
+    expect_assert_failure(init_from_decb_memory(payload, payload_size));
+}

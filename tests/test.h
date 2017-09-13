@@ -502,6 +502,14 @@ void lbvs_basic_test(void **state);
 void lbvs_non_branch_test(void **state);
 void init_from_decb_memory_test(void **state);
 void init_from_decb_memory_run_cycles_test(void **state);
+void init_from_decb_memory_invalid_preamble_test(void **state);
+void init_from_decb_memory_invalid_preamble_2_test(void **state);
+void init_from_decb_memory_invalid_postamble_test(void **state);
+void init_from_decb_memory_invalid_preamble_length_test(void **state);
+void init_from_decb_memory_invalid_payload_size_test(void **state);
+void init_from_decb_memory_invalid_postamble_too_short_test(void **state);
+void init_from_decb_memory_invalid_postamble_too_long_test(void **state);
+void init_from_decb_memory_invalid_postamble_byte_wrong_test(void **state);
 
 const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(core_init_test, test_setup, test_teardown),
@@ -993,5 +1001,12 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(lbvs_non_branch_test, test_setup, test_teardown),
 
     cmocka_unit_test_setup_teardown(init_from_decb_memory_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(init_from_decb_memory_run_cycles_test, test_setup, test_teardown)
+    cmocka_unit_test_setup_teardown(init_from_decb_memory_run_cycles_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(init_from_decb_memory_invalid_preamble_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(init_from_decb_memory_invalid_preamble_2_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(init_from_decb_memory_invalid_postamble_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(init_from_decb_memory_invalid_preamble_length_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(init_from_decb_memory_invalid_postamble_too_short_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(init_from_decb_memory_invalid_postamble_too_long_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(init_from_decb_memory_invalid_postamble_byte_wrong_test, test_setup, test_teardown)
 };
