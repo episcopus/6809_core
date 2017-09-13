@@ -3,6 +3,8 @@
 #include <setjmp.h>
 #include <cmocka.h>
 
+#include "types.h"
+
 /* Core tests */
 int test_setup(void **state);
 int test_teardown(void **state);
@@ -503,6 +505,7 @@ void lbvs_non_branch_test(void **state);
 
 /* Program test stuff including DECB support */
 char* get_test_program_path(const char* prog_name);
+void perform_memory_checks(struct test_check* checks, size_t len);
 void init_from_decb_memory_test(void **state);
 void init_from_decb_memory_run_cycles_test(void **state);
 void init_from_decb_memory_invalid_preamble_test(void **state);

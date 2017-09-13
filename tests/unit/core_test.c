@@ -1222,6 +1222,18 @@ char* get_test_program_path(const char* prog_name) {
     return final_test_path;
 }
 
+void perform_memory_checks(struct test_check* checks, size_t len) {
+    if (!checks) {
+        return;
+    }
+
+    for (int i=0; i<len; i++) {
+        printf("%d: %x, %x\n", i, checks[i].address, checks[i].value);
+        assert_int_equal(checks[i].value,
+                         read_byte_from_memory(checks[i].address));
+    }
+}
+
 void init_from_decb_memory_test(void **state) {
     (void) state; /* unused */
 
@@ -1397,15 +1409,24 @@ void init_from_decb_memory_invalid_postamble_byte_wrong_test(void **state) {
 void init_from_decb_file_basic_test(void **state) {
     (void) state; /* unused */
 
+    struct test_check checks[] = {
+        { 0x5000, 0x69 }
+    };
+
     char* program_path = get_test_program_path("8-bit_data_transfer.bin");
     int num_preambles = init_from_decb_file(program_path);
     free(program_path);
 
     assert_int_equal(num_preambles, 2);
+    perform_memory_checks(checks, sizeof(checks) / sizeof(checks[0]));
 }
 
 void init_from_decb_file_basic_run_cycles_test(void **state) {
     (void) state; /* unused */
+
+    struct test_check checks[] = {
+        { 0x5001, 0x69 }
+    };
 
     char* program_path = get_test_program_path("8-bit_data_transfer.bin");
     init_from_decb_file(program_path);
@@ -1413,7 +1434,7 @@ void init_from_decb_file_basic_run_cycles_test(void **state) {
 
     uint16 num_cycles = run_cycles(opcode_table[OP_LDA_E].cycle_count +
                                    opcode_table[OP_STA_E].cycle_count);
-    assert_int_equal(read_byte_from_memory(0x5001), 0x69);
+    perform_memory_checks(checks, sizeof(checks) / sizeof(checks[0]));
     assert_int_equal(e_cpu_context.pc, 0x2006);
     assert_int_equal(num_cycles, opcode_table[OP_LDA_E].cycle_count +
                      opcode_table[OP_STA_E].cycle_count);

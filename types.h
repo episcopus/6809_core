@@ -94,3 +94,8 @@ struct stack_op_postbyte_entry {
     enum target_register reg;
     uint8 bit;
 };
+
+struct test_check {
+    uint16 address;
+    uint8 value;
+};
