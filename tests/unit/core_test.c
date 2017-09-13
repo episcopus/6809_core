@@ -3,11 +3,14 @@
 #include <setjmp.h>
 #include <cmocka.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "core.h"
 
 extern struct cpu_state e_cpu_context;
 extern struct opcode_def opcode_table[];
+const char* root_test_path = "/tests/program/";
 
 int test_setup(void **state) {
     (void) state; /* unused */
@@ -1200,6 +1203,25 @@ void set_reg_value_16_test(void **state) {
     assert_int_equal(get_reg_value_16(REG_S), S_POINTER);
 }
 
+char* get_test_program_path(const char* prog_name) {
+    if (!prog_name) {
+        return NULL;
+    }
+
+    const char* cur_path = getenv("PWD");
+    int path_length = strlen(cur_path) +
+        strlen(root_test_path) +
+        strlen(prog_name);
+    char* final_test_path = malloc(path_length);
+    memset(final_test_path, '\0', path_length);
+
+    strncat(final_test_path, cur_path, strlen(cur_path));
+    strncat(final_test_path, root_test_path, strlen(root_test_path));
+    strncat(final_test_path, prog_name, strlen(prog_name));
+
+    return final_test_path;
+}
+
 void init_from_decb_memory_test(void **state) {
     (void) state; /* unused */
 
@@ -1370,4 +1392,49 @@ void init_from_decb_memory_invalid_postamble_byte_wrong_test(void **state) {
     uint16 payload_size = sizeof(payload);
 
     expect_assert_failure(init_from_decb_memory(payload, payload_size));
+}
+
+void init_from_decb_file_basic_test(void **state) {
+    (void) state; /* unused */
+
+    char* program_path = get_test_program_path("8-bit_data_transfer.out");
+    int num_preambles = init_from_decb_file(program_path);
+    free(program_path);
+
+    assert_int_equal(num_preambles, 2);
+}
+
+void init_from_decb_file_basic_run_cycles_test(void **state) {
+    (void) state; /* unused */
+
+    char* program_path = get_test_program_path("8-bit_data_transfer.out");
+    init_from_decb_file(program_path);
+    free(program_path);
+
+    uint16 num_cycles = run_cycles(opcode_table[OP_LDA_E].cycle_count +
+                                   opcode_table[OP_STA_E].cycle_count);
+    assert_int_equal(read_byte_from_memory(0x5001), 0x69);
+    assert_int_equal(e_cpu_context.pc, 0x2006);
+    assert_int_equal(num_cycles, opcode_table[OP_LDA_E].cycle_count +
+                     opcode_table[OP_STA_E].cycle_count);
+}
+
+void init_from_decb_file_error_test(void **state) {
+    (void) state; /* unused */
+
+    int num_preambles = 0;
+    expect_assert_failure(num_preambles = init_from_decb_file(
+                              "/this/file/doesnt/exist"));
+
+    assert_int_equal(num_preambles, 0);
+}
+
+void get_test_program_path_test(void **state) {
+    (void) state; /* unused */
+
+    char* program_path = get_test_program_path("8-bit_data_transfer.out");
+    if (program_path) {
+        printf("program_path = %s\n", program_path);
+    }
+    free(program_path);
 }

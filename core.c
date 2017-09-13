@@ -729,5 +729,35 @@ uint16 init_from_decb_memory(const uint8* buffer, uint16 buffer_size) {
 }
 
 uint16 init_from_decb_file(const char* filename) {
-    /* FILE* handle = fopen(filename, "rb"); */
+    FILE* handle = fopen(filename, "rb");
+    if (!handle) {
+        assert(FALSE);
+        return 0;
+    }
+
+    /* Figure out size of file in order to size buffer accordingly */
+    int pos_beg = ftell(handle);
+    if(fseek(handle, 0, SEEK_END)) {
+        assert(FALSE);
+        fclose(handle);
+        return 0;
+    }
+    int pos_end = ftell(handle);
+    int file_size = pos_end - pos_beg;
+    rewind(handle);
+
+    uint8* my_buffer = (uint8*) malloc(file_size);
+    int read_size = fread((void *) my_buffer, 1, file_size, handle);
+    if (!read_size || ferror(handle)) {
+        assert(FALSE);
+        free((void *) my_buffer);
+        fclose(handle);
+        return 0;
+    }
+
+    free((void *) my_buffer);
+    fclose(handle);
+
+    uint16 ret_preambles = init_from_decb_memory(my_buffer, (uint16) read_size);
+    return ret_preambles;
 }
