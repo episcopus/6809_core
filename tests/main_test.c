@@ -3,6 +3,8 @@
 #include <setjmp.h>
 #include <cmocka.h>
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
 #include "core.h"
 #include "tests/test.h"
@@ -514,6 +516,37 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(program_mask_off_most_significant_four_bits_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(program_find_larger_of_two_numbers_test, test_setup, test_teardown)
 };
+
+char* get_test_program_path(const char* prog_name) {
+    if (!prog_name) {
+        return NULL;
+    }
+
+    /* const char* cur_path = getenv("PWD"); */
+    const char* cur_path = "/Users/simon/Dropbox/Programming/c/6809_core";
+    int path_length = strlen(cur_path) +
+        strlen(root_test_path) +
+        strlen(prog_name);
+    char* final_test_path = malloc(path_length);
+    memset(final_test_path, '\0', path_length);
+
+    strncat(final_test_path, cur_path, strlen(cur_path));
+    strncat(final_test_path, root_test_path, strlen(root_test_path));
+    strncat(final_test_path, prog_name, strlen(prog_name));
+
+    return final_test_path;
+}
+
+void perform_memory_checks(struct test_check* checks, size_t len) {
+    if (!checks) {
+        return;
+    }
+
+    for (int i=0; i<len; i++) {
+        assert_int_equal(read_byte_from_memory(checks[i].address),
+                         checks[i].value);
+    }
+}
 
 int main(void) {
     return cmocka_run_group_tests(tests, NULL, NULL);

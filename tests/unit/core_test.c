@@ -4,7 +4,6 @@
 #include <cmocka.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include "core.h"
 #include "tests/test.h"
@@ -1202,37 +1201,6 @@ void set_reg_value_16_test(void **state) {
 
     assert_int_equal(val, 0x7812);
     assert_int_equal(get_reg_value_16(REG_S), S_POINTER);
-}
-
-char* get_test_program_path(const char* prog_name) {
-    if (!prog_name) {
-        return NULL;
-    }
-
-    /* const char* cur_path = getenv("PWD"); */
-    const char* cur_path = "/Users/simon/Dropbox/Programming/c/6809_core";
-    int path_length = strlen(cur_path) +
-        strlen(root_test_path) +
-        strlen(prog_name);
-    char* final_test_path = malloc(path_length);
-    memset(final_test_path, '\0', path_length);
-
-    strncat(final_test_path, cur_path, strlen(cur_path));
-    strncat(final_test_path, root_test_path, strlen(root_test_path));
-    strncat(final_test_path, prog_name, strlen(prog_name));
-
-    return final_test_path;
-}
-
-void perform_memory_checks(struct test_check* checks, size_t len) {
-    if (!checks) {
-        return;
-    }
-
-    for (int i=0; i<len; i++) {
-        assert_int_equal(read_byte_from_memory(checks[i].address),
-                         checks[i].value);
-    }
 }
 
 void init_from_decb_memory_test(void **state) {
