@@ -514,7 +514,8 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(program_8_bit_addition_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(program_shift_left_1_bit_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(program_mask_off_most_significant_four_bits_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(program_find_larger_of_two_numbers_test, test_setup, test_teardown)
+    cmocka_unit_test_setup_teardown(program_find_larger_of_two_numbers_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(program_table_of_squares_test, test_setup, test_teardown)
 };
 
 char* get_test_program_path(const char* prog_name) {

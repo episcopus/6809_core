@@ -96,3 +96,31 @@ void program_find_larger_of_two_numbers_test(void **state) {
     perform_memory_checks(checks, sizeof(checks) / sizeof(checks[0]));
     assert_int_equal(e_cpu_context.pc, 0x200E);
 }
+
+void program_table_of_squares_test(void **state) {
+    (void) state; /* unused */
+
+    struct test_check checks[] = {
+        { 0x50, 0 },
+        { 0x51, 1 },
+        { 0x52, 4 },
+        { 0x53, 9 },
+        { 0x54, 16 },
+        { 0x55, 25 },
+        { 0x56, 36 },
+        { 0x57, 47 },
+        { 0x41, 3 },
+        { 0x42, 9 }
+    };
+
+    char* program_path = get_test_program_path("table_of_squares.bin");
+    init_from_decb_file(program_path);
+    free(program_path);
+
+    run_cycles(opcode_table[OP_LDB_D].cycle_count +
+               opcode_table[OP_LDX_I].cycle_count +
+               opcode_table[OP_LDA_I].cycle_count +
+               opcode_table[OP_STA_D].cycle_count);
+    perform_memory_checks(checks, sizeof(checks) / sizeof(checks[0]));
+    assert_int_equal(e_cpu_context.pc, 0xB);
+}
