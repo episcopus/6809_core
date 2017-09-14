@@ -13,7 +13,8 @@ all: default
 
 OBJECTS = $(patsubst %.c, $(BUILD_DIR)%.o, $(wildcard *.c)) \
 	$(patsubst %.c, $(BUILD_DIR)%.o, $(wildcard tests/*.c)) \
-	$(patsubst %.c, $(BUILD_DIR)%.o, $(wildcard tests/unit/*.c))
+	$(patsubst %.c, $(BUILD_DIR)%.o, $(wildcard tests/unit/*.c)) \
+	$(patsubst %.c, $(BUILD_DIR)%.o, $(wildcard tests/program/*.c))
 HEADERS = $(wildcard *.h) $(wildcard tests/*.h)
 DECB_OBJECTS = $(patsubst %.s, $(BUILD_DIR)%.bin, $(wildcard tests/program/*.s))
 

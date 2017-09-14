@@ -7,10 +7,11 @@
 #include <string.h>
 
 #include "core.h"
+#include "tests/test.h"
 
 extern struct cpu_state e_cpu_context;
 extern struct opcode_def opcode_table[];
-const char* root_test_path = "/build/tests/program/";
+extern const char* root_test_path;
 
 int test_setup(void **state) {
     (void) state; /* unused */
@@ -1448,47 +1449,4 @@ void init_from_decb_file_error_test(void **state) {
                               "/this/file/doesnt/exist"));
 
     assert_int_equal(num_preambles, 0);
-}
-
-void program_8_bit_addition_test(void **state) {
-    (void) state; /* unused */
-
-    struct test_check checks[] = {
-        { 0x5000, 0x38 },
-        { 0x5001, 0x2B },
-        { 0x5002, 0x63 }
-    };
-
-    char* program_path = get_test_program_path("8-bit_addition.bin");
-    init_from_decb_file(program_path);
-    free(program_path);
-
-    uint16 num_cycles = run_cycles(opcode_table[OP_LDA_E].cycle_count +
-                                   opcode_table[OP_ADDA_E].cycle_count +
-                                   opcode_table[OP_STA_E].cycle_count);
-    perform_memory_checks(checks, sizeof(checks) / sizeof(checks[0]));
-    assert_int_equal(e_cpu_context.pc, 0x2009);
-    assert_int_equal(num_cycles, opcode_table[OP_LDA_E].cycle_count +
-                     opcode_table[OP_ADDA_E].cycle_count +
-                     opcode_table[OP_STA_E].cycle_count);
-
-}
-
-void program_shift_left_1_bit_test(void **state) {
-    (void) state; /* unused */
-
-    struct test_check checks[] = {
-        { 0x5000, 0x6F },
-        { 0x5001, 0xDE }
-    };
-
-    char* program_path = get_test_program_path("shift_left_1_bit.bin");
-    init_from_decb_file(program_path);
-    free(program_path);
-
-    run_cycles(opcode_table[OP_LDB_E].cycle_count +
-               opcode_table[OP_ASLB].cycle_count +
-               opcode_table[OP_STB_E].cycle_count);
-    perform_memory_checks(checks, sizeof(checks) / sizeof(checks[0]));
-    assert_int_equal(e_cpu_context.pc, 0x2007);
 }
