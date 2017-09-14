@@ -1208,7 +1208,8 @@ char* get_test_program_path(const char* prog_name) {
         return NULL;
     }
 
-    const char* cur_path = getenv("PWD");
+    /* const char* cur_path = getenv("PWD"); */
+    const char* cur_path = "/Users/simon/Dropbox/Programming/c/6809_core";
     int path_length = strlen(cur_path) +
         strlen(root_test_path) +
         strlen(prog_name);
@@ -1228,8 +1229,8 @@ void perform_memory_checks(struct test_check* checks, size_t len) {
     }
 
     for (int i=0; i<len; i++) {
-        assert_int_equal(checks[i].value,
-                         read_byte_from_memory(checks[i].address));
+        assert_int_equal(read_byte_from_memory(checks[i].address),
+                         checks[i].value);
     }
 }
 
@@ -1449,7 +1450,7 @@ void init_from_decb_file_error_test(void **state) {
     assert_int_equal(num_preambles, 0);
 }
 
-void program_8_bit_addition_program_test(void **state) {
+void program_8_bit_addition_test(void **state) {
     (void) state; /* unused */
 
     struct test_check checks[] = {
@@ -1471,4 +1472,23 @@ void program_8_bit_addition_program_test(void **state) {
                      opcode_table[OP_ADDA_E].cycle_count +
                      opcode_table[OP_STA_E].cycle_count);
 
+}
+
+void program_shift_left_1_bit_test(void **state) {
+    (void) state; /* unused */
+
+    struct test_check checks[] = {
+        { 0x5000, 0x6F },
+        { 0x5001, 0xDE }
+    };
+
+    char* program_path = get_test_program_path("shift_left_1_bit.bin");
+    init_from_decb_file(program_path);
+    free(program_path);
+
+    run_cycles(opcode_table[OP_LDB_E].cycle_count +
+               opcode_table[OP_ASLB].cycle_count +
+               opcode_table[OP_STB_E].cycle_count);
+    perform_memory_checks(checks, sizeof(checks) / sizeof(checks[0]));
+    assert_int_equal(e_cpu_context.pc, 0x2007);
 }

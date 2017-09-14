@@ -520,7 +520,8 @@ void init_from_decb_file_basic_test(void **state);
 void init_from_decb_file_basic_run_cycles_test(void **state);
 void init_from_decb_file_error_test(void **state);
 
-void program_8_bit_addition_program_test(void **state);
+void program_8_bit_addition_test(void **state);
+void program_shift_left_1_bit_test(void **state);
 
 const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(core_init_test, test_setup, test_teardown),
@@ -1023,5 +1024,6 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(init_from_decb_file_basic_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(init_from_decb_file_basic_run_cycles_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(init_from_decb_file_error_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(program_8_bit_addition_program_test, test_setup, test_teardown)
+    cmocka_unit_test_setup_teardown(program_8_bit_addition_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(program_shift_left_1_bit_test, test_setup, test_teardown)
 };
