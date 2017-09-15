@@ -1033,9 +1033,7 @@ int jsr(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     uint16 out_addr = get_memory_address_from_postbyte(a_m, &extra_cycles);
 
     /* Save current PC onto hardware stack */
-    e_cpu_context.s -= 2;
-    write_word_to_memory(e_cpu_context.s, e_cpu_context.pc);
-
+    push_word_to_stack(REG_S, e_cpu_context.pc);
     e_cpu_context.pc = out_addr;
 
     return opcode_table[opcode].cycle_count + extra_cycles;
@@ -1279,9 +1277,6 @@ int psh(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     /* baseline figure for clock cycles, each register pushed is one
        additional cycle */
     uint8 cycles = opcode_table[opcode].cycle_count;
-    /* baseline stack pointer, decremented for each push, works for
-       both u and s pointer */
-    uint16 stack_pointer = get_reg_value_16(t_r);
 
     /* number of possible registers to push - it's really 8 but
        the REG_S value is special and needs to toggle since can't push own
@@ -1301,23 +1296,19 @@ int psh(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
                    its own stack pointer */
                 this_t_r == REG_S && t_r == REG_S ? this_t_r = REG_U : REG_S;
                 uint16 val = get_reg_value_16(this_t_r);
-                uint8 lower_byte = val;
-                uint8 upper_byte = val >> 8;
 
-                write_byte_to_memory(--stack_pointer, lower_byte);
-                write_byte_to_memory(--stack_pointer, upper_byte);
+                push_word_to_stack(t_r, val);
                 cycles += 2;
             }
             else if (get_reg_size(this_t_r) == REG_SIZE_8) {
                 uint8 val = get_reg_value_8(this_t_r);
 
-                write_byte_to_memory(--stack_pointer, val);
+                push_byte_to_stack(t_r, val);
                 cycles++;
             }
         }
     }
 
-    set_reg_value_16(t_r, stack_pointer);
     return cycles + extra_cycles;
 }
 
@@ -1331,9 +1322,6 @@ int pul(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     /* baseline figure for clock cycles, each register pushed is one
        additional cycle */
     uint8 cycles = opcode_table[opcode].cycle_count;
-    /* baseline stack pointer, incremented for each pull, works for
-       both u and s pointer */
-    uint16 stack_pointer = get_reg_value_16(t_r);
 
     /* number of possible registers to pull - it's really 8 but
        the REG_S value is special and needs to toggle since can't pull own
@@ -1353,14 +1341,13 @@ int pul(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
                    its own stack pointer */
                 this_t_r == REG_S && t_r == REG_S ? this_t_r = REG_U : REG_S;
 
-                uint16 this_val = read_word_from_memory(stack_pointer);
-                stack_pointer += 2;
+                uint16 this_val = pull_word_from_stack(t_r);
                 set_reg_value_16(this_t_r, this_val);
 
                 cycles += 2;
             }
             else if (get_reg_size(this_t_r) == REG_SIZE_8) {
-                uint8 this_val = read_byte_from_memory(stack_pointer++);
+                uint8 this_val = pull_byte_from_stack(t_r);
                 set_reg_value_8(this_t_r, this_val);
 
                 cycles++;
@@ -1368,7 +1355,6 @@ int pul(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
         }
     }
 
-    set_reg_value_16(t_r, stack_pointer);
     return cycles + extra_cycles;
 }
 
