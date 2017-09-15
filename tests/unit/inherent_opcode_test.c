@@ -1224,6 +1224,137 @@ void rorb_rotate_test(void **state) {
     assert_true(post_pc > pre_pc);
 }
 
+void rti_basic_test(void ** state) {
+    (void) state; /* unused */
+
+    set_reg_value_8(REG_A, 0x12);
+    set_reg_value_8(REG_B, 0x34);
+    set_reg_value_8(REG_DP, 0x56);
+    /* c, z, h are set by this */
+    set_reg_value_8(REG_CC, 0x25);
+    set_reg_value_16(REG_X, 0x1234);
+    set_reg_value_16(REG_Y, 0x5678);
+    set_reg_value_16(REG_U, 0x200);
+    set_reg_value_16(REG_S, 0x100);
+    set_reg_value_16(REG_PC, 0);
+    /* Save pre PC before IRQ simulation */
+    int pre_pc = e_cpu_context.pc;
+
+    /* fake IRQ vector / pointer */
+    write_word_to_memory(0xFFF8, 0x5000);
+
+    /* Now simulate an IRQ interrupt */
+    /* Forget about the masking for now  */
+    /* if (e_cpu_context.cc.i) { */
+    /*     return; */
+    /* } */
+    e_cpu_context.cc.e = 1;
+    push_word_to_stack(REG_S, get_reg_value_16(REG_PC));
+    push_word_to_stack(REG_S, get_reg_value_16(REG_U));
+    push_word_to_stack(REG_S, get_reg_value_16(REG_Y));
+    push_word_to_stack(REG_S, get_reg_value_16(REG_X));
+    push_byte_to_stack(REG_S, get_reg_value_8(REG_DP));
+    push_byte_to_stack(REG_S, get_reg_value_8(REG_B));
+    push_byte_to_stack(REG_S, get_reg_value_8(REG_A));
+    push_byte_to_stack(REG_S, get_reg_value_8(REG_CC));
+    set_reg_value_16(REG_PC, read_word_from_memory(0xFFF8));
+
+    /* simulate IRQ code execution, it will mess with the registers */
+    set_reg_value_8(REG_A, 0xFE);
+    set_reg_value_8(REG_B, 0xDC);
+    set_reg_value_8(REG_DP, 0xBA);
+    /* v, n are set by this */
+    set_reg_value_8(REG_CC, 0x8A);
+    set_reg_value_16(REG_X, 0xFEDC);
+    set_reg_value_16(REG_Y, 0xBA98);
+    set_reg_value_16(REG_U, 0x300);
+
+    uint8 code_bytes[] = {
+        OP_RTI
+    };
+    struct mem_loader_def test_memory[] = {
+        { 0x5000, code_bytes, 1 },
+    };
+    load_memory(test_memory, 1);
+
+    int cycles = run_cycles(opcode_table[OP_RTI].cycle_count);
+    uint16 post_pc = e_cpu_context.pc;
+    /* Same PC since fake IRQ occurred before we ran any instructions
+       from the original PC of 0x0 */
+    assert_int_equal(post_pc, pre_pc);
+    assert_int_equal(cycles, opcode_table[OP_RTI].cycle_count + 9);
+    assert_int_equal(0x12, get_reg_value_8(REG_A));
+    assert_int_equal(0x34, get_reg_value_8(REG_B));
+    assert_int_equal(0x56, get_reg_value_8(REG_DP));
+    assert_int_equal(0x25 | 0x80, get_reg_value_8(REG_CC));
+    assert_int_equal(0x1234, get_reg_value_16(REG_X));
+    assert_int_equal(0x5678, get_reg_value_16(REG_Y));
+    assert_int_equal(0x200, get_reg_value_16(REG_U));
+    assert_int_equal(0x100, get_reg_value_16(REG_S));
+}
+
+void rti_basic_firq_test(void ** state) {
+    (void) state; /* unused */
+
+    set_reg_value_8(REG_A, 0x12);
+    set_reg_value_8(REG_B, 0x34);
+    set_reg_value_8(REG_DP, 0x56);
+    /* c, z, h are set by this */
+    set_reg_value_8(REG_CC, 0x25);
+    set_reg_value_16(REG_X, 0x1234);
+    set_reg_value_16(REG_Y, 0x5678);
+    set_reg_value_16(REG_U, 0x200);
+    set_reg_value_16(REG_S, 0x100);
+    set_reg_value_16(REG_PC, 0);
+    /* Save pre PC before IRQ simulation */
+    int pre_pc = e_cpu_context.pc;
+
+    /* fake IRQ vector / pointer */
+    write_word_to_memory(0xFFF6, 0x5000);
+
+    /* Now simulate an FIRQ interrupt */
+    /* Forget about the masking for now  */
+    /* if (e_cpu_context.cc.i) { */
+    /*     return; */
+    /* } */
+    push_word_to_stack(REG_S, get_reg_value_16(REG_PC));
+    push_byte_to_stack(REG_S, get_reg_value_8(REG_CC));
+    set_reg_value_16(REG_PC, read_word_from_memory(0xFFF6));
+
+    /* simulate FIRQ code execution, it will mess with the registers */
+    set_reg_value_8(REG_A, 0xFE);
+    set_reg_value_8(REG_B, 0xDC);
+    set_reg_value_8(REG_DP, 0xBA);
+    /* v, n, f, i are set by this */
+    set_reg_value_8(REG_CC, 0xDA);
+    set_reg_value_16(REG_X, 0xFEDC);
+    set_reg_value_16(REG_Y, 0xBA98);
+    set_reg_value_16(REG_U, 0x300);
+
+    uint8 code_bytes[] = {
+        OP_RTI
+    };
+    struct mem_loader_def test_memory[] = {
+        { 0x5000, code_bytes, 1 },
+    };
+    load_memory(test_memory, 1);
+
+    int cycles = run_cycles(opcode_table[OP_RTI].cycle_count);
+    uint16 post_pc = e_cpu_context.pc;
+    /* Same PC since fake IRQ occurred before we ran any instructions
+       from the original PC of 0x0 */
+    assert_int_equal(post_pc, pre_pc);
+    assert_int_equal(cycles, opcode_table[OP_RTI].cycle_count);
+    assert_int_equal(0xFE, get_reg_value_8(REG_A));
+    assert_int_equal(0xDC, get_reg_value_8(REG_B));
+    assert_int_equal(0xBA, get_reg_value_8(REG_DP));
+    assert_int_equal(0x25, get_reg_value_8(REG_CC));
+    assert_int_equal(0xFEDC, get_reg_value_16(REG_X));
+    assert_int_equal(0xBA98, get_reg_value_16(REG_Y));
+    assert_int_equal(0x300, get_reg_value_16(REG_U));
+    assert_int_equal(0x100, get_reg_value_16(REG_S));
+}
+
 void sex_test(void **state) {
     (void) state; /* unused */
 

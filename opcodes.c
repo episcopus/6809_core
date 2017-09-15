@@ -1441,11 +1441,27 @@ int ror(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
 /* Return from Interrupt */
 int rti(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     (void) t_r; /* unused */
-    (void )a_m; /* unused */
-
+    (void) a_m; /* unused */
     e_cpu_context.pc++;
+    uint8 cycles = opcode_table[opcode].cycle_count;
 
-    return 0;
+    set_reg_value_8(REG_CC, pull_byte_from_stack(REG_S));
+    /* The e flag will have been set in the case of the slower interrupt mode
+       that pushes the full cpu state */
+    if (e_cpu_context.cc.e) {
+        set_reg_value_8(REG_A, pull_byte_from_stack(REG_S));
+        set_reg_value_8(REG_B, pull_byte_from_stack(REG_S));
+        set_reg_value_8(REG_DP, pull_byte_from_stack(REG_S));
+        set_reg_value_16(REG_X, pull_word_from_stack(REG_S));
+        set_reg_value_16(REG_Y, pull_word_from_stack(REG_S));
+        set_reg_value_16(REG_U, pull_word_from_stack(REG_S));
+
+        cycles += 9;
+    }
+
+    set_reg_value_16(REG_PC, pull_word_from_stack(REG_S));
+
+    return cycles;
 }
 
 /* Subtract Memory Byte and Carry from Accumulator A or B */
