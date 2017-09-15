@@ -311,6 +311,36 @@ uint16 get_memory_address_from_postbyte(enum addressing_mode am, uint8* out_extr
     return return_addr;
 }
 
+void push_byte_to_stack(enum target_register t_r, uint8 data) {
+    if (t_r != REG_S && t_r != REG_U) {
+        assert(FALSE);
+        return;
+    }
+
+    /* baseline stack pointer, decremented for each push, works for
+       both u and s pointer */
+    uint16 stack_pointer = get_reg_value_16(t_r);
+    write_byte_to_memory(--stack_pointer, data);
+    set_reg_value_16(t_r, stack_pointer);
+}
+
+uint8 pull_byte_from_stack(enum target_register t_r) {
+    if (t_r != REG_S && t_r != REG_U) {
+        assert(FALSE);
+        return 0;
+    }
+
+    /* baseline stack pointer, incremented for each pull, works for
+       both u and s pointer */
+    uint16 stack_pointer = get_reg_value_16(t_r);
+
+    uint8 this_val = read_byte_from_memory(stack_pointer);
+    stack_pointer += 1;
+    set_reg_value_16(t_r, stack_pointer);
+
+    return this_val;
+}
+
 uint16 decode_indexed_addressing_postbyte(uint8* out_extra_cycles) {
     uint8 postbyte = e_cpu_context.memory[e_cpu_context.pc];
     uint16 return_address = 0;

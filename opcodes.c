@@ -1452,6 +1452,16 @@ int ror(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     return opcode_table[opcode].cycle_count + extra_cycles;
 }
 
+/* Return from Interrupt */
+int rti(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
+    (void) t_r; /* unused */
+    (void )a_m; /* unused */
+
+    e_cpu_context.pc++;
+
+    return 0;
+}
+
 /* Subtract Memory Byte and Carry from Accumulator A or B */
 int sbc(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;

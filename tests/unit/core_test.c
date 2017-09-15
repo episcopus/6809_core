@@ -1203,6 +1203,58 @@ void set_reg_value_16_test(void **state) {
     assert_int_equal(get_reg_value_16(REG_S), S_POINTER);
 }
 
+void push_byte_to_stack_basic_test(void **state) {
+    (void) state; /* unused */
+
+    e_cpu_context.s = 0x100;
+    push_byte_to_stack(REG_S, 0x69);
+
+    assert_int_equal(get_reg_value_16(REG_S), 0xFF);
+    assert_int_equal(read_byte_from_memory(0xFF), 0x69);
+}
+
+void pull_byte_from_stack_basic_test(void **state) {
+    (void) state; /* unused */
+
+    e_cpu_context.s = 0xFF;
+    write_byte_to_memory(0xFF, 0x69);
+    uint8 read_byte = pull_byte_from_stack(REG_S);
+
+    assert_int_equal(read_byte, 0x69);
+    assert_int_equal(get_reg_value_16(REG_S), 0x100);
+}
+
+void push_byte_to_stack_invalid_test(void **state) {
+    e_cpu_context.s = 0x100;
+
+    expect_assert_failure(push_byte_to_stack(REG_X, 0x69));
+}
+
+void push_pull_byte_stack_combo_test(void **state) {
+    e_cpu_context.s = 0x100;
+
+    push_byte_to_stack(REG_S, 0x12);
+    push_byte_to_stack(REG_S, 0x34);
+    push_byte_to_stack(REG_S, 0x56);
+
+    assert_int_equal(pull_byte_from_stack(REG_S), 0x56);
+    assert_int_equal(pull_byte_from_stack(REG_S), 0x34);
+    assert_int_equal(pull_byte_from_stack(REG_S), 0x12);
+}
+
+void push_byte_to_stack_u_test(void **state) {
+    (void) state; /* unused */
+
+    e_cpu_context.s = 0x100;
+    e_cpu_context.u = 0x200;
+    push_byte_to_stack(REG_U, 0x69);
+
+    assert_int_equal(get_reg_value_16(REG_U), 0x1FF);
+    assert_int_equal(read_byte_from_memory(0x1FF), 0x69);
+    assert_int_equal(get_reg_value_16(REG_S), 0x100);
+    assert_int_equal(read_byte_from_memory(0x100), 0);
+}
+
 void init_from_decb_memory_test(void **state) {
     (void) state; /* unused */
 

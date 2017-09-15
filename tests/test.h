@@ -72,6 +72,12 @@ void get_reg_value_16_test(void **state);
 void get_reg_value_16_invalid_test(void **state);
 void set_reg_value_16_test(void **state);
 
+void push_byte_to_stack_basic_test(void **state);
+void pull_byte_from_stack_basic_test(void **state);
+void push_byte_to_stack_invalid_test(void **state);
+void push_pull_byte_stack_combo_test(void **state);
+void push_byte_to_stack_u_test(void **state);
+
 /* Immediate tests */
 void adca_immediate_test(void **state);
 void adcb_immediate_test(void **state);

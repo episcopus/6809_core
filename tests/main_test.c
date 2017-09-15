@@ -76,6 +76,11 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(get_reg_value_16_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(get_reg_value_16_invalid_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(set_reg_value_16_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(pull_byte_from_stack_basic_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(push_byte_to_stack_basic_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(push_byte_to_stack_invalid_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(push_pull_byte_stack_combo_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(push_byte_to_stack_u_test, test_setup, test_teardown),
 
     cmocka_unit_test_setup_teardown(nop_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(nop_pc_test, test_setup, test_teardown),
