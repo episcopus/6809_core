@@ -77,6 +77,11 @@ void pull_byte_from_stack_basic_test(void **state);
 void push_byte_to_stack_invalid_test(void **state);
 void push_pull_byte_stack_combo_test(void **state);
 void push_byte_to_stack_u_test(void **state);
+void push_word_to_stack_basic_test(void **state);
+void pull_word_from_stack_basic_test(void **state);
+void push_word_to_stack_invalid_test(void **state);
+void push_pull_word_stack_combo_test(void **state);
+void push_word_to_stack_u_test(void **state);
 
 /* Immediate tests */
 void adca_immediate_test(void **state);

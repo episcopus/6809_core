@@ -23,6 +23,8 @@ uint16 get_memory_address_from_postbyte(enum addressing_mode am, uint8* out_extr
 
 void push_byte_to_stack(enum target_register t_r, uint8 data);
 uint8 pull_byte_from_stack(enum target_register t_r);
+void push_word_to_stack(enum target_register t_r, uint16 data);
+uint16 pull_word_from_stack(enum target_register t_r);
 
 uint16 decode_indexed_addressing_postbyte();
 enum target_register decode_register_from_indexed_postbyte(uint8 postbyte);

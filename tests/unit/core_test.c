@@ -1255,6 +1255,58 @@ void push_byte_to_stack_u_test(void **state) {
     assert_int_equal(read_byte_from_memory(0x100), 0);
 }
 
+void push_word_to_stack_basic_test(void **state) {
+    (void) state; /* unused */
+
+    e_cpu_context.s = 0x100;
+    push_word_to_stack(REG_S, 0x69AB);
+
+    assert_int_equal(get_reg_value_16(REG_S), 0xFE);
+    assert_int_equal(read_word_from_memory(0xFE), 0x69AB);
+}
+
+void pull_word_from_stack_basic_test(void **state) {
+    (void) state; /* unused */
+
+    e_cpu_context.s = 0xFE;
+    write_word_to_memory(0xFE, 0x69AB);
+    uint16 read_word = pull_word_from_stack(REG_S);
+
+    assert_int_equal(read_word, 0x69AB);
+    assert_int_equal(get_reg_value_16(REG_S), 0x100);
+}
+
+void push_word_to_stack_invalid_test(void **state) {
+    e_cpu_context.s = 0x100;
+
+    expect_assert_failure(push_word_to_stack(REG_X, 0x69AB));
+}
+
+void push_pull_word_stack_combo_test(void **state) {
+    e_cpu_context.s = 0x100;
+
+    push_word_to_stack(REG_S, 0x12);
+    push_word_to_stack(REG_S, 0x34);
+    push_word_to_stack(REG_S, 0x56);
+
+    assert_int_equal(pull_word_from_stack(REG_S), 0x56);
+    assert_int_equal(pull_word_from_stack(REG_S), 0x34);
+    assert_int_equal(pull_word_from_stack(REG_S), 0x12);
+}
+
+void push_word_to_stack_u_test(void **state) {
+    (void) state; /* unused */
+
+    e_cpu_context.s = 0x100;
+    e_cpu_context.u = 0x200;
+    push_word_to_stack(REG_U, 0x69AB);
+
+    assert_int_equal(get_reg_value_16(REG_U), 0x1FE);
+    assert_int_equal(read_word_from_memory(0x1FE), 0x69AB);
+    assert_int_equal(get_reg_value_16(REG_S), 0x100);
+    assert_int_equal(read_word_from_memory(0x100), 0);
+}
+
 void init_from_decb_memory_test(void **state) {
     (void) state; /* unused */
 

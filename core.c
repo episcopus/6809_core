@@ -333,9 +333,38 @@ uint8 pull_byte_from_stack(enum target_register t_r) {
     /* baseline stack pointer, incremented for each pull, works for
        both u and s pointer */
     uint16 stack_pointer = get_reg_value_16(t_r);
-
     uint8 this_val = read_byte_from_memory(stack_pointer);
     stack_pointer += 1;
+    set_reg_value_16(t_r, stack_pointer);
+
+    return this_val;
+}
+
+void push_word_to_stack(enum target_register t_r, uint16 data) {
+    if (t_r != REG_S && t_r != REG_U) {
+        assert(FALSE);
+        return;
+    }
+
+    /* baseline stack pointer, decremented for each push, works for
+       both u and s pointer */
+    uint16 stack_pointer = get_reg_value_16(t_r);
+    stack_pointer -= 2;
+    write_word_to_memory(stack_pointer, data);
+    set_reg_value_16(t_r, stack_pointer);
+}
+
+uint16 pull_word_from_stack(enum target_register t_r) {
+    if (t_r != REG_S && t_r != REG_U) {
+        assert(FALSE);
+        return 0;
+    }
+
+    /* baseline stack pointer, incremented for each pull, works for
+       both u and s pointer */
+    uint16 stack_pointer = get_reg_value_16(t_r);
+    uint16 this_val = read_word_from_memory(stack_pointer);
+    stack_pointer += 2;
     set_reg_value_16(t_r, stack_pointer);
 
     return this_val;
