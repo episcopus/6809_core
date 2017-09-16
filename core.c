@@ -6,6 +6,19 @@
 #include "core.h"
 
 struct cpu_state e_cpu_context;
+/* This struct captures the inverse order stacking order for register
+   push and pull operations */
+const struct stack_op_postbyte_entry stack_op_pb_entry_table[] = {
+    { REG_CC, 0 },
+    { REG_A, 1 },
+    { REG_B, 2 },
+    { REG_DP, 3 },
+    { REG_X, 4 },
+    { REG_Y, 5 },
+    { REG_S, 6 },
+    { REG_PC, 7 }
+};
+
 extern struct opcode_def opcode_table[];
 extern struct opcode_def opcode_ext_x10_table[];
 extern struct opcode_def opcode_ext_x11_table[];
@@ -368,6 +381,97 @@ uint16 pull_word_from_stack(enum target_register t_r) {
     set_reg_value_16(t_r, stack_pointer);
 
     return this_val;
+}
+
+uint8 push_registers_to_stack(uint8 reg_field, enum target_register reg_stack) {
+    /* Utility function meant to centralize the push / pull order of registers
+       to and from the stack. Used for interrupts, RTI, PSH, etc.
+       The reg_field identifies which registers to push. The reg_context enables
+       REG_U to be switched to REG_S when we are invoked in the context of
+       the latter. */
+
+    /* 1 cycle per byte pushed */
+    uint8 extra_cycles = 0;
+
+    /* number of possible registers to push - it's really 8 but
+       the REG_S value is special and needs to toggle since can't push own
+       stack pointer */
+    int sizeof_table = sizeof(stack_op_pb_entry_table) /
+        sizeof(struct stack_op_postbyte_entry);
+    /* push all necessary registers as requested in the postbyte according
+       to the 6809 spec. */
+    for (int i = sizeof_table - 1; i >= 0; i--) {
+        if (reg_field & (1 << i)) {
+            enum target_register this_t_r = stack_op_pb_entry_table[i].reg;
+
+            if (get_reg_size(this_t_r) == REG_SIZE_16) {
+                /* REG_S in this table is a special value that flips to REG_U in
+                   the case where the function is called with REG_S target
+                   register. This is because the psh instruction cannot push
+                   its own stack pointer */
+                this_t_r == REG_S && reg_stack == REG_S ? this_t_r = REG_U :
+                    REG_S;
+                uint16 val = get_reg_value_16(this_t_r);
+
+                push_word_to_stack(reg_stack, val);
+                extra_cycles += 2;
+            }
+            else if (get_reg_size(this_t_r) == REG_SIZE_8) {
+                uint8 val = get_reg_value_8(this_t_r);
+
+                push_byte_to_stack(reg_stack, val);
+                extra_cycles++;
+            }
+        }
+    }
+
+    return extra_cycles;
+}
+
+uint8 pull_registers_from_stack(uint8 reg_field, enum target_register reg_stack) {
+    /* Utility function meant to centralize the push / pull order of registers
+       to and from the stack. Used for interrupts, RTI, PSH, etc.
+       The reg_field identifies which registers to push. The reg_context enables
+       REG_U to be switched to REG_S when we are invoked in the context of
+       the latter. */
+
+    /* 1 cycle per byte pushed */
+    uint8 extra_cycles = 0;
+
+    /* number of possible registers to pull - it's really 8 but
+       the REG_S value is special and needs to toggle since can't pull own
+       stack pointer */
+    int sizeof_table = sizeof(stack_op_pb_entry_table) /
+        sizeof(struct stack_op_postbyte_entry);
+    /* pull all necessary registers as requested in the postbyte according
+       to the 6809 spec. */
+    for (int i = 0; i < sizeof_table; i++) {
+        if (reg_field & (1 << i)) {
+            enum target_register this_t_r = stack_op_pb_entry_table[i].reg;
+
+            if (get_reg_size(this_t_r) == REG_SIZE_16) {
+                /* REG_S in this table is a special value that flips to REG_U in
+                   the case where the function is called with REG_S target
+                   register. This is because the pul instruction cannot pull
+                   its own stack pointer */
+                this_t_r == REG_S && reg_stack == REG_S ? this_t_r = REG_U :
+                    REG_S;
+
+                uint16 this_val = pull_word_from_stack(reg_stack);
+                set_reg_value_16(this_t_r, this_val);
+
+                extra_cycles += 2;
+            }
+            else if (get_reg_size(this_t_r) == REG_SIZE_8) {
+                uint8 this_val = pull_byte_from_stack(reg_stack);
+                set_reg_value_8(this_t_r, this_val);
+
+                extra_cycles++;
+            }
+        }
+    }
+
+    return extra_cycles;
 }
 
 uint16 decode_indexed_addressing_postbyte(uint8* out_extra_cycles) {

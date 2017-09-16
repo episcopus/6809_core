@@ -8,18 +8,6 @@ extern struct opcode_def opcode_ext_x10_table[];
 extern struct opcode_def opcode_ext_x11_table[];
 extern struct cpu_state e_cpu_context;
 
-/* This struct captures the inverse order stacking order for psh operations */
-const struct stack_op_postbyte_entry stack_op_pb_entry_table[] = {
-    { REG_CC, 0 },
-    { REG_A, 1 },
-    { REG_B, 2 },
-    { REG_DP, 3 },
-    { REG_X, 4 },
-    { REG_Y, 5 },
-    { REG_S, 6 },
-    { REG_PC, 7 }
-};
-
 /* Add Accumulator B to Index Register X */
 int abx(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     (void) t_r; /* unused */
@@ -1277,37 +1265,7 @@ int psh(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     /* baseline figure for clock cycles, each register pushed is one
        additional cycle */
     uint8 cycles = opcode_table[opcode].cycle_count;
-
-    /* number of possible registers to push - it's really 8 but
-       the REG_S value is special and needs to toggle since can't push own
-       stack pointer */
-    int sizeof_table = sizeof(stack_op_pb_entry_table) /
-        sizeof(struct stack_op_postbyte_entry);
-    /* push all necessary registers as requested in the postbyte according
-       to the 6809 spec. */
-    for (int i = sizeof_table - 1; i >= 0; i--) {
-        if (postbyte & (1 << i)) {
-            enum target_register this_t_r = stack_op_pb_entry_table[i].reg;
-
-            if (get_reg_size(this_t_r) == REG_SIZE_16) {
-                /* REG_S in this table is a special value that flips to REG_U in
-                   the case where the function is called with REG_S target
-                   register. This is because the psh instruction cannot push
-                   its own stack pointer */
-                this_t_r == REG_S && t_r == REG_S ? this_t_r = REG_U : REG_S;
-                uint16 val = get_reg_value_16(this_t_r);
-
-                push_word_to_stack(t_r, val);
-                cycles += 2;
-            }
-            else if (get_reg_size(this_t_r) == REG_SIZE_8) {
-                uint8 val = get_reg_value_8(this_t_r);
-
-                push_byte_to_stack(t_r, val);
-                cycles++;
-            }
-        }
-    }
+    extra_cycles += push_registers_to_stack(postbyte, t_r);
 
     return cycles + extra_cycles;
 }
@@ -1322,38 +1280,7 @@ int pul(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     /* baseline figure for clock cycles, each register pushed is one
        additional cycle */
     uint8 cycles = opcode_table[opcode].cycle_count;
-
-    /* number of possible registers to pull - it's really 8 but
-       the REG_S value is special and needs to toggle since can't pull own
-       stack pointer */
-    int sizeof_table = sizeof(stack_op_pb_entry_table) /
-        sizeof(struct stack_op_postbyte_entry);
-    /* pull all necessary registers as requested in the postbyte according
-       to the 6809 spec. */
-    for (int i = 0; i < sizeof_table; i++) {
-        if (postbyte & (1 << i)) {
-            enum target_register this_t_r = stack_op_pb_entry_table[i].reg;
-
-            if (get_reg_size(this_t_r) == REG_SIZE_16) {
-                /* REG_S in this table is a special value that flips to REG_U in
-                   the case where the function is called with REG_S target
-                   register. This is because the pul instruction cannot pull
-                   its own stack pointer */
-                this_t_r == REG_S && t_r == REG_S ? this_t_r = REG_U : REG_S;
-
-                uint16 this_val = pull_word_from_stack(t_r);
-                set_reg_value_16(this_t_r, this_val);
-
-                cycles += 2;
-            }
-            else if (get_reg_size(this_t_r) == REG_SIZE_8) {
-                uint8 this_val = pull_byte_from_stack(t_r);
-                set_reg_value_8(this_t_r, this_val);
-
-                cycles++;
-            }
-        }
-    }
+    extra_cycles += pull_registers_from_stack(postbyte, t_r);
 
     return cycles + extra_cycles;
 }

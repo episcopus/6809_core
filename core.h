@@ -25,6 +25,8 @@ void push_byte_to_stack(enum target_register t_r, uint8 data);
 uint8 pull_byte_from_stack(enum target_register t_r);
 void push_word_to_stack(enum target_register t_r, uint16 data);
 uint16 pull_word_from_stack(enum target_register t_r);
+uint8 push_registers_to_stack(uint8 reg_field, enum target_register reg_stack);
+uint8 pull_registers_from_stack(uint8 reg_field, enum target_register reg_stack);
 
 uint16 decode_indexed_addressing_postbyte();
 enum target_register decode_register_from_indexed_postbyte(uint8 postbyte);
