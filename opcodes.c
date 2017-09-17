@@ -1372,6 +1372,9 @@ int rti(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;
     uint8 cycles = opcode_table[opcode].cycle_count;
 
+    /* Note: restoring the CC also clears any interrupt inhibit mask which would
+       be set by interrupt routine thereby making program eligible for interrupts
+       again */
     set_reg_value_8(REG_CC, pull_byte_from_stack(REG_S));
     /* The e flag will have been set in the case of the slower interrupt mode
        that pushes the full cpu state */

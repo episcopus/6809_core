@@ -45,6 +45,9 @@ void core_init_test(void **state) {
     assert_int_equal(e_cpu_context.cc.v, 0);
     assert_int_equal(e_cpu_context.cc.c, 0);
     assert_int_equal(e_cpu_context.cycle_count, 0);
+    assert_int_equal(e_cpu_context.irq, 0);
+    assert_int_equal(e_cpu_context.firq, 0);
+    assert_int_equal(e_cpu_context.nmi, 0);
 
     for (int i = 0; i < MEMORY_SIZE; i++) {
         assert_int_equal(e_cpu_context.memory[i], 0);
@@ -1113,6 +1116,91 @@ void run_cycles_notimpl_test(void **state) {
     load_memory(test_memory, 1);
 
     expect_assert_failure(run_cycles(1));
+}
+
+void process_interrupts_nmi_test(void **state) {
+    (void) state; /* unused */
+
+    set_reg_value_8(REG_A, 0x2);
+    set_reg_value_16(REG_PC, 0x100);
+
+    uint8 code_bytes[] = {
+        OP_INCA,
+        OP_INCA,
+        OP_INCA
+    };
+    uint8 nmi_bytes[] = {
+        OP_CLRA,
+        OP_RTI
+    };
+    struct mem_loader_def test_memory[] = {
+        { 0x100, code_bytes, 3 },
+        { NMI_VECTOR, nmi_bytes, 2 }
+    };
+    load_memory(test_memory, 2);
+
+    /* Interrupt processor execution after the second INCA */
+    int cycles = run_cycles(opcode_table[OP_INCA].cycle_count);
+    cycles += run_cycles(opcode_table[OP_INCA].cycle_count);
+
+    assert_int_equal(get_reg_value_8(REG_A), 0x4);
+    e_cpu_context.nmi = 1;
+    cycles += run_cycles(opcode_table[OP_INCA].cycle_count);
+
+    /* Two INCA's at 2 cycles each plus 12 cycles for all registers being
+       pushed */
+    assert_int_equal(cycles, 16);
+    assert_int_equal(get_reg_value_16(REG_PC), NMI_VECTOR);
+}
+
+void process_interrupts_nmi_with_rti_test(void **state) {
+    (void) state; /* unused */
+
+    set_reg_value_8(REG_A, 0x2);
+    set_reg_value_16(REG_PC, 0x100);
+
+    uint8 code_bytes[] = {
+        OP_INCA,
+        OP_INCA,
+        OP_INCA
+    };
+    uint8 nmi_bytes[] = {
+        OP_CLRA,
+        OP_RTI
+    };
+    struct mem_loader_def test_memory[] = {
+        { 0x100, code_bytes, 3 },
+        { NMI_VECTOR, nmi_bytes, 2 }
+    };
+    load_memory(test_memory, 2);
+
+    /* Interrupt processor execution after the second INCA */
+    int cycles = run_cycles(opcode_table[OP_INCA].cycle_count);
+    cycles += run_cycles(opcode_table[OP_INCA].cycle_count);
+
+    assert_int_equal(get_reg_value_8(REG_A), 0x4);
+    e_cpu_context.nmi = 1;
+    cycles += run_cycles(opcode_table[OP_INCA].cycle_count);
+
+    /* Two INCA's at 2 cycles each plus 12 cycles for all registers being
+       pushed */
+    assert_int_equal(cycles, 16);
+    assert_int_equal(get_reg_value_16(REG_PC), NMI_VECTOR);
+
+    /* Interrupt routine clears A but we expect its value to be restored
+       by the RTI instruction */
+    cycles += run_cycles(opcode_table[OP_CLRA].cycle_count);
+    assert_int_equal(get_reg_value_8(REG_A), 0);
+
+    cycles += run_cycles(opcode_table[OP_RTI].cycle_count);
+    assert_int_equal(get_reg_value_16(REG_PC), 0x100 + 2);
+    assert_int_equal(get_reg_value_8(REG_A), 0x4);
+
+    cycles += run_cycles(opcode_table[OP_INCA].cycle_count);
+    /* Previous value (16), plus one CLRA (2), one RTI w/ e enabled (15)
+       and finally one INCA (2) = 35 */
+    assert_int_equal(cycles, 35);
+    assert_int_equal(get_reg_value_8(REG_A), 0x5);
 }
 
 void decode_source_target_postbyte_test(void **state) {

@@ -42,6 +42,11 @@ struct cpu_state {
     uint8* memory; /* Memory map */
 
     uint32 cycle_count;
+
+    /* Interrupts, are !=0 when the line is low, i.e. interrupt is active */
+    uint8 irq;
+    uint8 firq;
+    uint8 nmi;
 };
 
 enum addressing_mode {

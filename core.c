@@ -50,6 +50,9 @@ void core_init() {
         e_cpu_context.memory[i] = 0;
     }
     e_cpu_context.cycle_count = 0;
+    e_cpu_context.irq = 0;
+    e_cpu_context.firq = 0;
+    e_cpu_context.nmi = 0;
 
     return;
 }
@@ -713,14 +716,58 @@ uint32 run_cycles(uint32 wanted_cycles) {
     uint32 completed_cycles = 0;
 
     while (completed_cycles < wanted_cycles) {
-        uint8 opcode = e_cpu_context.memory[e_cpu_context.pc];
-        struct opcode_def this_opcode = opcode_table[opcode];
-        assert(strncmp("NOTIMPL", this_opcode.instruction, 7) != 0);
+        int this_completed_cycles = 0;
 
-        int this_completed_cycles = this_opcode.func(opcode, this_opcode.t_r,
-                                             this_opcode.mode);
+        if (e_cpu_context.nmi || e_cpu_context.firq ||
+            e_cpu_context.irq) {
+            this_completed_cycles += process_interrupts();
+        }
+        else {
+            uint8 opcode = e_cpu_context.memory[e_cpu_context.pc];
+            struct opcode_def this_opcode = opcode_table[opcode];
+            assert(strncmp("NOTIMPL", this_opcode.instruction, 7) != 0);
+
+             this_completed_cycles += this_opcode.func(opcode, this_opcode.t_r,
+                                                       this_opcode.mode);
+        }
+
         e_cpu_context.cycle_count += this_completed_cycles;
         completed_cycles += this_completed_cycles;
+    }
+
+    return completed_cycles;
+}
+
+uint32 process_interrupts() {
+    uint32 completed_cycles = 0;
+
+    if (e_cpu_context.nmi) {
+        /* Push all registers, inhibit FIRQ and IRQ and set up interrupt
+           vector */
+        e_cpu_context.cc.e = 1;
+        completed_cycles += push_registers_to_stack(0xFF, REG_S);
+        e_cpu_context.cc.i = 1;
+        e_cpu_context.cc.f = 1;
+        set_reg_value_16(REG_PC, NMI_VECTOR);
+        /* This interrupt is only edge sensitive therefore will only activate
+           once. */
+        e_cpu_context.nmi = 0;
+    }
+    else if (e_cpu_context.firq && !e_cpu_context.cc.f) {
+        /* Fast interrupt only pushes PC and CC and inhibits further
+           IRQ and FIRQ to occur */
+        e_cpu_context.cc.e = 0;
+        completed_cycles += push_registers_to_stack(0x81, REG_S);
+        e_cpu_context.cc.i = 1;
+        e_cpu_context.cc.f = 1;
+        set_reg_value_16(REG_PC, FIRQ_VECTOR);
+    }
+    else if (e_cpu_context.irq && !e_cpu_context.cc.i) {
+        /* IRQ pushes all the registers, inhibits further IRQ's */
+        e_cpu_context.cc.e = 1;
+        completed_cycles += push_registers_to_stack(0xFF, REG_S);
+        e_cpu_context.cc.i = 1;
+        set_reg_value_16(REG_PC, IRQ_VECTOR);
     }
 
     return completed_cycles;

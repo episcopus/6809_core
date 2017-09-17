@@ -12,6 +12,15 @@
 #define S_POINTER 0x3000
 #define U_POINTER 0x4000
 
+/* Interrupt vector / word pointer addresses */
+#define RESET_VECTOR 0xFFFE
+#define NMI_VECTOR   0xFFFC
+#define SWI_VECTOR   0xFFFA
+#define IRQ_VECTOR   0xFFF8
+#define FIRQ_VECTOR  0xFFF6
+#define SWI2_VECTOR  0xFFF4
+#define SWI3_VECTOR  0xFFF2
+
 /* For cmocka, replace regular assert with mock_assert() which allows us to
    test for assert()'s in tests. */
 /* #ifdef UNIT_TESTING */

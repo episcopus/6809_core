@@ -27,6 +27,8 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(run_cycles_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(run_cycles_multiple_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(run_cycles_notimpl_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(process_interrupts_nmi_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(process_interrupts_nmi_with_rti_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(read_byte_from_memory_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(read_word_from_memory_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(read_byte_handler_immedidate_test, test_setup, test_teardown),
