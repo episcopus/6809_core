@@ -1186,6 +1186,8 @@ void process_interrupts_nmi_with_rti_test(void **state) {
        pushed */
     assert_int_equal(cycles, 16);
     assert_int_equal(get_reg_value_16(REG_PC), NMI_VECTOR);
+    assert_int_equal(e_cpu_context.cc.f, 1);
+    assert_int_equal(e_cpu_context.cc.i, 1);
 
     /* Interrupt routine clears A but we expect its value to be restored
        by the RTI instruction */
@@ -1201,6 +1203,107 @@ void process_interrupts_nmi_with_rti_test(void **state) {
        and finally one INCA (2) = 35 */
     assert_int_equal(cycles, 35);
     assert_int_equal(get_reg_value_8(REG_A), 0x5);
+    assert_int_equal(e_cpu_context.cc.f, 0);
+    assert_int_equal(e_cpu_context.cc.i, 0);
+}
+
+void process_interrupts_firq_test(void **state) {
+    (void) state; /* unused */
+
+    set_reg_value_8(REG_A, 0x2);
+    set_reg_value_16(REG_PC, 0x100);
+
+    uint8 code_bytes[] = {
+        OP_INCA,
+        OP_INCA,
+        OP_INCA
+    };
+    uint8 firq_bytes[] = {
+        OP_CLRA,
+        OP_RTI
+    };
+    struct mem_loader_def test_memory[] = {
+        { 0x100, code_bytes, 3 },
+        { FIRQ_VECTOR, firq_bytes, 2 }
+    };
+    load_memory(test_memory, 2);
+
+    /* Interrupt processor execution after the second INCA */
+    int cycles = run_cycles(opcode_table[OP_INCA].cycle_count);
+    cycles += run_cycles(opcode_table[OP_INCA].cycle_count);
+
+    assert_int_equal(get_reg_value_8(REG_A), 0x4);
+    e_cpu_context.firq = 1;
+    cycles += run_cycles(opcode_table[OP_INCA].cycle_count);
+
+    /* Two INCA's at 2 cycles each plus 3 cycles for PC and CC registers being
+       pushed */
+    assert_int_equal(cycles, 7);
+    assert_int_equal(get_reg_value_16(REG_PC), FIRQ_VECTOR);
+    assert_int_equal(e_cpu_context.cc.f, 1);
+    assert_int_equal(e_cpu_context.cc.i, 1);
+}
+
+void process_interrupts_firq_with_rti_test(void **state) {
+    (void) state; /* unused */
+
+    set_reg_value_8(REG_A, 0x2);
+    set_reg_value_16(REG_PC, 0x100);
+
+    uint8 code_bytes[] = {
+        OP_INCA,
+        OP_INCA,
+        OP_INCA
+    };
+    uint8 firq_bytes[] = {
+        OP_CLRA,
+        OP_RTI
+    };
+    struct mem_loader_def test_memory[] = {
+        { 0x100, code_bytes, 3 },
+        { FIRQ_VECTOR, firq_bytes, 2 }
+    };
+    load_memory(test_memory, 2);
+
+    /* Interrupt processor execution after the second INCA */
+    int cycles = run_cycles(opcode_table[OP_INCA].cycle_count);
+    cycles += run_cycles(opcode_table[OP_INCA].cycle_count);
+
+    assert_int_equal(get_reg_value_8(REG_A), 0x4);
+    assert_int_equal(e_cpu_context.cc.f, 0);
+    assert_int_equal(e_cpu_context.cc.i, 0);
+    e_cpu_context.firq = 1;
+    cycles += run_cycles(opcode_table[OP_INCA].cycle_count);
+
+    /* Two INCA's at 2 cycles each plus 3 cycles for PC and CC registers being
+       pushed */
+    assert_int_equal(cycles, 7);
+    assert_int_equal(get_reg_value_16(REG_PC), FIRQ_VECTOR);
+    /* FIRQ and IRQ are masked during FIRQ execution */
+    assert_int_equal(e_cpu_context.cc.f, 1);
+    assert_int_equal(e_cpu_context.cc.i, 1);
+    /* Turn off interrupt so it doesn't get triggered again for the test */
+    e_cpu_context.firq = 0;
+
+    /* Interrupt routine clears A but we expect its value to not be restored
+       by the RTI instruction */
+    cycles += run_cycles(opcode_table[OP_CLRA].cycle_count);
+    assert_int_equal(e_cpu_context.cc.e, 0);
+    assert_int_equal(cycles, 9);
+    assert_int_equal(get_reg_value_8(REG_A), 0);
+
+    cycles += run_cycles(opcode_table[OP_RTI].cycle_count);
+    assert_int_equal(cycles, 15);
+    assert_int_equal(get_reg_value_16(REG_PC), 0x100 + 2);
+    assert_int_equal(get_reg_value_8(REG_A), 0);
+
+    cycles += run_cycles(opcode_table[OP_INCA].cycle_count);
+    /* Previous value (7), plus one CLRA (2), one RTI w/o e enabled (6)
+       and finally one INCA (2) = 17 */
+    assert_int_equal(cycles, 17);
+    assert_int_equal(get_reg_value_8(REG_A), 0x1);
+    assert_int_equal(e_cpu_context.cc.f, 0);
+    assert_int_equal(e_cpu_context.cc.i, 0);
 }
 
 void decode_source_target_postbyte_test(void **state) {

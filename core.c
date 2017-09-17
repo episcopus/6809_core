@@ -720,17 +720,21 @@ uint32 run_cycles(uint32 wanted_cycles) {
 
         if (e_cpu_context.nmi || e_cpu_context.firq ||
             e_cpu_context.irq) {
-            this_completed_cycles += process_interrupts();
-        }
-        else {
-            uint8 opcode = e_cpu_context.memory[e_cpu_context.pc];
-            struct opcode_def this_opcode = opcode_table[opcode];
-            assert(strncmp("NOTIMPL", this_opcode.instruction, 7) != 0);
-
-             this_completed_cycles += this_opcode.func(opcode, this_opcode.t_r,
-                                                       this_opcode.mode);
+            this_completed_cycles = process_interrupts();
+            e_cpu_context.cycle_count += this_completed_cycles;
+            completed_cycles += this_completed_cycles;
         }
 
+        if (completed_cycles >= wanted_cycles) {
+            break;
+        }
+
+        uint8 opcode = e_cpu_context.memory[e_cpu_context.pc];
+        struct opcode_def this_opcode = opcode_table[opcode];
+        assert(strncmp("NOTIMPL", this_opcode.instruction, 7) != 0);
+
+        this_completed_cycles = this_opcode.func(opcode, this_opcode.t_r,
+                                                  this_opcode.mode);
         e_cpu_context.cycle_count += this_completed_cycles;
         completed_cycles += this_completed_cycles;
     }
