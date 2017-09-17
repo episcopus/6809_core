@@ -66,6 +66,8 @@ void process_interrupts_nmi_test(void **state);
 void process_interrupts_nmi_with_rti_test(void **state);
 void process_interrupts_firq_test(void **state);
 void process_interrupts_firq_with_rti_test(void **state);
+void process_interrupts_irq_test(void **state);
+void process_interrupts_irq_with_rti_test(void **state);
 void decode_source_target_postbyte_test(void **state);
 void decode_source_target_postbyte_2_test(void **state);
 void decode_source_target_postbyte_invalid_test(void **state);

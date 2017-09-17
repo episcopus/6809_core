@@ -752,7 +752,7 @@ uint32 process_interrupts() {
         completed_cycles += push_registers_to_stack(0xFF, REG_S);
         e_cpu_context.cc.i = 1;
         e_cpu_context.cc.f = 1;
-        set_reg_value_16(REG_PC, NMI_VECTOR);
+        set_reg_value_16(REG_PC, read_word_from_memory(NMI_VECTOR));
         /* This interrupt is only edge sensitive therefore will only activate
            once. */
         e_cpu_context.nmi = 0;
@@ -764,14 +764,14 @@ uint32 process_interrupts() {
         completed_cycles += push_registers_to_stack(0x81, REG_S);
         e_cpu_context.cc.i = 1;
         e_cpu_context.cc.f = 1;
-        set_reg_value_16(REG_PC, FIRQ_VECTOR);
+        set_reg_value_16(REG_PC, read_word_from_memory(FIRQ_VECTOR));
     }
     else if (e_cpu_context.irq && !e_cpu_context.cc.i) {
         /* IRQ pushes all the registers, inhibits further IRQ's */
         e_cpu_context.cc.e = 1;
         completed_cycles += push_registers_to_stack(0xFF, REG_S);
         e_cpu_context.cc.i = 1;
-        set_reg_value_16(REG_PC, IRQ_VECTOR);
+        set_reg_value_16(REG_PC, read_word_from_memory(IRQ_VECTOR));
     }
 
     return completed_cycles;

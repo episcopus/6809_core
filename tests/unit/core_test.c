@@ -1133,9 +1133,10 @@ void process_interrupts_nmi_test(void **state) {
         OP_CLRA,
         OP_RTI
     };
+    write_word_to_memory(NMI_VECTOR, 0x200);
     struct mem_loader_def test_memory[] = {
         { 0x100, code_bytes, 3 },
-        { NMI_VECTOR, nmi_bytes, 2 }
+        { 0x200, nmi_bytes, 2 }
     };
     load_memory(test_memory, 2);
 
@@ -1150,7 +1151,7 @@ void process_interrupts_nmi_test(void **state) {
     /* Two INCA's at 2 cycles each plus 12 cycles for all registers being
        pushed */
     assert_int_equal(cycles, 16);
-    assert_int_equal(get_reg_value_16(REG_PC), NMI_VECTOR);
+    assert_int_equal(get_reg_value_16(REG_PC), 0x200);
 }
 
 void process_interrupts_nmi_with_rti_test(void **state) {
@@ -1168,9 +1169,10 @@ void process_interrupts_nmi_with_rti_test(void **state) {
         OP_CLRA,
         OP_RTI
     };
+    write_word_to_memory(NMI_VECTOR, 0x200);
     struct mem_loader_def test_memory[] = {
         { 0x100, code_bytes, 3 },
-        { NMI_VECTOR, nmi_bytes, 2 }
+        { 0x200, nmi_bytes, 2 }
     };
     load_memory(test_memory, 2);
 
@@ -1185,7 +1187,7 @@ void process_interrupts_nmi_with_rti_test(void **state) {
     /* Two INCA's at 2 cycles each plus 12 cycles for all registers being
        pushed */
     assert_int_equal(cycles, 16);
-    assert_int_equal(get_reg_value_16(REG_PC), NMI_VECTOR);
+    assert_int_equal(get_reg_value_16(REG_PC), 0x200);
     assert_int_equal(e_cpu_context.cc.f, 1);
     assert_int_equal(e_cpu_context.cc.i, 1);
 
@@ -1222,9 +1224,10 @@ void process_interrupts_firq_test(void **state) {
         OP_CLRA,
         OP_RTI
     };
+    write_word_to_memory(FIRQ_VECTOR, 0x200);
     struct mem_loader_def test_memory[] = {
         { 0x100, code_bytes, 3 },
-        { FIRQ_VECTOR, firq_bytes, 2 }
+        { 0x200, firq_bytes, 2 }
     };
     load_memory(test_memory, 2);
 
@@ -1239,7 +1242,7 @@ void process_interrupts_firq_test(void **state) {
     /* Two INCA's at 2 cycles each plus 3 cycles for PC and CC registers being
        pushed */
     assert_int_equal(cycles, 7);
-    assert_int_equal(get_reg_value_16(REG_PC), FIRQ_VECTOR);
+    assert_int_equal(get_reg_value_16(REG_PC), 0x200);
     assert_int_equal(e_cpu_context.cc.f, 1);
     assert_int_equal(e_cpu_context.cc.i, 1);
 }
@@ -1259,9 +1262,10 @@ void process_interrupts_firq_with_rti_test(void **state) {
         OP_CLRA,
         OP_RTI
     };
+    write_word_to_memory(FIRQ_VECTOR, 0x200);
     struct mem_loader_def test_memory[] = {
         { 0x100, code_bytes, 3 },
-        { FIRQ_VECTOR, firq_bytes, 2 }
+        { 0x200, firq_bytes, 2 }
     };
     load_memory(test_memory, 2);
 
@@ -1278,7 +1282,7 @@ void process_interrupts_firq_with_rti_test(void **state) {
     /* Two INCA's at 2 cycles each plus 3 cycles for PC and CC registers being
        pushed */
     assert_int_equal(cycles, 7);
-    assert_int_equal(get_reg_value_16(REG_PC), FIRQ_VECTOR);
+    assert_int_equal(get_reg_value_16(REG_PC), 0x200);
     /* FIRQ and IRQ are masked during FIRQ execution */
     assert_int_equal(e_cpu_context.cc.f, 1);
     assert_int_equal(e_cpu_context.cc.i, 1);
@@ -1302,6 +1306,108 @@ void process_interrupts_firq_with_rti_test(void **state) {
        and finally one INCA (2) = 17 */
     assert_int_equal(cycles, 17);
     assert_int_equal(get_reg_value_8(REG_A), 0x1);
+    assert_int_equal(e_cpu_context.cc.f, 0);
+    assert_int_equal(e_cpu_context.cc.i, 0);
+}
+
+void process_interrupts_irq_test(void **state) {
+    (void) state; /* unused */
+
+    set_reg_value_8(REG_A, 0x2);
+    set_reg_value_16(REG_PC, 0x100);
+
+    uint8 code_bytes[] = {
+        OP_INCA,
+        OP_INCA,
+        OP_INCA
+    };
+    uint8 irq_bytes[] = {
+        OP_CLRA,
+        OP_RTI
+    };
+    write_word_to_memory(IRQ_VECTOR, 0x200);
+    struct mem_loader_def test_memory[] = {
+        { 0x100, code_bytes, 3 },
+        { 0x200, irq_bytes, 2 }
+    };
+    load_memory(test_memory, 2);
+
+    /* Interrupt processor execution after the second INCA */
+    int cycles = run_cycles(opcode_table[OP_INCA].cycle_count);
+    cycles += run_cycles(opcode_table[OP_INCA].cycle_count);
+
+    assert_int_equal(get_reg_value_8(REG_A), 0x4);
+    e_cpu_context.irq = 1;
+    cycles += run_cycles(opcode_table[OP_INCA].cycle_count);
+
+    /* Two INCA's at 2 cycles each plus 12 cycles for all registers being
+       pushed */
+    assert_int_equal(cycles, 16);
+    assert_int_equal(get_reg_value_16(REG_PC), 0x200);
+    assert_int_equal(e_cpu_context.cc.f, 0);
+    assert_int_equal(e_cpu_context.cc.i, 1);
+}
+
+void process_interrupts_irq_with_rti_test(void **state) {
+    (void) state; /* unused */
+
+    set_reg_value_8(REG_A, 0x2);
+    set_reg_value_16(REG_PC, 0x100);
+
+    uint8 code_bytes[] = {
+        OP_INCA,
+        OP_INCA,
+        OP_INCA
+    };
+    uint8 irq_bytes[] = {
+        OP_CLRA,
+        OP_RTI
+    };
+    write_word_to_memory(IRQ_VECTOR, 0x200);
+    struct mem_loader_def test_memory[] = {
+        { 0x100, code_bytes, 3 },
+        { 0x200, irq_bytes, 2 }
+    };
+    load_memory(test_memory, 2);
+
+    /* Interrupt processor execution after the second INCA */
+    int cycles = run_cycles(opcode_table[OP_INCA].cycle_count);
+    cycles += run_cycles(opcode_table[OP_INCA].cycle_count);
+
+    assert_int_equal(get_reg_value_8(REG_A), 0x4);
+    assert_int_equal(e_cpu_context.cc.f, 0);
+    assert_int_equal(e_cpu_context.cc.i, 0);
+    e_cpu_context.irq = 1;
+    cycles += run_cycles(opcode_table[OP_INCA].cycle_count);
+
+    /* Two INCA's at 2 cycles each plus 12 cycles for all registers being
+       pushed */
+    assert_int_equal(cycles, 16);
+    assert_int_equal(get_reg_value_16(REG_PC), 0x200);
+    /* IRQ is masked during IRQ execution, not FIRQ */
+    assert_int_equal(e_cpu_context.cc.f, 0);
+    assert_int_equal(e_cpu_context.cc.i, 1);
+    /* Turn off interrupt so it doesn't get triggered again for the test */
+    e_cpu_context.irq = 0;
+
+    /* Interrupt routine clears A but we expect its value to be restored
+       by the RTI instruction */
+    cycles += run_cycles(opcode_table[OP_CLRA].cycle_count);
+    assert_int_equal(e_cpu_context.cc.e, 1);
+    assert_int_equal(cycles, 18);
+    assert_int_equal(get_reg_value_8(REG_A), 0);
+
+    cycles += run_cycles(opcode_table[OP_RTI].cycle_count);
+    /* Previous value (16), plus one CLRA (2), one RTI w/ e enabled (15) */
+    assert_int_equal(cycles, 33);
+    assert_int_equal(get_reg_value_16(REG_PC), 0x100 + 2);
+    assert_int_equal(get_reg_value_8(REG_A), 4);
+
+    cycles += run_cycles(opcode_table[OP_INCA].cycle_count);
+    /* Previous value (16), plus one CLRA (2), one RTI w/ e enabled (15)
+       and finally one INCA (2) = 35 */
+    assert_int_equal(cycles, 35);
+    assert_int_equal(get_reg_value_8(REG_A), 0x5);
     assert_int_equal(e_cpu_context.cc.f, 0);
     assert_int_equal(e_cpu_context.cc.i, 0);
 }
