@@ -40,6 +40,7 @@ int psh(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int rol(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int ror(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int rti(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
+int rts(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int sbc(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int sex(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int sub(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);

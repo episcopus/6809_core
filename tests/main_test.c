@@ -262,6 +262,7 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(pulu_nothing_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(rti_basic_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(rti_basic_firq_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(rts_basic_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(sbca_immediate_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(sbcb_immediate_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(sbca_carry_test, test_setup, test_teardown),

@@ -188,6 +188,7 @@ void pulu_nothing_test(void ** state);
 void puls_nothing_test(void ** state);
 void rti_basic_test(void ** state);
 void rti_basic_firq_test(void ** state);
+void rts_basic_test(void ** state);
 void sbca_immediate_test(void ** state);
 void sbcb_immediate_test(void ** state);
 void sbca_carry_test(void ** state);

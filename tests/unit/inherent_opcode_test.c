@@ -1355,6 +1355,32 @@ void rti_basic_firq_test(void ** state) {
     assert_int_equal(0x100, get_reg_value_16(REG_S));
 }
 
+void rts_basic_test(void ** state) {
+    (void) state; /* unused */
+
+    set_reg_value_16(REG_PC, 0x100);
+    set_reg_value_16(REG_S, 0x200);
+
+    /* Simulate a call to a subroutine */
+    push_word_to_stack(REG_S, get_reg_value_16(REG_PC));
+    set_reg_value_16(REG_PC, 0x300);
+
+    uint8 code_bytes[] = {
+        OP_RTS
+    };
+    struct mem_loader_def test_memory[] = {
+        { 0x300, code_bytes, 1 },
+    };
+    load_memory(test_memory, 1);
+
+    int cycles = run_cycles(opcode_table[OP_RTS].cycle_count);
+    uint16 post_pc = e_cpu_context.pc;
+
+    assert_int_equal(post_pc, 0x100);
+    assert_int_equal(cycles, opcode_table[OP_RTS].cycle_count);
+    assert_int_equal(0x200, get_reg_value_16(REG_S));
+}
+
 void sex_test(void **state) {
     (void) state; /* unused */
 
