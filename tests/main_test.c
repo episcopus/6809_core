@@ -319,6 +319,7 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(ldu_direct_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(ldx_direct_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(ldy_direct_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(lsr_direct_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(neg_direct_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(ora_direct_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(orb_direct_test, test_setup, test_teardown),

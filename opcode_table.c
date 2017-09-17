@@ -7,7 +7,7 @@ const struct opcode_def opcode_table[] = {
     /* 0x1 */  { "NOTIMPL",      0x1,             2,  REG_NONE, INHERENT,  notimpl  },
     /* 0x2 */  { "NOTIMPL",      0x2,             2,  REG_NONE, INHERENT,  notimpl  },
     /* 0x3 */  { "COM",          0x3,             6,  REG_NONE, DIRECT,    com      },
-    /* 0x4 */  { "NOTIMPL",      0x4,             2,  REG_NONE, INHERENT,  notimpl  },
+    /* 0x4 */  { "LSR",          OP_LSR_D,        6,  REG_NONE, DIRECT,    lsr      },
     /* 0x5 */  { "NOTIMPL",      0x5,             2,  REG_NONE, INHERENT,  notimpl  },
     /* 0x6 */  { "ROR",          OP_ROR_D,        6,  REG_NONE, DIRECT,    ror      },
     /* 0x7 */  { "ASR",          OP_ASR_D,        6,  REG_NONE, DIRECT,    asr      },

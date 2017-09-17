@@ -319,6 +319,7 @@ void lds_direct_test(void **state);
 void ldu_direct_test(void **state);
 void ldx_direct_test(void **state);
 void ldy_direct_test(void **state);
+void lsr_direct_test(void **state);
 void neg_direct_test(void **state);
 void ora_direct_test(void **state);
 void orb_direct_test(void **state);
