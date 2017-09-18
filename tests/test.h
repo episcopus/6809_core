@@ -379,6 +379,7 @@ void cmpu_extended_nocarry_test(void **state);
 void cmpx_extended_overflow_test(void **state);
 void cmpy_extended_zero_test(void **state);
 void com_extended_test(void **state);
+void lsr_extended_test(void **state);
 void dec_extended_test(void **state);
 void eora_extended_test(void **state);
 void eorb_extended_test(void **state);

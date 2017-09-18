@@ -134,6 +134,7 @@ extern void mock_assert(const int result, const char* const expression,
 #define OP_CLR_I        0x6F
 #define OP_NEG_E        0x70
 #define OP_COM_E        0x73
+#define OP_LSR_E        0x74
 #define OP_ROR_E        0x76
 #define OP_ASR_E        0x77
 #define OP_ASL_E        0x78
