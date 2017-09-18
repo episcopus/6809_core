@@ -26,6 +26,12 @@
 #define HS_SYNC 0x1
 #define HS_CWAI 0x2
 
+enum swi_type {
+    SWI_1,
+    SWI_2,
+    SWI_3
+};
+
 /* For cmocka, replace regular assert with mock_assert() which allows us to
    test for assert()'s in tests. */
 /* #ifdef UNIT_TESTING */
@@ -279,6 +285,7 @@ extern void mock_assert(const int result, const char* const expression,
 #define OP_LBLT   0x2D
 #define OP_LBGT   0x2E
 #define OP_LBLE   0x2F
+#define OP_SWI2   0x3F
 #define OP_CMPD   0x83
 #define OP_CMPD_D 0x93
 #define OP_CMPY_D 0x9C
@@ -304,6 +311,7 @@ extern void mock_assert(const int result, const char* const expression,
 
 /* Two byte opcodes - those have 0x11 as leading byte */
 
+#define OP_SWI3   0x3F
 #define OP_CMPS   0x8C
 #define OP_CMPU   0x83
 #define OP_CMPU_D 0x93

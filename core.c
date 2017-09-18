@@ -803,6 +803,38 @@ uint32 process_interrupts() {
     return completed_cycles;
 }
 
+uint32 process_swi(enum swi_type swi) {
+    uint32 swi_vector = SWI_VECTOR;
+    switch (swi) {
+    case SWI_1:
+        swi_vector = SWI_VECTOR;
+        break;
+    case SWI_2:
+        swi_vector = SWI2_VECTOR;
+        break;
+    case SWI_3:
+        swi_vector = SWI3_VECTOR;
+        break;
+    default:
+        assert(FALSE);
+        break;
+    }
+
+    /* Saves CPU state, inhibits interrupts and branches to the SWI vector */
+    e_cpu_context.cc.e = 1;
+    push_registers_to_stack(0xFF, REG_S);
+    if (swi == SWI_1) {
+        e_cpu_context.cc.i = 1;
+        e_cpu_context.cc.f = 1;
+    }
+    set_reg_value_16(REG_PC, read_word_from_memory(swi_vector));
+
+    uint32 cycles = swi == SWI_1 ? opcode_table[OP_SWI].cycle_count :
+        opcode_ext_x10_table[OP_SWI2].cycle_count;
+
+    return cycles;
+}
+
 int extended(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     /* Look up appropriate operation by dereferencing second byte */
     (void) a_m; /* unused */

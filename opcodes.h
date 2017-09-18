@@ -49,6 +49,8 @@ int st16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int sub(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int sub16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int swi(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
+int swi2(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
+int swi3(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int sync(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int tfr(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 int tst(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);

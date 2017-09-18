@@ -42,3 +42,4 @@ uint16 init_from_decb_file(const char* filename);
 
 uint32 run_cycles(uint32 wanted_cycles);
 uint32 process_interrupts();
+uint32 process_swi(enum swi_type swi);

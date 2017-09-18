@@ -1609,14 +1609,25 @@ int swi(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     (void) a_m; /* unused */
     e_cpu_context.pc++;
 
-    /* Saves CPU state, inhibits interrupts and branches to the SWI vector */
-    e_cpu_context.cc.e = 1;
-    push_registers_to_stack(0xFF, REG_S);
-    e_cpu_context.cc.i = 1;
-    e_cpu_context.cc.f = 1;
-    set_reg_value_16(REG_PC, read_word_from_memory(SWI_VECTOR));
+    return process_swi(SWI_1);
+}
 
-    return opcode_table[opcode].cycle_count;
+/* Software Interrupt */
+int swi2(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
+    (void) t_r; /* unused */
+    (void) a_m; /* unused */
+    e_cpu_context.pc++;
+
+    return process_swi(SWI_2);
+}
+
+/* Software Interrupt */
+int swi3(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
+    (void) t_r; /* unused */
+    (void) a_m; /* unused */
+    e_cpu_context.pc++;
+
+    return process_swi(SWI_3);
 }
 
 /* Synchronize with Interrupt */
