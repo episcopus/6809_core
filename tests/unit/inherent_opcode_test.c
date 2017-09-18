@@ -1662,6 +1662,82 @@ void swi2_with_rti_test(void **state) {
     assert_int_equal(get_reg_value_16(REG_PC), 0x103);
 }
 
+void swi3_basic_test(void **state) {
+    (void) state; /* unused */
+
+    set_reg_value_8(REG_A, 0x2);
+    set_reg_value_16(REG_PC, 0x100);
+
+    uint8 code_bytes[] = {
+        OP_INCA,
+        OP_EXTENDED_X11,
+        OP_SWI3
+    };
+    uint8 swi3_bytes[] = {
+        OP_CLRA,
+        OP_RTI
+    };
+    write_word_to_memory(SWI3_VECTOR, 0x200);
+    struct mem_loader_def test_memory[] = {
+        { 0x100, code_bytes, 3 },
+        { 0x200, swi3_bytes, 2 }
+    };
+    load_memory(test_memory, 2);
+
+    /* Interrupt processor execution after the second INCA */
+    int cycles = run_cycles(opcode_table[OP_INCA].cycle_count +
+                            opcode_ext_x11_table[OP_SWI3].cycle_count);
+
+    assert_int_equal(get_reg_value_8(REG_A), 0x3);
+
+    /* One INCA's at 2 cycles plus 20 cycles for SWI3 */
+    assert_int_equal(cycles, 22);
+    assert_int_equal(get_reg_value_16(REG_PC), 0x200);
+}
+
+void swi3_with_rti_test(void **state) {
+    (void) state; /* unused */
+
+    set_reg_value_8(REG_A, 0x2);
+    set_reg_value_16(REG_PC, 0x100);
+
+    uint8 code_bytes[] = {
+        OP_INCA,
+        OP_EXTENDED_X11,
+        OP_SWI3,
+        OP_NOP
+    };
+    uint8 swi3_bytes[] = {
+        OP_CLRA,
+        OP_RTI
+    };
+    write_word_to_memory(SWI3_VECTOR, 0x200);
+    struct mem_loader_def test_memory[] = {
+        { 0x100, code_bytes, 4 },
+        { 0x200, swi3_bytes, 2 }
+    };
+    load_memory(test_memory, 2);
+
+    /* Interrupt processor execution after the second INCA */
+    int cycles = run_cycles(opcode_table[OP_INCA].cycle_count +
+                            opcode_ext_x11_table[OP_SWI3].cycle_count);
+
+    assert_int_equal(get_reg_value_8(REG_A), 0x3);
+
+    /* One INCA's at 2 cycles plus 20 cycles for SWI3 */
+    assert_int_equal(cycles, 22);
+    assert_int_equal(get_reg_value_16(REG_PC), 0x200);
+
+    cycles += run_cycles(opcode_table[OP_CLRA].cycle_count);
+    assert_int_equal(get_reg_value_8(REG_A), 0);
+
+    /* Now return from the interrupt and the previous value of a should
+       be restored */
+    cycles += run_cycles(opcode_table[OP_RTI].cycle_count);
+    assert_int_equal(get_reg_value_8(REG_A), 0x3);
+    assert_int_equal(get_reg_value_16(REG_PC), 0x103);
+}
+
 void sync_basic_test(void **state) {
     (void) state; /* unused */
 

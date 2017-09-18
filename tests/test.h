@@ -216,6 +216,8 @@ void swi_basic_test(void ** state);
 void swi_with_rti_test(void ** state);
 void swi2_basic_test(void ** state);
 void swi2_with_rti_test(void ** state);
+void swi3_basic_test(void ** state);
+void swi3_with_rti_test(void ** state);
 void sync_basic_test(void ** state);
 void sync_basic_resume_test(void ** state);
 void sync_basic_irq_test(void ** state);
