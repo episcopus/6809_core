@@ -48,7 +48,7 @@ void core_init_test(void **state) {
     assert_int_equal(e_cpu_context.irq, 0);
     assert_int_equal(e_cpu_context.firq, 0);
     assert_int_equal(e_cpu_context.nmi, 0);
-    assert_int_equal(e_cpu_context.sync, 0);
+    assert_int_equal(e_cpu_context.halted_state, HS_NONE);
 
     for (int i = 0; i < MEMORY_SIZE; i++) {
         assert_int_equal(e_cpu_context.memory[i], 0);

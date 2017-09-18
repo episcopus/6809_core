@@ -158,6 +158,8 @@ void cmpy_immediate_nocarry(void **state);
 void cmpy_immediate_carry(void **state);
 void cmpy_immediate_overflow(void **state);
 void cmpy_immediate_zero(void **state);
+void cwai_basic_test(void ** state);
+void cwai_basic_irq_test(void ** state);
 void eora_immediate_test(void **state);
 void eorb_immediate_test(void **state);
 void eora_immediate_zero_test(void **state);

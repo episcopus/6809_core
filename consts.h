@@ -21,6 +21,11 @@
 #define SWI2_VECTOR  0xFFF4
 #define SWI3_VECTOR  0xFFF2
 
+/* Halted states for SYNC and CWAI */
+#define HS_NONE 0x0
+#define HS_SYNC 0x1
+#define HS_CWAI 0x2
+
 /* For cmocka, replace regular assert with mock_assert() which allows us to
    test for assert()'s in tests. */
 /* #ifdef UNIT_TESTING */
@@ -84,6 +89,7 @@ extern void mock_assert(const int result, const char* const expression,
 #define OP_RTS          0x39
 #define OP_ABX          0x3A
 #define OP_RTI          0x3B
+#define OP_CWAI         0x3C
 #define OP_MUL          0x3D
 #define OP_NEGA         0x40
 #define OP_COMA         0x43

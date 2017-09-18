@@ -232,6 +232,8 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(cmpy_immediate_carry, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(cmpy_immediate_overflow, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(cmpy_immediate_zero, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(cwai_basic_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(cwai_basic_irq_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(eora_immediate_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(eorb_immediate_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(eora_immediate_zero_test, test_setup, test_teardown),

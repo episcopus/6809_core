@@ -53,7 +53,7 @@ void core_init() {
     e_cpu_context.irq = 0;
     e_cpu_context.firq = 0;
     e_cpu_context.nmi = 0;
-    e_cpu_context.sync = 0;
+    e_cpu_context.halted_state = HS_NONE;
 
     return;
 }
@@ -730,8 +730,9 @@ uint32 run_cycles(uint32 wanted_cycles) {
             break;
         }
 
-        if (e_cpu_context.sync) {
-            /* Execution is halted pending an interrupt. See sync(). */
+        if (e_cpu_context.halted_state) {
+            /* Execution is halted pending an interrupt. See sync() or
+               cwai(). */
             break;
         }
 
@@ -750,15 +751,21 @@ uint32 run_cycles(uint32 wanted_cycles) {
 
 uint32 process_interrupts() {
     uint32 completed_cycles = 0;
-    /* Receiving an interrupt unblocks the SYNC blockage, regardless whether
-       of whether interrupt is suppressed. */
-    e_cpu_context.sync = 0;
+    if (e_cpu_context.halted_state == HS_SYNC) {
+        /* Receiving an interrupt unblocks the SYNC blockage, regardless whether
+           of whether interrupt is suppressed. */
+        e_cpu_context.halted_state = HS_NONE;
+    }
 
     if (e_cpu_context.nmi) {
-        /* Push all registers, inhibit FIRQ and IRQ and set up interrupt
-           vector */
-        e_cpu_context.cc.e = 1;
-        completed_cycles += push_registers_to_stack(0xFF, REG_S);
+        if (e_cpu_context.halted_state != HS_CWAI) {
+            /* Push all registers, inhibit FIRQ and IRQ and set up interrupt
+               vector, but not in the CWAI case which did the pushing already */
+            e_cpu_context.cc.e = 1;
+            completed_cycles += push_registers_to_stack(0xFF, REG_S);
+        }
+
+        e_cpu_context.halted_state = HS_NONE;
         e_cpu_context.cc.i = 1;
         e_cpu_context.cc.f = 1;
         set_reg_value_16(REG_PC, read_word_from_memory(NMI_VECTOR));
@@ -767,18 +774,28 @@ uint32 process_interrupts() {
         e_cpu_context.nmi = 0;
     }
     else if (e_cpu_context.firq && !e_cpu_context.cc.f) {
-        /* Fast interrupt only pushes PC and CC and inhibits further
-           IRQ and FIRQ to occur */
-        e_cpu_context.cc.e = 0;
-        completed_cycles += push_registers_to_stack(0x81, REG_S);
+        if (e_cpu_context.halted_state != HS_CWAI) {
+            /* Fast interrupt only pushes PC and CC and inhibits further
+               IRQ and FIRQ to occur, however the CWAI instruction will have
+               pushed all registers already so skip this. */
+            e_cpu_context.cc.e = 0;
+            completed_cycles += push_registers_to_stack(0x81, REG_S);
+        }
+
+        e_cpu_context.halted_state = HS_NONE;
         e_cpu_context.cc.i = 1;
         e_cpu_context.cc.f = 1;
         set_reg_value_16(REG_PC, read_word_from_memory(FIRQ_VECTOR));
     }
     else if (e_cpu_context.irq && !e_cpu_context.cc.i) {
-        /* IRQ pushes all the registers, inhibits further IRQ's */
-        e_cpu_context.cc.e = 1;
-        completed_cycles += push_registers_to_stack(0xFF, REG_S);
+        if (e_cpu_context.halted_state != HS_CWAI) {
+            /* IRQ pushes all the registers, inhibits further IRQ's,
+               but not if CWAI already did this */
+            e_cpu_context.cc.e = 1;
+            completed_cycles += push_registers_to_stack(0xFF, REG_S);
+        }
+
+        e_cpu_context.halted_state = HS_NONE;
         e_cpu_context.cc.i = 1;
         set_reg_value_16(REG_PC, read_word_from_memory(IRQ_VECTOR));
     }

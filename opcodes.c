@@ -646,6 +646,32 @@ int com(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     return opcode_table[opcode].cycle_count + extra_cycles;
 }
 
+/* Clear Condition Code Bits and Wait for Interrupt */
+int cwai(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
+    (void) a_m; /* unused */
+    (void) t_r; /* unused */
+
+    /* Similar to SYNC but allows unsuppressing interrupts via an and of
+       the postbyte with the CC (to clear any IRQ, FIRQ inhibits), and then
+       pushes the entire CPU state to the stack before waiting for
+       interrupt. It's important to note that any FIRQ will end up needing
+       to pop all the state but that should happen anyway given we set e to 1
+       here. */
+
+    e_cpu_context.pc++;
+    uint8 postbyte = read_byte_from_memory(get_reg_value_16(REG_PC));
+    e_cpu_context.pc++;
+
+    uint8 new_cc = postbyte & get_reg_value_8(REG_CC);
+    set_reg_value_8(REG_CC, new_cc);
+
+    e_cpu_context.cc.e = 1;
+    push_registers_to_stack(0xFF, REG_S);
+    e_cpu_context.halted_state = HS_CWAI;
+
+    return opcode_table[opcode].cycle_count;
+}
+
 /* Subtract from value in 8-Bit Accumulator */
 int cmp(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     e_cpu_context.pc++;
@@ -1590,7 +1616,7 @@ int sync(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     /* See clock cycle limitation here
        https://github.com/episcopus/6809_core/issues/1 */
 
-    e_cpu_context.sync = 1;
+    e_cpu_context.halted_state = HS_SYNC;
 
     return opcode_table[opcode].cycle_count;
 }
