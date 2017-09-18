@@ -1603,6 +1603,22 @@ int sub16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     return opcode_table[opcode].cycle_count + extra_cycles;
 }
 
+/* Software Interrupt */
+int swi(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
+    (void) t_r; /* unused */
+    (void) a_m; /* unused */
+    e_cpu_context.pc++;
+
+    /* Saves CPU state, inhibits interrupts and branches to the SWI vector */
+    e_cpu_context.cc.e = 1;
+    push_registers_to_stack(0xFF, REG_S);
+    e_cpu_context.cc.i = 1;
+    e_cpu_context.cc.f = 1;
+    set_reg_value_16(REG_PC, read_word_from_memory(SWI_VECTOR));
+
+    return opcode_table[opcode].cycle_count;
+}
+
 /* Synchronize with Interrupt */
 int sync(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     (void) t_r; /* unused */

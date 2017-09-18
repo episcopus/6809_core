@@ -212,6 +212,8 @@ void subb_overflow_test(void ** state);
 void sub16d_immediate_test(void ** state);
 void sub16d_carry_test(void ** state);
 void sub16d_overflow_test(void ** state);
+void swi_basic_test(void ** state);
+void swi_with_rti_test(void ** state);
 void sync_basic_test(void ** state);
 void sync_basic_resume_test(void ** state);
 void sync_basic_irq_test(void ** state);

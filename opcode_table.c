@@ -66,7 +66,7 @@ const struct opcode_def opcode_table[] = {
     /* 0x3C */ { "CWAI",         OP_CWAI,         22, REG_NONE, INHERENT,  cwai     },
     /* 0x3D */ { "MUL",          0x3D,            11, REG_NONE, INHERENT,  mul      },
     /* 0x3E */ { "NOTIMPL",      0x3E,            2,  REG_NONE, INHERENT,  notimpl  },
-    /* 0x3F */ { "NOTIMPL",      0x3F,            2,  REG_NONE, INHERENT,  notimpl  },
+    /* 0x3F */ { "SWI",          OP_SWI,          19, REG_NONE, INHERENT,  swi      },
     /* 0x40 */ { "NEGA",         0x40,            2,  REG_A,    INHERENT,  neg      },
     /* 0x41 */ { "NOTIMPL",      0x41,            2,  REG_NONE, INHERENT,  notimpl  },
     /* 0x42 */ { "NOTIMPL",      0x42,            2,  REG_NONE, INHERENT,  notimpl  },
