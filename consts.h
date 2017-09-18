@@ -47,6 +47,7 @@ extern void mock_assert(const int result, const char* const expression,
 #define OP_EXTENDED_X10 0x10
 #define OP_EXTENDED_X11 0x11
 #define OP_NOP          0x12
+#define OP_SYNC         0x13
 #define OP_LBRA         0x16
 #define OP_LBSR         0x17
 #define OP_DAA          0x19

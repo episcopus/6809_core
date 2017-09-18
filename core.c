@@ -53,6 +53,7 @@ void core_init() {
     e_cpu_context.irq = 0;
     e_cpu_context.firq = 0;
     e_cpu_context.nmi = 0;
+    e_cpu_context.sync = 0;
 
     return;
 }
@@ -729,6 +730,11 @@ uint32 run_cycles(uint32 wanted_cycles) {
             break;
         }
 
+        if (e_cpu_context.sync) {
+            /* Execution is halted pending an interrupt. See sync(). */
+            break;
+        }
+
         uint8 opcode = e_cpu_context.memory[e_cpu_context.pc];
         struct opcode_def this_opcode = opcode_table[opcode];
         assert(strncmp("NOTIMPL", this_opcode.instruction, 7) != 0);
@@ -744,6 +750,9 @@ uint32 run_cycles(uint32 wanted_cycles) {
 
 uint32 process_interrupts() {
     uint32 completed_cycles = 0;
+    /* Receiving an interrupt unblocks the SYNC blockage, regardless whether
+       of whether interrupt is suppressed. */
+    e_cpu_context.sync = 0;
 
     if (e_cpu_context.nmi) {
         /* Push all registers, inhibit FIRQ and IRQ and set up interrupt

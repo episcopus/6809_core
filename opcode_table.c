@@ -22,7 +22,7 @@ const struct opcode_def opcode_table[] = {
     /* 0x10 */ { "EXTENDED_X10", OP_EXTENDED_X10, 0,  REG_NONE, INHERENT,  extended },
     /* 0x11 */ { "EXTENDED_X11", OP_EXTENDED_X11, 0,  REG_NONE, INHERENT,  extended },
     /* 0x12 */ { "NOP",          OP_NOP,          2,  REG_NONE, INHERENT,  nop      },
-    /* 0x13 */ { "NOTIMPL",      0x13,            2,  REG_NONE, INHERENT,  notimpl  },
+    /* 0x13 */ { "SYNC",         OP_SYNC,         4,  REG_NONE, INHERENT,  sync     },
     /* 0x14 */ { "NOTIMPL",      0x14,            2,  REG_NONE, INHERENT,  notimpl  },
     /* 0x15 */ { "NOTIMPL",      0x15,            2,  REG_NONE, INHERENT,  notimpl  },
     /* 0x16 */ { "LBRA",         OP_LBRA,         5,  REG_NONE, INHERENT,  branch16 },

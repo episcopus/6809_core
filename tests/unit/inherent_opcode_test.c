@@ -1441,6 +1441,109 @@ void sex_zero_test(void **state) {
     assert_true(post_pc > pre_pc);
 }
 
+void sync_basic_test(void **state) {
+    (void) state; /* unused */
+
+    set_reg_value_16(REG_PC, 0x100);
+    set_reg_value_8(REG_A, 0x69);
+    uint8 code_bytes[] = {
+        OP_SYNC,
+        OP_CLRA
+    };
+    struct mem_loader_def test_memory[] = {
+        { 0x100, code_bytes, 2 },
+    };
+    load_memory(test_memory, 1);
+
+    int cycles = run_cycles(0xFF);
+
+    /* The processor is hanging on a sync instruction hence only processed that
+       instruction's cycles */
+    assert_int_equal(cycles, opcode_table[OP_SYNC].cycle_count);
+    assert_int_equal(get_reg_value_16(REG_PC), 0x101);
+    assert_int_equal(get_reg_value_8(REG_A), 0x69);
+    assert_int_equal(e_cpu_context.sync, 1);
+}
+
+void sync_basic_resume_test(void **state) {
+    (void) state; /* unused */
+
+    set_reg_value_16(REG_PC, 0x100);
+    set_reg_value_8(REG_A, 0x69);
+    e_cpu_context.cc.i = 1;
+    uint8 code_bytes[] = {
+        OP_SYNC,
+        OP_CLRA
+    };
+    struct mem_loader_def test_memory[] = {
+        { 0x100, code_bytes, 2 },
+    };
+    load_memory(test_memory, 1);
+
+    int cycles = run_cycles(0xFF);
+    assert_int_equal(cycles, opcode_table[OP_SYNC].cycle_count);
+
+    /* The second execution should yield 0 cycles since the CPU is in
+       sync state. */
+    cycles += run_cycles(0xFF);
+    assert_int_equal(cycles, opcode_table[OP_SYNC].cycle_count);
+    assert_int_equal(get_reg_value_16(REG_PC), 0x101);
+    assert_int_equal(get_reg_value_8(REG_A), 0x69);
+    assert_int_equal(e_cpu_context.sync, 1);
+
+    /* Now send interrupt, suppressed, so that CPU execution is continued */
+    e_cpu_context.irq = 1;
+    cycles += run_cycles(opcode_table[OP_CLRA].cycle_count);
+
+    assert_int_equal(cycles, opcode_table[OP_SYNC].cycle_count +
+        opcode_table[OP_CLRA].cycle_count);
+    assert_int_equal(get_reg_value_16(REG_PC), 0x102);
+    assert_int_equal(get_reg_value_8(REG_A), 0);
+    assert_int_equal(e_cpu_context.sync, 0);
+}
+
+void sync_basic_irq_test(void **state) {
+    (void) state; /* unused */
+
+    set_reg_value_16(REG_PC, 0x100);
+    set_reg_value_8(REG_A, 0x69);
+    e_cpu_context.cc.i = 0;
+    uint8 code_bytes[] = {
+        OP_SYNC,
+        OP_CLRA
+    };
+    uint8 irq_bytes[] = {
+        OP_INCA,
+        OP_RTI
+    };
+    write_word_to_memory(IRQ_VECTOR, 0x200);
+    struct mem_loader_def test_memory[] = {
+        { 0x100, code_bytes, 2 },
+        { 0x200, irq_bytes, 2 },
+    };
+    load_memory(test_memory, 2);
+
+    int cycles = run_cycles(0xFF);
+    assert_int_equal(cycles, opcode_table[OP_SYNC].cycle_count);
+
+    /* The second execution should yield 0 cycles since the CPU is in
+       sync state. */
+    cycles += run_cycles(0xFF);
+    assert_int_equal(cycles, opcode_table[OP_SYNC].cycle_count);
+    assert_int_equal(get_reg_value_16(REG_PC), 0x101);
+    assert_int_equal(get_reg_value_8(REG_A), 0x69);
+    assert_int_equal(e_cpu_context.sync, 1);
+
+    /* Now send interrupt, non suppressed, so that CPU execution is continued
+       at the IRQ */
+    e_cpu_context.irq = 1;
+    cycles += run_cycles(opcode_table[OP_CLRA].cycle_count);
+    assert_int_equal(get_reg_value_16(REG_PC), 0x200);
+    assert_int_equal(e_cpu_context.sync, 0);
+    assert_int_equal(cycles, opcode_table[OP_SYNC].cycle_count +
+                     12 /* cost of pushing all registers as part of IRQ */);
+}
+
 void tsta_test(void **state) {
     (void) state; /* unused */
 

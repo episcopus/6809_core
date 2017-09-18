@@ -47,6 +47,7 @@ struct cpu_state {
     uint8 irq;
     uint8 firq;
     uint8 nmi;
+    uint8 sync;
 };
 
 enum addressing_mode {

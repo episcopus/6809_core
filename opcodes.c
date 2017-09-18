@@ -1577,6 +1577,24 @@ int sub16(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     return opcode_table[opcode].cycle_count + extra_cycles;
 }
 
+/* Synchronize with Interrupt */
+int sync(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
+    (void) t_r; /* unused */
+    (void) a_m; /* unused */
+    e_cpu_context.pc++;
+
+    /* Sets processor in "sync" state, essentially hanging pending an interrupt.
+       Execution will resume even when interrupt is suppressed, simply carrying
+       on at the PC. Otherwise process interrupt as per usual. */
+
+    /* See clock cycle limitation here
+       https://github.com/episcopus/6809_core/issues/1 */
+
+    e_cpu_context.sync = 1;
+
+    return opcode_table[opcode].cycle_count;
+}
+
 /* Transfer Register to Register */
 int tfr(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     (void) t_r; /* unused */
