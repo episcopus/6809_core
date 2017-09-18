@@ -73,7 +73,7 @@ const struct opcode_def opcode_table[] = {
     /* 0x43 */ { "COMA",         OP_COMA,         2,  REG_A,    INHERENT,  com      },
     /* 0x44 */ { "LSRA",         0x44,            2,  REG_A,    INHERENT,  lsr      },
     /* 0x45 */ { "NOTIMPL",      0x45,            2,  REG_NONE, INHERENT,  notimpl  },
-    /* 0x46 */ { "NOTIMPL",      0x46,            2,  REG_NONE, INHERENT,  notimpl  },
+    /* 0x46 */ { "RORA",         OP_RORA,         2,  REG_A,    INHERENT,  ror      },
     /* 0x47 */ { "ASRA",         OP_ASRA,         2,  REG_A,    INHERENT,  asr      },
     /* 0x48 */ { "ASLA",         OP_ASLA,         2,  REG_A,    INHERENT,  asl      },
     /* 0x49 */ { "ROLA",         OP_ROLA,         2,  REG_A,    INHERENT,  rol      },

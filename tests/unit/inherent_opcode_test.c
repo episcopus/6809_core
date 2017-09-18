@@ -1188,6 +1188,37 @@ void rora_test(void **state) {
     assert_true(post_pc > pre_pc);
 }
 
+void rora_basic_test(void **state) {
+    (void) state; /* unused */
+
+    set_reg_value_16(REG_PC, 0x5000);
+    int pre_pc = e_cpu_context.pc;
+    /* Basic shift right by one bit */
+    e_cpu_context.d.byte_acc.a = 0x2;
+    /* b shouldn't be messed with */
+    e_cpu_context.d.byte_acc.b = 8;
+
+    uint8 code_bytes[] = {
+        OP_RORA
+    };
+    struct mem_loader_def test_memory[] = {
+        { 0x5000, code_bytes, 1 },
+    };
+    load_memory(test_memory, 1);
+
+    int cycles = run_cycles(opcode_table[OP_RORA].cycle_count);
+    uint16 post_pc = e_cpu_context.pc;
+
+    assert_int_equal(cycles, opcode_table[OP_RORA].cycle_count);
+    assert_int_equal(e_cpu_context.d.byte_acc.a, 0x1);
+    assert_int_equal(e_cpu_context.d.byte_acc.b, 0x8);
+    assert_int_equal(e_cpu_context.cc.c, 0);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_int_equal(post_pc, pre_pc + 1);
+}
+
 void rorb_test(void **state) {
     (void) state; /* unused */
 
