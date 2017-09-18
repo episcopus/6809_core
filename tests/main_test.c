@@ -151,6 +151,7 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(rora_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(rora_basic_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(rorb_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(rorb_basic_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(rora_carry_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(rorb_carry_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(rora_rotate_test, test_setup, test_teardown),

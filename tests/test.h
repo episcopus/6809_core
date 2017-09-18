@@ -289,6 +289,7 @@ void rolb_rotate_test(void **state);
 void rora_test(void **state);
 void rora_basic_test(void **state);
 void rorb_test(void **state);
+void rorb_basic_test(void **state);
 void rora_carry_test(void **state);
 void rorb_carry_test(void **state);
 void rora_rotate_test(void **state);

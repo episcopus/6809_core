@@ -89,7 +89,7 @@ const struct opcode_def opcode_table[] = {
     /* 0x53 */ { "COMB",         OP_COMB,         2,  REG_B,    INHERENT,  com      },
     /* 0x54 */ { "LSRB",         0x54,            2,  REG_B,    INHERENT,  lsr      },
     /* 0x55 */ { "NOTIMPL",      0x55,            2,  REG_NONE, INHERENT,  notimpl  },
-    /* 0x56 */ { "NOTIMPL",      0x56,            2,  REG_NONE, INHERENT,  notimpl  },
+    /* 0x56 */ { "RORB",         OP_RORB,         2,  REG_B,    INHERENT,  ror      },
     /* 0x57 */ { "ASRB",         OP_ASRB,         2,  REG_B,    INHERENT,  asr      },
     /* 0x58 */ { "ASLB",         OP_ASLB,         2,  REG_B,    INHERENT,  asl      },
     /* 0x59 */ { "ROLB",         OP_ROLB,         2,  REG_B,    INHERENT,  rol      },
