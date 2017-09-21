@@ -1,3 +1,5 @@
+#include "consts.h"
+#include "types.h"
 #include "opcodes.h"
 
 const struct opcode_def opcode_table[] = {

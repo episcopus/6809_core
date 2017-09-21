@@ -5,6 +5,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "consts.h"
+#include "types.h"
+#include "memory.h"
 #include "core.h"
 #include "tests/test.h"
 

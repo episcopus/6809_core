@@ -3,6 +3,10 @@
 #include <setjmp.h>
 #include <cmocka.h>
 
+#include "consts.h"
+#include "types.h"
+#include "memory.h"
+#include "core.h"
 #include "opcodes.h"
 
 extern struct cpu_state e_cpu_context;

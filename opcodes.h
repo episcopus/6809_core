@@ -1,5 +1,3 @@
-#include "core.h"
-
 int extended(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);
 
 int abx(uint8 opcode, enum target_register t_r, enum addressing_mode a_m);

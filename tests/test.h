@@ -1,8 +1,3 @@
-#include <stdarg.h>
-#include <stddef.h>
-#include <setjmp.h>
-#include <cmocka.h>
-
 /* Core tests */
 int test_setup(void **state);
 int test_teardown(void **state);

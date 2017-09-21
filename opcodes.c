@@ -1,6 +1,10 @@
 #include <assert.h>
 #include <stdio.h>
 
+#include "consts.h"
+#include "types.h"
+#include "memory.h"
+#include "core.h"
 #include "opcodes.h"
 
 extern struct opcode_def opcode_table[];

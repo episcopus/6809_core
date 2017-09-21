@@ -3,6 +3,9 @@
 #include <string.h>
 #include <stdio.h>
 
+#include "consts.h"
+#include "types.h"
+#include "memory.h"
 #include "core.h"
 
 struct cpu_state e_cpu_context;
@@ -54,6 +57,11 @@ void core_init() {
     e_cpu_context.firq = 0;
     e_cpu_context.nmi = 0;
     e_cpu_context.halted_state = HS_NONE;
+
+    e_cpu_context.memory_handler.read_byte_func = basic_read_byte_from_memory;
+    e_cpu_context.memory_handler.write_byte_func = basic_write_byte_to_memory;
+    e_cpu_context.memory_handler.read_word_func = basic_read_word_from_memory;
+    e_cpu_context.memory_handler.write_word_func = basic_write_word_to_memory;
 
     return;
 }

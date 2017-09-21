@@ -1,5 +1,3 @@
-#include "consts.h"
-
 typedef unsigned short int uint16;
 typedef unsigned char uint8;
 typedef unsigned int uint32;
@@ -27,27 +25,6 @@ struct condition_code {
     unsigned int h : 1; /* Half-Carry */
     unsigned int f : 1; /* FIRQ interrupt masked */
     unsigned int e : 1; /* Entire register state stacked */
-};
-
-struct cpu_state {
-    uint16 x; /* Index Register */
-    uint16 y; /* Index Register */
-    uint16 u; /* User Stack Pointer */
-    uint16 s; /* System Stack Pointer */
-    uint16 pc; /* Program Counter */
-    d_register d; /* Accumulator */
-    uint8 dp; /* Direct Page Register */
-    struct condition_code cc; /* Condition Codes Register */
-
-    uint8* memory; /* Memory map */
-
-    uint32 cycle_count;
-
-    /* Interrupts, are !=0 when the line is low, i.e. interrupt is active */
-    uint8 irq;
-    uint8 firq;
-    uint8 nmi;
-    uint8 halted_state;
 };
 
 enum addressing_mode {

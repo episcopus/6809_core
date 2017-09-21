@@ -1,4 +1,24 @@
-#include "types.h"
+struct cpu_state {
+    uint16 x; /* Index Register */
+    uint16 y; /* Index Register */
+    uint16 u; /* User Stack Pointer */
+    uint16 s; /* System Stack Pointer */
+    uint16 pc; /* Program Counter */
+    d_register d; /* Accumulator */
+    uint8 dp; /* Direct Page Register */
+    struct condition_code cc; /* Condition Codes Register */
+
+    struct memory_handler_struct memory_handler;
+    uint8* memory; /* Memory map */
+
+    uint32 cycle_count;
+
+    /* Interrupts, are !=0 when the line is low, i.e. interrupt is active */
+    uint8 irq;
+    uint8 firq;
+    uint8 nmi;
+    uint8 halted_state;
+};
 
 void core_init();
 void core_destroy();
