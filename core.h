@@ -1,3 +1,33 @@
+struct sam_state_struct {
+    /* Memory map mode */
+    uint8 ty_control_bit;
+
+    /* Memory size */
+    uint8 m1_control_bit;
+    uint8 m0_control_bit;
+
+    /* MPU cycle rate */
+    uint8 r1_control_bit;
+    uint8 r0_control_bit;
+
+    /* Page number */
+    uint8 p1_control_bit;
+
+    /* Video display starting address */
+    uint8 f6_control_bit;
+    uint8 f5_control_bit;
+    uint8 f4_control_bit;
+    uint8 f3_control_bit;
+    uint8 f2_control_bit;
+    uint8 f1_control_bit;
+    uint8 f0_control_bit;
+
+    /* Video display mode */
+    uint8 v2_control_bit;
+    uint8 v1_control_bit;
+    uint8 v0_control_bit;
+};
+
 struct cpu_state {
     uint16 x; /* Index Register */
     uint16 y; /* Index Register */
@@ -8,6 +38,7 @@ struct cpu_state {
     uint8 dp; /* Direct Page Register */
     struct condition_code cc; /* Condition Codes Register */
 
+    struct sam_state_struct sam_state;
     struct memory_handler_struct memory_handler;
     uint8* memory; /* Memory map */
 

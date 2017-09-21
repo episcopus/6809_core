@@ -63,6 +63,34 @@ void core_init() {
     e_cpu_context.memory_handler.read_word_func = basic_read_word_from_memory;
     e_cpu_context.memory_handler.write_word_func = basic_write_word_to_memory;
 
+    /* Memory map mode, RAM/ROM mode */
+    e_cpu_context.sam_state.ty_control_bit = 0;
+
+    /* Memory size, assign to 64K by default */
+    e_cpu_context.sam_state.m1_control_bit = 1;
+    e_cpu_context.sam_state.m0_control_bit = 0;
+
+    /* MPU cycle rate, 0.89 MHz */
+    e_cpu_context.sam_state.r1_control_bit = 0;
+    e_cpu_context.sam_state.r0_control_bit = 0;
+
+    /* Page number */
+    e_cpu_context.sam_state.p1_control_bit = 0;
+
+    /* Video display starting address, $0400 by default */
+    e_cpu_context.sam_state.f6_control_bit = 0;
+    e_cpu_context.sam_state.f5_control_bit = 0;
+    e_cpu_context.sam_state.f4_control_bit = 0;
+    e_cpu_context.sam_state.f3_control_bit = 0;
+    e_cpu_context.sam_state.f2_control_bit = 0;
+    e_cpu_context.sam_state.f1_control_bit = 1;
+    e_cpu_context.sam_state.f0_control_bit = 0;
+
+    /* Video display mode */
+    e_cpu_context.sam_state.v2_control_bit = 0;
+    e_cpu_context.sam_state.v1_control_bit = 0;
+    e_cpu_context.sam_state.v0_control_bit = 0;
+
     return;
 }
 
@@ -204,49 +232,19 @@ int load_memory(struct mem_loader_def* defs, uint8 num_defs) {
 }
 
 uint8 read_byte_from_memory(uint16 address) {
-    if (address > MEMORY_SIZE - 1) {
-        assert(FALSE);
-        return 0;
-    }
-
-    uint8 return_byte = e_cpu_context.memory[address];
-    return return_byte;
+    return e_cpu_context.memory_handler.read_byte_func(address);
 }
 
 void write_byte_to_memory(uint16 address, uint8 byte) {
-    if (address > MEMORY_SIZE - 1) {
-        assert(FALSE);
-        return;
-    }
-
-    e_cpu_context.memory[address] = byte;
-    return;
+    return e_cpu_context.memory_handler.write_byte_func(address, byte);
 }
 
 uint16 read_word_from_memory(uint16 address) {
-    if (address > MEMORY_SIZE - 2) {
-        assert(FALSE);
-        return 0;
-    }
-
-    uint16 return_word = 0;
-    /* data is stored big endian, needs to be flipped for little
-       endian host emulator */
-    return_word |= e_cpu_context.memory[address + 1];
-    return_word |= (uint16) e_cpu_context.memory[address] << 8;
-    return return_word;
+    return e_cpu_context.memory_handler.read_word_func(address);
 }
 
 void write_word_to_memory(uint16 address, uint16 word) {
-    if (address > MEMORY_SIZE - 2) {
-        assert(FALSE);
-        return;
-    }
-
-    /* flip bytes due to differing endianess of CPU being emulated */
-    e_cpu_context.memory[address + 1] = (uint8) word & 0xFF;
-    e_cpu_context.memory[address] = (uint8) ((word >> 8) & 0xFF);
-    return;
+    return e_cpu_context.memory_handler.write_word_func(address, word);
 }
 
 /* This memory accessor reads a byte from the appropriate location

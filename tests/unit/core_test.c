@@ -56,6 +56,23 @@ void core_init_test(void **state) {
     for (int i = 0; i < MEMORY_SIZE; i++) {
         assert_int_equal(e_cpu_context.memory[i], 0);
     }
+
+    assert_int_equal(e_cpu_context.sam_state.ty_control_bit, 0);
+    assert_int_equal(e_cpu_context.sam_state.m1_control_bit, 1);
+    assert_int_equal(e_cpu_context.sam_state.m0_control_bit, 0);
+    assert_int_equal(e_cpu_context.sam_state.r1_control_bit, 0);
+    assert_int_equal(e_cpu_context.sam_state.r0_control_bit, 0);
+    assert_int_equal(e_cpu_context.sam_state.p1_control_bit, 0);
+    assert_int_equal(e_cpu_context.sam_state.f6_control_bit, 0);
+    assert_int_equal(e_cpu_context.sam_state.f5_control_bit, 0);
+    assert_int_equal(e_cpu_context.sam_state.f4_control_bit, 0);
+    assert_int_equal(e_cpu_context.sam_state.f3_control_bit, 0);
+    assert_int_equal(e_cpu_context.sam_state.f2_control_bit, 0);
+    assert_int_equal(e_cpu_context.sam_state.f1_control_bit, 1);
+    assert_int_equal(e_cpu_context.sam_state.f0_control_bit, 0);
+    assert_int_equal(e_cpu_context.sam_state.v2_control_bit, 0);
+    assert_int_equal(e_cpu_context.sam_state.v1_control_bit, 0);
+    assert_int_equal(e_cpu_context.sam_state.v0_control_bit, 0);
 }
 
 void test_e_flag(void **state) {
