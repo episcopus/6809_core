@@ -84,6 +84,10 @@ void push_word_to_stack_invalid_test(void **state);
 void push_pull_word_stack_combo_test(void **state);
 void push_word_to_stack_u_test(void **state);
 
+/* Memory handler tests */
+void sam_read_byte_test(void **state);
+void sam_write_byte_test(void **state);
+
 /* Immediate tests */
 void adca_immediate_test(void **state);
 void adcb_immediate_test(void **state);

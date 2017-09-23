@@ -33,6 +33,10 @@ void basic_write_byte_to_memory(uint16 address, uint8 byte);
 uint16 basic_read_word_from_memory(uint16 address);
 void basic_write_word_to_memory(uint16 address, uint16 word);
 
+/* Memory handler routine for SAM managed flags */
+uint8 sam_read_byte_from_memory(uint16 address);
+void sam_write_byte_to_memory(uint16 address, uint8 byte);
+
 /* Memory handler routine specific to the coco architecture */
 uint8 coco_read_byte_from_memory(uint16 address);
 void coco_write_byte_to_memory(uint16 address, uint8 byte);
