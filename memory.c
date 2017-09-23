@@ -7,7 +7,9 @@
 
 extern struct cpu_state e_cpu_context;
 const struct memory_range_handler_struct memory_handler_table[] = {
-    { 0x0, 0xFFFF, MT_RAM }
+    { 0x0, 0xFFBF, MT_RAM },
+    { 0xFFC0, 0xFFDF, MT_SAM },
+    { 0xFFE0, 0xFFFF, MT_RAM }
 };
 
 const uint8 memory_table_size = sizeof(memory_handler_table) /
@@ -237,6 +239,9 @@ uint8 coco_read_byte_from_memory(uint16 address) {
     case MT_RAM:
         bf = basic_read_byte_from_memory;
         break;
+    case MT_SAM:
+        bf = sam_read_byte_from_memory;
+        break;
     default:
         assert(FALSE);
         break;
@@ -257,6 +262,9 @@ void coco_write_byte_to_memory(uint16 address, uint8 byte) {
     switch (get_mh_type_from_address(address)) {
     case MT_RAM:
         bf = basic_write_byte_to_memory;
+        break;
+    case MT_SAM:
+        bf = sam_write_byte_to_memory;
         break;
     default:
         assert(FALSE);

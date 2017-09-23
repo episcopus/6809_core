@@ -98,6 +98,7 @@ const struct CMUnitTest tests[] = {
 
     cmocka_unit_test_setup_teardown(sam_read_byte_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(sam_write_byte_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(sam_memory_handler_byte_from_core_test, test_setup, test_teardown),
 
     cmocka_unit_test_setup_teardown(nop_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(nop_pc_test, test_setup, test_teardown),
