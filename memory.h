@@ -36,3 +36,5 @@ void basic_write_word_to_memory(uint16 address, uint16 word);
 /* Memory handler routine specific to the coco architecture */
 uint8 coco_read_byte_from_memory(uint16 address);
 void coco_write_byte_to_memory(uint16 address, uint8 byte);
+uint16 coco_read_word_from_memory(uint16 address);
+void coco_write_word_to_memory(uint16 address, uint16 word);

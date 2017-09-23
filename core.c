@@ -59,9 +59,9 @@ void core_init() {
     e_cpu_context.halted_state = HS_NONE;
 
     e_cpu_context.memory_handler.read_byte_func = coco_read_byte_from_memory;
-    e_cpu_context.memory_handler.write_byte_func = basic_write_byte_to_memory;
-    e_cpu_context.memory_handler.read_word_func = basic_read_word_from_memory;
-    e_cpu_context.memory_handler.write_word_func = basic_write_word_to_memory;
+    e_cpu_context.memory_handler.write_byte_func = coco_write_byte_to_memory;
+    e_cpu_context.memory_handler.read_word_func = coco_read_word_from_memory;
+    e_cpu_context.memory_handler.write_word_func = coco_write_word_to_memory;
 
     /* Memory map mode, RAM/ROM mode */
     e_cpu_context.sam_state.ty_control_bit = 0;
