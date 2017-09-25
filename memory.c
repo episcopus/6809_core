@@ -498,11 +498,18 @@ enum memory_handler_type get_mh_type_from_address(uint16 address) {
 
 uint16 lookup_effective_address(uint16 address) {
     uint16 effective_address = address;
-
-    /* Look up any address indirection due to memory map mode */
-    if (!e_cpu_context.sam_state.ty_control_bit) {
-        uint16 lookup_index = address - 0xFF00;
-        effective_address = 0xFF00 + (memory_redirect_table[lookup_index][1]);
+    if (address >= 0xFFF2) {
+        /* This region is unconditionally redirected AFAIK for interrupt
+           vectors to the Basic ROM area of A000-BFFF.
+           Push 0xFFFx address down to the 0xBFFx vectors. */
+        effective_address -= 0x4000;
+    }
+    else {
+        /* Look up any address indirection due to memory map mode */
+        if (!e_cpu_context.sam_state.ty_control_bit) {
+            uint16 lookup_index = address - 0xFF00;
+            effective_address = 0xFF00 + (memory_redirect_table[lookup_index][1]);
+        }
     }
 
     return effective_address;
