@@ -88,6 +88,8 @@ void push_word_to_stack_u_test(void **state);
 void sam_read_byte_test(void **state);
 void sam_write_byte_test(void **state);
 void sam_memory_handler_byte_from_core_test(void **state);
+void sam_not_redirected_byte_test(void **state);
+void sam_redirected_byte_test(void **state);
 
 /* Immediate tests */
 void adca_immediate_test(void **state);
