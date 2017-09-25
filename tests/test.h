@@ -90,6 +90,8 @@ void sam_write_byte_test(void **state);
 void sam_memory_handler_byte_from_core_test(void **state);
 void sam_not_redirected_byte_test(void **state);
 void sam_redirected_byte_test(void **state);
+void sam_irq_redirected_byte_test(void **state);
+void sam_irq_redirected_byte_test_2(void **state);
 
 /* Immediate tests */
 void adca_immediate_test(void **state);
