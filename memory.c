@@ -2,15 +2,16 @@
 
 #include "consts.h"
 #include "types.h"
+#include "pia.h"
 #include "memory.h"
 #include "core.h"
 
 extern struct cpu_state e_cpu_context;
 static const struct memory_range_handler_struct memory_handler_table[] = {
     { 0x0,    0xFEFF, MT_RAM   },
-    { 0xFF00, 0xFF03, MT_RAM   }, /* PIA 1 */
+    { 0xFF00, 0xFF03, MT_PIA   },
     { 0xFF04, 0xFF1F, MT_DEDIC },
-    { 0xFF20, 0xFF23, MT_RAM   }, /* PIA 2 */
+    { 0xFF20, 0xFF23, MT_PIA   },
     { 0xFF24, 0xFFBF, MT_DEDIC },
     { 0xFFC0, 0xFFDF, MT_SAM   },
     { 0xFFE0, 0xFFFF, MT_DEDIC }
@@ -571,6 +572,9 @@ uint8 coco_read_byte_from_memory(uint16 address) {
     case MT_DEDIC:
         bf = dedicated_read_byte_from_memory;
         break;
+    case MT_PIA:
+        bf = pia_read_byte_from_memory;
+        break;
     default:
         assert(FALSE);
         break;
@@ -598,6 +602,9 @@ void coco_write_byte_to_memory(uint16 address, uint8 byte) {
     case MT_DEDIC:
         bf = dedicated_write_byte_to_memory;
         break;
+    case MT_PIA:
+        bf = pia_write_byte_to_memory;
+        break;
     default:
         assert(FALSE);
         break;
@@ -620,8 +627,8 @@ uint16 coco_read_word_from_memory(uint16 address) {
     case MT_DEDIC:
         wf = dedicated_read_word_from_memory;
         break;
-        /* Don't allow word based access to SAM for now, let's see how this
-           goes. */
+        /* Don't allow word based access to SAM and PIA for now, let's see how
+           this goes. */
     default:
         assert(FALSE);
         break;
@@ -643,13 +650,11 @@ void coco_write_word_to_memory(uint16 address, uint16 word) {
     case MT_RAM:
         bf = basic_write_word_to_memory;
         break;
-        /* Don't allow word based access to SAM for now, let's see how this
-           goes. */
     case MT_DEDIC:
         bf = dedicated_write_word_to_memory;
         break;
-        /* Don't allow word based access to SAM for now, let's see how this
-           goes. */
+        /* Don't allow word based access to SAM and PIA for now, let's see how
+           this goes. */
     default:
         assert(FALSE);
         break;

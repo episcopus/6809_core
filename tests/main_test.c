@@ -8,6 +8,7 @@
 
 #include "consts.h"
 #include "types.h"
+#include "pia.h"
 #include "memory.h"
 #include "core.h"
 #include "tests/test.h"
@@ -103,6 +104,8 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(sam_redirected_byte_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(sam_irq_redirected_byte_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(sam_irq_redirected_byte_test_2, test_setup, test_teardown),
+
+    cmocka_unit_test_setup_teardown(pia_basic_test, test_setup, test_teardown),
 
     cmocka_unit_test_setup_teardown(nop_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(nop_pc_test, test_setup, test_teardown),

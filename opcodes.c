@@ -3,6 +3,7 @@
 
 #include "consts.h"
 #include "types.h"
+#include "pia.h"
 #include "memory.h"
 #include "core.h"
 #include "opcodes.h"

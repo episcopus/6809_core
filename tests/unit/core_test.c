@@ -7,6 +7,7 @@
 
 #include "consts.h"
 #include "types.h"
+#include "pia.h"
 #include "memory.h"
 #include "core.h"
 #include "tests/test.h"
@@ -73,6 +74,15 @@ void core_init_test(void **state) {
     assert_int_equal(e_cpu_context.sam_state.v2_control_bit, 0);
     assert_int_equal(e_cpu_context.sam_state.v1_control_bit, 0);
     assert_int_equal(e_cpu_context.sam_state.v0_control_bit, 0);
+
+    assert_int_equal(e_cpu_context.pia_state.ddr_1_a, 0);
+    assert_int_equal(e_cpu_context.pia_state.dddr_1_a, 0);
+    assert_int_equal(e_cpu_context.pia_state.ddr_1_b, 0);
+    assert_int_equal(e_cpu_context.pia_state.dddr_1_b, 0);
+    assert_int_equal(e_cpu_context.pia_state.ddr_2_a, 0);
+    assert_int_equal(e_cpu_context.pia_state.dddr_2_a, 0);
+    assert_int_equal(e_cpu_context.pia_state.ddr_2_b, 0);
+    assert_int_equal(e_cpu_context.pia_state.dddr_2_b, 0);
 }
 
 void test_e_flag(void **state) {

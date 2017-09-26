@@ -39,6 +39,7 @@ struct cpu_state {
     struct condition_code cc; /* Condition Codes Register */
 
     struct sam_state_struct sam_state;
+    struct pia_state_struct pia_state;
     struct memory_handler_struct memory_handler;
     uint8* memory; /* Memory map */
 

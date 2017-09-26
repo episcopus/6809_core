@@ -5,6 +5,7 @@
 
 #include "consts.h"
 #include "types.h"
+#include "pia.h"
 #include "memory.h"
 #include "core.h"
 
@@ -90,6 +91,16 @@ void core_init() {
     e_cpu_context.sam_state.v2_control_bit = 0;
     e_cpu_context.sam_state.v1_control_bit = 0;
     e_cpu_context.sam_state.v0_control_bit = 0;
+
+    /* Initialize PIA state to all zero's */
+    e_cpu_context.pia_state.ddr_1_a = 0;
+    e_cpu_context.pia_state.dddr_1_a = 0;
+    e_cpu_context.pia_state.ddr_1_b = 0;
+    e_cpu_context.pia_state.dddr_1_b = 0;
+    e_cpu_context.pia_state.ddr_2_a = 0;
+    e_cpu_context.pia_state.dddr_2_a = 0;
+    e_cpu_context.pia_state.ddr_2_b = 0;
+    e_cpu_context.pia_state.dddr_2_b = 0;
 
     return;
 }

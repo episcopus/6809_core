@@ -7,6 +7,7 @@
 
 #include "consts.h"
 #include "types.h"
+#include "pia.h"
 #include "memory.h"
 #include "core.h"
 #include "tests/test.h"
@@ -62,12 +63,12 @@ void sam_not_redirected_byte_test(void **state) {
     /* Redirects are not followed in memory map mode */
     e_cpu_context.sam_state.ty_control_bit = 1;
 
-    coco_write_byte_to_memory(0xFF04, 0x69);
+    coco_write_byte_to_memory(0xFF58, 0x69);
 
-    assert_int_equal(coco_read_byte_from_memory(0xFF00),
-                     0x00);
-    assert_int_equal(coco_read_byte_from_memory(0xFF04),
+    assert_int_equal(coco_read_byte_from_memory(0xFF58),
                      0x69);
+    assert_int_equal(coco_read_byte_from_memory(0xFF48),
+                     0x0);
 }
 
 void sam_redirected_byte_test(void **state) {
@@ -76,11 +77,11 @@ void sam_redirected_byte_test(void **state) {
     /* Redirects are followed when not in memory map mode */
     e_cpu_context.sam_state.ty_control_bit = 0;
 
-    coco_write_byte_to_memory(0xFF04, 0x69);
+    coco_write_byte_to_memory(0xFF58, 0x69);
 
-    assert_int_equal(coco_read_byte_from_memory(0xFF00),
+    assert_int_equal(coco_read_byte_from_memory(0xFF58),
                      0x69);
-    assert_int_equal(coco_read_byte_from_memory(0xFF04),
+    assert_int_equal(coco_read_byte_from_memory(0xFF48),
                      0x69);
 }
 

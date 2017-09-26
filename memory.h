@@ -17,7 +17,8 @@ struct memory_handler_struct {
 enum memory_handler_type {
     MT_RAM,
     MT_SAM,
-    MT_DEDIC
+    MT_DEDIC,
+    MT_PIA
 };
 
 struct memory_range_handler_struct {
