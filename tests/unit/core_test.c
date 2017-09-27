@@ -16,20 +16,6 @@ extern struct cpu_state e_cpu_context;
 extern struct opcode_def opcode_table[];
 extern const char* root_test_path;
 
-int test_setup(void **state) {
-    (void) state; /* unused */
-
-    core_init();
-    return 0;
-}
-
-int test_teardown(void **state) {
-    (void) state; /* unused */
-
-    core_destroy();
-    return 0;
-}
-
 void core_init_test(void **state) {
     (void) state; /* unused */
 

@@ -569,6 +569,20 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(program_table_of_squares_test, test_setup, test_teardown)
 };
 
+int test_setup(void **state) {
+    (void) state; /* unused */
+
+    core_init();
+    return 0;
+}
+
+int test_teardown(void **state) {
+    (void) state; /* unused */
+
+    core_destroy();
+    return 0;
+}
+
 char* get_test_program_path(const char* prog_name) {
     if (!prog_name) {
         return NULL;
