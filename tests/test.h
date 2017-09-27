@@ -59,6 +59,7 @@ void run_cycles_multiple_test(void **state);
 void run_cycles_notimpl_test(void **state);
 void run_hsync_interval_test(void **state);
 void run_hsync_interval_irq_test(void **state);
+void run_vsync_interval_irq_test(void **state);
 void process_interrupts_nmi_test(void **state);
 void process_interrupts_nmi_with_rti_test(void **state);
 void process_interrupts_firq_test(void **state);

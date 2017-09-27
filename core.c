@@ -27,10 +27,6 @@ extern struct opcode_def opcode_table[];
 extern struct opcode_def opcode_ext_x10_table[];
 extern struct opcode_def opcode_ext_x11_table[];
 
-/* Global counters tracking remaining amount of cycles until respective
-   interval */
-int hsync_cycles = HSYNC_CYCLES_TOTAL;
-int vsync_cycles = VSYNC_CYCLES_TOTAL;
 
 void core_init() {
     e_cpu_context.x = 0;
@@ -59,6 +55,8 @@ void core_init() {
         e_cpu_context.memory[i] = 0;
     }
     e_cpu_context.cycle_count = 0;
+    e_cpu_context.hsync_cycles = HSYNC_CYCLES_TOTAL;
+    e_cpu_context.vsync_cycles = VSYNC_CYCLES_TOTAL;
     e_cpu_context.irq = 0;
     e_cpu_context.firq = 0;
     e_cpu_context.nmi = 0;
@@ -744,9 +742,8 @@ uint32 run_cycles(uint32 wanted_cycles) {
         if (e_cpu_context.nmi || e_cpu_context.firq ||
             e_cpu_context.irq) {
             this_completed_cycles = process_interrupts();
-            e_cpu_context.cycle_count += this_completed_cycles;
             completed_cycles += this_completed_cycles;
-            perform_hsync_housekeeping(this_completed_cycles);
+            perform_tick_housekeeping(this_completed_cycles);
         }
 
         if (completed_cycles >= wanted_cycles) {
@@ -765,9 +762,8 @@ uint32 run_cycles(uint32 wanted_cycles) {
 
         this_completed_cycles = this_opcode.func(opcode, this_opcode.t_r,
                                                   this_opcode.mode);
-        e_cpu_context.cycle_count += this_completed_cycles;
         completed_cycles += this_completed_cycles;
-        perform_hsync_housekeeping(this_completed_cycles);
+        perform_tick_housekeeping(this_completed_cycles);
     }
 
     return completed_cycles;
@@ -777,16 +773,22 @@ uint32 run_hsync_interval() {
     /* Runs one HSYNC worth of cycles, which is around 57, do various
        housekeeping, meant to be called by emulator host at the
        appropriate frequency (15,750 Hz) */
-    uint32 this_cycles = run_cycles(hsync_cycles);
+    uint32 this_cycles = run_cycles(e_cpu_context.hsync_cycles);
     return this_cycles;
 }
 
-void perform_hsync_housekeeping(uint32 cycles) {
-    hsync_cycles -= cycles;
+void perform_tick_housekeeping(uint32 cycles) {
+    e_cpu_context.cycle_count += cycles;
+    perform_hsync_housekeeping(cycles);
+    perform_vsync_housekeeping(cycles);
+}
 
-    if (hsync_cycles <= 0) {
+void perform_hsync_housekeeping(uint32 cycles) {
+    e_cpu_context.hsync_cycles -= cycles;
+
+    if (e_cpu_context.hsync_cycles <= 0) {
         /* Accumulate any deviation to the next call */
-        hsync_cycles += HSYNC_CYCLES_TOTAL;
+        e_cpu_context.hsync_cycles += HSYNC_CYCLES_TOTAL;
 
         /* Now do any HSYNC housekeeping */
         uint8 pia1_cra = pia_read_byte_from_memory(0xFF01);
@@ -795,7 +797,29 @@ void perform_hsync_housekeeping(uint32 cycles) {
             /* Trigger HSYNC IRQ if enabled at the PIA */
             e_cpu_context.irq = 1;
         }
+        /* Set the interrupt flag in the PIA regardless */
         pia_write_byte_to_memory(0xFF01, pia1_cra | 0x8);
+    }
+}
+
+void perform_vsync_housekeeping(uint32 cycles) {
+    e_cpu_context.vsync_cycles -= cycles;
+
+    if (e_cpu_context.vsync_cycles <= 0) {
+        /* Accumulate any deviation to the next call */
+        e_cpu_context.vsync_cycles += VSYNC_CYCLES_TOTAL;
+
+        /* Now do any VSYNC housekeeping */
+        uint8 pia1_crb = pia_read_byte_from_memory(0xFF03);
+        uint8 vsync_irq_enabled = pia1_crb & 0x1;
+        if (!e_cpu_context.cc.i && vsync_irq_enabled) {
+            /* Trigger VSYNC IRQ if enabled at the PIA */
+            e_cpu_context.irq = 1;
+        }
+        /* Set the interrupt flag in the PIA regardless */
+        pia_write_byte_to_memory(0xFF03, pia1_crb | 0x8);
+
+        /* TODO update screen */
     }
 }
 
@@ -836,6 +860,7 @@ uint32 process_interrupts() {
         e_cpu_context.cc.i = 1;
         e_cpu_context.cc.f = 1;
         set_reg_value_16(REG_PC, read_word_from_memory(FIRQ_VECTOR));
+        e_cpu_context.firq = 0;
     }
     else if (e_cpu_context.irq && !e_cpu_context.cc.i) {
         if (e_cpu_context.halted_state != HS_CWAI) {
@@ -848,6 +873,7 @@ uint32 process_interrupts() {
         e_cpu_context.halted_state = HS_NONE;
         e_cpu_context.cc.i = 1;
         set_reg_value_16(REG_PC, read_word_from_memory(IRQ_VECTOR));
+        e_cpu_context.irq = 0;
     }
 
     return completed_cycles;
@@ -889,9 +915,7 @@ int extended(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     /* Look up appropriate operation by dereferencing second byte */
     (void) a_m; /* unused */
     (void) t_r; /* unused */
-
     e_cpu_context.pc++;
-    uint32 completed_cycles = 0;
 
     uint8 cur_opcode = e_cpu_context.memory[e_cpu_context.pc];
     struct opcode_def this_opcode;
@@ -908,10 +932,7 @@ int extended(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     int this_completed_cycles = this_opcode.func(this_opcode.opcode,
                                                  this_opcode.t_r,
                                                  this_opcode.mode);
-    e_cpu_context.cycle_count += this_completed_cycles;
-    completed_cycles += this_completed_cycles;
-
-    return completed_cycles;
+    return this_completed_cycles;
 }
 
 enum target_register decode_target_register_from_postbyte(uint8 postbyte) {

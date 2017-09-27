@@ -44,6 +44,10 @@ struct cpu_state {
     uint8* memory; /* Memory map */
 
     uint32 cycle_count;
+    /* Global counters tracking remaining amount of cycles until respective
+       interval */
+    int hsync_cycles;
+    int vsync_cycles;
 
     /* Interrupts, are !=0 when the line is low, i.e. interrupt is active */
     uint8 irq;
@@ -94,6 +98,8 @@ uint16 init_from_decb_file(const char* filename);
 
 uint32 run_cycles(uint32 wanted_cycles);
 uint32 run_hsync_interval();
+void perform_tick_housekeeping(uint32 cycles);
 void perform_hsync_housekeeping(uint32 cycles);
+void perform_vsync_housekeeping(uint32 cycles);
 uint32 process_interrupts();
 uint32 process_swi(enum swi_type swi);

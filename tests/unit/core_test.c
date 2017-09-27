@@ -49,6 +49,8 @@ void core_init_test(void **state) {
     assert_int_equal(e_cpu_context.cc.v, 0);
     assert_int_equal(e_cpu_context.cc.c, 0);
     assert_int_equal(e_cpu_context.cycle_count, 0);
+    assert_int_equal(e_cpu_context.hsync_cycles, HSYNC_CYCLES_TOTAL);
+    assert_int_equal(e_cpu_context.vsync_cycles, VSYNC_CYCLES_TOTAL);
     assert_int_equal(e_cpu_context.irq, 0);
     assert_int_equal(e_cpu_context.firq, 0);
     assert_int_equal(e_cpu_context.nmi, 0);
@@ -1197,6 +1199,45 @@ void run_hsync_interval_irq_test(void **state) {
     uint32 this_cycles = run_hsync_interval();
     assert_in_range(this_cycles, 50, 64);
 
+    assert_int_equal(e_cpu_context.irq, 1);
+}
+
+void run_vsync_interval_irq_test(void **state) {
+    set_reg_value_16(REG_D, 0xFFFF);
+    set_reg_value_16(REG_PC, 0x100);
+    write_word_to_memory(IRQ_VECTOR, 0x200);
+    /* 255 * 255 doubly nested loop, we are expecting to have
+       run cycles break out after VSYNC cycles */
+    uint8 code_bytes[] = {
+        OP_NOP,
+        OP_DECA,
+        OP_BNE,
+        0xFC,
+        OP_LDA,
+        0xFF,
+        OP_DECB,
+        OP_BNE,
+        0xF7
+    };
+    struct mem_loader_def test_memory[] = {
+        { 0x100, code_bytes, 13 },
+    };
+    load_memory(test_memory, 1);
+
+    /* Enable the VSYNC interrupt which should be firing after the instructions
+       have run */
+    uint8 pia1_crb = pia_read_byte_from_memory(0xFF03);
+    pia1_crb |= 0x1;
+    pia_write_byte_to_memory(0xFF03, pia1_crb);
+    e_cpu_context.cc.i = 0;
+
+    uint32 this_cycles = run_cycles(VSYNC_CYCLES_TOTAL);
+    assert_in_range(this_cycles, VSYNC_CYCLES_TOTAL - 10,
+                    VSYNC_CYCLES_TOTAL + 10);
+
+    /* Execution will break out of the main loop before the interrupt triggering
+       core has had a chance to run. But the flag will have been set by the
+       vsync housekeeping routine. */
     assert_int_equal(e_cpu_context.irq, 1);
 }
 
