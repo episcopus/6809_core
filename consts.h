@@ -32,6 +32,11 @@ enum swi_type {
     SWI_3
 };
 
+/* How many cycles to execute before running HSYNC/VSYNC cadence specific
+   work */
+#define HSYNC_CYCLES_TOTAL 57
+#define VSYNC_CYCLES_TOTAL 14915
+
 /* For cmocka, replace regular assert with mock_assert() which allows us to
    test for assert()'s in tests. */
 /* #ifdef UNIT_TESTING */

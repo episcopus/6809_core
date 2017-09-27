@@ -31,6 +31,8 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(run_cycles_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(run_cycles_multiple_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(run_cycles_notimpl_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(run_hsync_interval_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(run_hsync_interval_irq_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(process_interrupts_nmi_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(process_interrupts_nmi_with_rti_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(process_interrupts_firq_test, test_setup, test_teardown),

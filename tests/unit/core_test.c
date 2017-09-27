@@ -1149,6 +1149,57 @@ void run_cycles_notimpl_test(void **state) {
     expect_assert_failure(run_cycles(1));
 }
 
+void run_hsync_interval_test(void **state) {
+    /* This code is normally set to iterate 255 times but will now break after
+       the appropriate hsync cycle amount */
+    set_reg_value_8(REG_B, 0xFF);
+    uint8 code_bytes[] = {
+        OP_INCA,
+        OP_INCA,
+        OP_INCA,
+        OP_DECB,
+        OP_BNE,
+        0xFA
+    };
+    struct mem_loader_def test_memory[] = {
+        { 0x100, code_bytes, 6 },
+    };
+    load_memory(test_memory, 1);
+
+    uint32 this_cycles = run_hsync_interval();
+    assert_in_range(this_cycles, 50, 64);
+
+    assert_int_equal(e_cpu_context.irq, 0);
+}
+
+void run_hsync_interval_irq_test(void **state) {
+    set_reg_value_8(REG_B, 0xFF);
+    uint8 code_bytes[] = {
+        OP_INCA,
+        OP_INCA,
+        OP_INCA,
+        OP_DECB,
+        OP_BNE,
+        0xFA
+    };
+    struct mem_loader_def test_memory[] = {
+        { 0x100, code_bytes, 6 },
+    };
+    load_memory(test_memory, 1);
+
+    /* Enable the HSYNC interrupt which should be firing after the instructions
+       have run */
+    uint8 pia1_cra = pia_read_byte_from_memory(0xFF01);
+    pia1_cra |= 0x1;
+    pia_write_byte_to_memory(0xFF01, pia1_cra);
+    e_cpu_context.cc.i = 0;
+
+    uint32 this_cycles = run_hsync_interval();
+    assert_in_range(this_cycles, 50, 64);
+
+    assert_int_equal(e_cpu_context.irq, 1);
+}
+
 void process_interrupts_nmi_test(void **state) {
     (void) state; /* unused */
 

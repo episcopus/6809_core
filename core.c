@@ -27,6 +27,11 @@ extern struct opcode_def opcode_table[];
 extern struct opcode_def opcode_ext_x10_table[];
 extern struct opcode_def opcode_ext_x11_table[];
 
+/* Global counters tracking remaining amount of cycles until respective
+   interval */
+int hsync_cycles = HSYNC_CYCLES_TOTAL;
+int vsync_cycles = VSYNC_CYCLES_TOTAL;
+
 void core_init() {
     e_cpu_context.x = 0;
     e_cpu_context.y = 0;
@@ -741,6 +746,7 @@ uint32 run_cycles(uint32 wanted_cycles) {
             this_completed_cycles = process_interrupts();
             e_cpu_context.cycle_count += this_completed_cycles;
             completed_cycles += this_completed_cycles;
+            perform_hsync_housekeeping(this_completed_cycles);
         }
 
         if (completed_cycles >= wanted_cycles) {
@@ -761,9 +767,36 @@ uint32 run_cycles(uint32 wanted_cycles) {
                                                   this_opcode.mode);
         e_cpu_context.cycle_count += this_completed_cycles;
         completed_cycles += this_completed_cycles;
+        perform_hsync_housekeeping(this_completed_cycles);
     }
 
     return completed_cycles;
+}
+
+uint32 run_hsync_interval() {
+    /* Runs one HSYNC worth of cycles, which is around 57, do various
+       housekeeping, meant to be called by emulator host at the
+       appropriate frequency (15,750 Hz) */
+    uint32 this_cycles = run_cycles(hsync_cycles);
+    return this_cycles;
+}
+
+void perform_hsync_housekeeping(uint32 cycles) {
+    hsync_cycles -= cycles;
+
+    if (hsync_cycles <= 0) {
+        /* Accumulate any deviation to the next call */
+        hsync_cycles += HSYNC_CYCLES_TOTAL;
+
+        /* Now do any HSYNC housekeeping */
+        uint8 pia1_cra = pia_read_byte_from_memory(0xFF01);
+        uint8 hsync_irq_enabled = pia1_cra & 0x1;
+        if (!e_cpu_context.cc.i && hsync_irq_enabled) {
+            /* Trigger HSYNC IRQ if enabled at the PIA */
+            e_cpu_context.irq = 1;
+        }
+        pia_write_byte_to_memory(0xFF01, pia1_cra | 0x8);
+    }
 }
 
 uint32 process_interrupts() {
