@@ -1653,6 +1653,47 @@ void swi_with_rti_test(void **state) {
     assert_int_equal(get_reg_value_16(REG_PC), 0x102);
 }
 
+void swi_hook_test(void **state) {
+    (void) state; /* unused */
+    /* Execution should break out of run_cycles at the SWI instruction and a
+       resume should proceed without triggering the interrupt */
+
+    set_reg_value_8(REG_A, 0x2);
+    set_reg_value_16(REG_PC, 0x100);
+    e_cpu_context.swi_hook = 1;
+
+    uint8 code_bytes[] = {
+        OP_INCA,
+        OP_SWI,
+        OP_NOP
+    };
+    uint8 swi_bytes[] = {
+        OP_CLRA,
+        OP_RTI
+    };
+    write_word_to_memory(SWI_VECTOR, 0x200);
+    struct mem_loader_def test_memory[] = {
+        { 0x100, code_bytes, 3 },
+        { 0x200, swi_bytes, 2 }
+    };
+    load_memory(test_memory, 2);
+
+    /* Interrupt processor execution after the second INCA */
+    int cycles = run_cycles(0xFFFFFF);
+
+    assert_int_equal(get_reg_value_8(REG_A), 0x3);
+
+    /* One INCA's at 2 cycles plus 0 cycles for SWI since we skipped
+       for the monitor */
+    assert_int_equal(cycles, 2);
+    assert_int_equal(get_reg_value_16(REG_PC), 0x102);
+
+    /* Ensure that we did not do the interrupt routine */
+    cycles += run_cycles(opcode_table[OP_NOP].cycle_count);
+    assert_int_equal(get_reg_value_8(REG_A), 3);
+    assert_int_equal(get_reg_value_16(REG_PC), 0x103);
+}
+
 void swi2_basic_test(void **state) {
     (void) state; /* unused */
 

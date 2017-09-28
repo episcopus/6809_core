@@ -105,6 +105,8 @@ void core_init() {
     e_cpu_context.pia_state.ddr_2_b = 0;
     e_cpu_context.pia_state.dddr_2_b = 0;
 
+    e_cpu_context.swi_hook = 0;
+
     return;
 }
 
@@ -762,6 +764,9 @@ uint32 run_cycles(uint32 wanted_cycles) {
 
         this_completed_cycles = this_opcode.func(opcode, this_opcode.t_r,
                                                   this_opcode.mode);
+        if (!this_completed_cycles && e_cpu_context.swi_hook) {
+            break;
+        }
         completed_cycles += this_completed_cycles;
         perform_tick_housekeeping(this_completed_cycles);
     }
@@ -894,6 +899,11 @@ uint32 process_swi(enum swi_type swi) {
     default:
         assert(FALSE);
         break;
+    }
+
+    /* Special trap for monitor execution */
+    if (e_cpu_context.swi_hook) {
+        return 0;
     }
 
     /* Saves CPU state, inhibits interrupts and branches to the SWI vector */

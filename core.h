@@ -54,6 +54,9 @@ struct cpu_state {
     uint8 firq;
     uint8 nmi;
     uint8 halted_state;
+
+    /* Set this to true to break in the monitor during the SWI instruction */
+    uint8 swi_hook;
 };
 
 void core_init();

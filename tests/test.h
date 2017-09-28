@@ -224,6 +224,7 @@ void sub16d_carry_test(void ** state);
 void sub16d_overflow_test(void ** state);
 void swi_basic_test(void ** state);
 void swi_with_rti_test(void ** state);
+void swi_hook_test(void ** state);
 void swi2_basic_test(void ** state);
 void swi2_with_rti_test(void ** state);
 void swi3_basic_test(void ** state);
