@@ -62,26 +62,36 @@ void print_prompt() {
 }
 
 int process_command() {
-    char command[80] = { 0 };
-    scanf("%s", command);
-    printf("Command: %s\n", command);
+    size_t command_cap = 80;
+    char* command = (char*) malloc(command_cap);
+    getline(&command, &command_cap, stdin);
+    /* printf("Command: %s", command); */
+    int ret_val = 1;
 
-    if (strncmp(command, "q", 79) == 0) {
-        return 0;
+    if (strncmp(command, "q", 1) == 0) {
+        ret_val = 0;
     }
-    else if (strncmp(command, "s", 79) == 0) {
+    else if (strncmp(command, "s", 1) == 0) {
         run_cycles(1);
-        return 1;
     }
-    else if (strncmp(command, "r", 79) == 0) {
-        /* This essentially runs until a SWI instruction pops out to the
-           monitor */
+    else if (strncmp(command, "r", 1) == 0) {
         run_cycles(0xFFFFFFFF);
-        return 1;
+    }
+    else if (strncmp(command, "x", 1) == 0) {
+        uint16 arg1 = 0;
+        int nTok = sscanf(command, "x %4hX", &arg1);
+        if (nTok < 1) {
+            printf("x (examine memory) usage: \"x 0400\"\n");
+        }
+        else {
+            printf("Examine memory, addr: $%.4X\n", arg1);
+        }
     }
     else {
-        return 1;
+        printf("Unrecognized command. Type 'h' for help.\n");
     }
+
+    return ret_val;
 }
 
 void loop() {
