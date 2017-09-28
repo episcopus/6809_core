@@ -12,4 +12,5 @@
         bhs     STRES
         lda     $5001
 STRES   sta     $5002
+        swi
         end     $2000

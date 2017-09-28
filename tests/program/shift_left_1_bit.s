@@ -9,4 +9,5 @@
         ldb     $5000
         aslb
         stb     $5001
+        swi
         end     $2000

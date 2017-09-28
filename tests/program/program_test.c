@@ -19,6 +19,7 @@ extern const char* root_test_path;
 
 void program_8_bit_addition_test(void **state) {
     (void) state; /* unused */
+    e_cpu_context.swi_hook = 1;
 
     struct test_check checks[] = {
         { 0x5000, 0x38 },
@@ -43,6 +44,7 @@ void program_8_bit_addition_test(void **state) {
 
 void program_shift_left_1_bit_test(void **state) {
     (void) state; /* unused */
+    e_cpu_context.swi_hook = 1;
 
     struct test_check checks[] = {
         { 0x5000, 0x6F },
@@ -62,6 +64,7 @@ void program_shift_left_1_bit_test(void **state) {
 
 void program_mask_off_most_significant_four_bits_test(void **state) {
     (void) state; /* unused */
+    e_cpu_context.swi_hook = 1;
 
     struct test_check checks[] = {
         { 0x5000, 0x3D },
@@ -82,6 +85,7 @@ void program_mask_off_most_significant_four_bits_test(void **state) {
 
 void program_find_larger_of_two_numbers_test(void **state) {
     (void) state; /* unused */
+    e_cpu_context.swi_hook = 1;
 
     struct test_check checks[] = {
         { 0x5000, 0x3F },
@@ -103,6 +107,7 @@ void program_find_larger_of_two_numbers_test(void **state) {
 
 void program_table_of_squares_test(void **state) {
     (void) state; /* unused */
+    e_cpu_context.swi_hook = 1;
 
     struct test_check checks[] = {
         { 0x50, 0 },
@@ -126,5 +131,5 @@ void program_table_of_squares_test(void **state) {
                opcode_table[OP_LDA_I].cycle_count +
                opcode_table[OP_STA_D].cycle_count);
     perform_memory_checks(checks, sizeof(checks) / sizeof(checks[0]));
-    assert_int_equal(e_cpu_context.pc, 0xB);
+    assert_int_equal(e_cpu_context.pc, 0xA);
 }

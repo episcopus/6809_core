@@ -7,4 +7,5 @@
         org     $2000
         lda     $5000
         sta     $5001
+        swi
         end     $2000

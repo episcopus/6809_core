@@ -9,4 +9,5 @@
         lda     $5000
         adda    $5001
         sta     $5002
+        swi
         end     $2000

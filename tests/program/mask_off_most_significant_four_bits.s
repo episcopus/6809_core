@@ -10,4 +10,5 @@
         lda     $5000
         anda    #%00001111      ; Mask off four MSB's
         sta     $5001
+        swi
         end     $2000

@@ -14,4 +14,5 @@
         ldx     #$50
         lda     b,x
         sta     $42
+        swi
         end

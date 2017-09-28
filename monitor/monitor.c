@@ -73,6 +73,12 @@ int process_command() {
         run_cycles(1);
         return 1;
     }
+    else if (strncmp(command, "r", 79) == 0) {
+        /* This essentially runs until a SWI instruction pops out to the
+           monitor */
+        run_cycles(0xFFFFFFFF);
+        return 1;
+    }
     else {
         return 1;
     }
@@ -93,6 +99,7 @@ int main(int argc, char* argv[]) {
     printf("Coco Monitor. Type 'h' for help.\nDECB file: %s\n", program_filename);
 
     core_init();
+    e_cpu_context.swi_hook = 1;
     uint16 preambles = init_from_decb_file(program_filename);
     printf("Loaded %d preambles.\n\n", preambles);
 
