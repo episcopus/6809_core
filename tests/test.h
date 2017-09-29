@@ -570,3 +570,4 @@ void program_shift_left_1_bit_test(void **state);
 void program_mask_off_most_significant_four_bits_test(void **state);
 void program_find_larger_of_two_numbers_test(void **state);
 void program_table_of_squares_test(void **state);
+void program_8_bit_add_with_carry(void **state);

@@ -133,3 +133,24 @@ void program_table_of_squares_test(void **state) {
     perform_memory_checks(checks, sizeof(checks) / sizeof(checks[0]));
     assert_int_equal(e_cpu_context.pc, 0xA);
 }
+
+void program_8_bit_add_with_carry(void **state) {
+    (void) state; /* unused */
+    e_cpu_context.swi_hook = 1;
+
+    struct test_check checks[] = {
+        { 0x3000, 0x84 },
+        { 0x3001, 0x20 },
+        { 0x3002, 0xA2 },
+        { 0x3003, 0x10 }
+    };
+
+    char* program_path = get_test_program_path("8-bit_add_with_carry.bin");
+    init_from_decb_file(program_path);
+    free(program_path);
+    e_cpu_context.swi_hook = 1;
+
+    run_cycles(0xFFFF);
+    perform_memory_checks(checks, sizeof(checks) / sizeof(checks[0]));
+    assert_int_equal(e_cpu_context.pc, 0x119);
+}
