@@ -61,6 +61,42 @@ void print_prompt() {
     printf("> ");
 }
 
+void print_memory(uint16 root_address) {
+    uint8 num_lines = 16;
+    uint16 cur_address = root_address;
+
+    for (int i=0; i<num_lines; i++) {
+        uint16 line_address = cur_address;
+        printf("$%.4hX:  ", line_address);
+        for (int j=0; j<16; j++) {
+            printf("%.2hX ", (uint16) read_byte_from_memory(line_address + j));
+            if (cur_address == 0xFFFF) {
+                break;
+            }
+            else {
+                cur_address++;
+            }
+        }
+
+        printf(" |  ");
+        cur_address = line_address;
+        for (int k=0; k<16; k++) {
+            printf("%c ", read_byte_from_memory(line_address + k));
+            if (cur_address == 0xFFFF) {
+                break;
+            }
+            else {
+                cur_address++;
+            }
+        }
+
+        printf("\n");
+        if (cur_address == 0xFFFF) {
+            break;
+        }
+    }
+}
+
 int process_command() {
     size_t command_cap = 80;
     char* command = (char*) malloc(command_cap);
@@ -84,7 +120,7 @@ int process_command() {
             printf("x (examine memory) usage: \"x 0400\"\n");
         }
         else {
-            printf("Examine memory, addr: $%.4X\n", arg1);
+            print_memory(arg1);
         }
     }
     else {
