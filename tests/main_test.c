@@ -568,7 +568,8 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(program_mask_off_most_significant_four_bits_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(program_find_larger_of_two_numbers_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(program_table_of_squares_test, test_setup, test_teardown),
-    cmocka_unit_test_setup_teardown(program_8_bit_add_with_carry, test_setup, test_teardown)
+    cmocka_unit_test_setup_teardown(program_8_bit_add_with_carry, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(program_bubble_sort, test_setup, test_teardown)
 };
 
 int test_setup(void **state) {

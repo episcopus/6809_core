@@ -154,3 +154,29 @@ void program_8_bit_add_with_carry(void **state) {
     perform_memory_checks(checks, sizeof(checks) / sizeof(checks[0]));
     assert_int_equal(e_cpu_context.pc, 0x119);
 }
+
+void program_bubble_sort(void **state) {
+    (void) state; /* unused */
+    e_cpu_context.swi_hook = 1;
+
+    struct test_check checks[] = {
+        { 0x05F7, 0x43 },
+        { 0x05F8, 0x45 },
+        { 0x05F9, 0x49 },
+        { 0x05FA, 0x4F },
+        { 0x05FB, 0x50 },
+        { 0x05FC, 0x50 },
+        { 0x05FD, 0x53 },
+        { 0x05FE, 0x53 },
+        { 0x05FF, 0x55 }
+    };
+
+    char* program_path = get_test_program_path("bubble_sort.bin");
+    init_from_decb_file(program_path);
+    free(program_path);
+    e_cpu_context.swi_hook = 1;
+
+    run_cycles(0xFFFFFFFF);
+    perform_memory_checks(checks, sizeof(checks) / sizeof(checks[0]));
+    assert_int_equal(e_cpu_context.pc, 0x129);
+}
