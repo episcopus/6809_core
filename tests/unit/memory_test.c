@@ -112,3 +112,45 @@ void sam_irq_redirected_byte_test_2(void **state) {
     assert_int_equal(coco_read_byte_from_memory(0xBFF2),
                      0x69);
 }
+
+void sam_page_number_test(void **state) {
+    (void) state; /* unused */
+
+    /* Tests out default mode where there is no page switching */
+    e_cpu_context.sam_state.p1_control_bit = 0;
+    /* RAM/ROM memory map mode */
+    e_cpu_context.sam_state.ty_control_bit = 0;
+    write_byte_to_memory(0x1000, 0x69);
+    assert_int_equal(read_byte_from_memory(0x1000), 0x69);
+    assert_int_equal(e_cpu_context.memory[0x1000], 0x69);
+    assert_int_equal(read_byte_from_memory(0x9000), 0x0);
+    assert_int_equal(e_cpu_context.memory[0x9000], 0x0);
+
+    /* Do not mess with the upper addresses when memory map mode is 0 */
+    /* write_byte_to_memory(0xA000, 0x79); */
+    /* assert_int_equal(read_byte_from_memory(0xA000), 0x79); */
+    /* assert_int_equal(e_cpu_context.memory[0xA000], 0x79); */
+    /* assert_int_equal(read_byte_from_memory(0x2000), 0x0); */
+    /* assert_int_equal(e_cpu_context.memory[0x2000], 0x0); */
+}
+
+void sam_page_number_page_flip_test(void **state) {
+    (void) state; /* unused */
+
+    /* Now tests the page flip */
+    e_cpu_context.sam_state.p1_control_bit = 1;
+    /* RAM/ROM memory map mode */
+    e_cpu_context.sam_state.ty_control_bit = 0;
+
+    write_byte_to_memory(0x1000, 0x69);
+
+    /* read_byte follows the redirection */
+    assert_int_equal(read_byte_from_memory(0x1000), 0x69);
+    assert_int_equal(e_cpu_context.memory[0x1000], 0x0);
+    assert_int_equal(e_cpu_context.memory[0x9000], 0x69);
+
+    /* Do not mess with the upper addresses when memory map mode is 0 */
+    /* write_byte_to_memory(0xA000, 0x79); */
+    /* assert_int_equal(read_byte_from_memory(0xA000), 0x79); */
+    /* assert_int_equal(e_cpu_context.memory[0x2000], 0x79); */
+}
