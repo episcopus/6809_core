@@ -41,10 +41,17 @@ uint8 pia_read_byte_from_memory(uint16 address) {
                        e_cpu_context.pia_state.dddr_2_b);
         break;
     case 0xFF01:
+        return_byte = e_cpu_context.pia_state.cr_1_a;
+        break;
     case 0xFF03:
+        return_byte = e_cpu_context.pia_state.cr_1_b;
+        break;
     case 0xFF21:
+        return_byte = e_cpu_context.pia_state.cr_2_a;
+        break;
     case 0xFF23:
-        return_byte = basic_read_byte_from_memory(address);
+        return_byte = e_cpu_context.pia_state.cr_2_b;
+        break;
     }
 
     /* TODO: Some reads will have side effects, i.e. clearing the IRQ bits. */
@@ -88,9 +95,16 @@ void pia_write_byte_to_memory(uint16 address, uint8 byte) {
         }
         break;
     case 0xFF01:
+        e_cpu_context.pia_state.cr_1_a = byte;
+        break;
     case 0xFF03:
+        e_cpu_context.pia_state.cr_1_b = byte;
+        break;
     case 0xFF21:
+        e_cpu_context.pia_state.cr_2_a = byte;
+        break;
     case 0xFF23:
-        basic_write_byte_to_memory(address, byte);
+        e_cpu_context.pia_state.cr_2_b = byte;
+        break;
     }
 }

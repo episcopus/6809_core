@@ -77,7 +77,8 @@ void sam_redirected_byte_test(void **state) {
     /* Redirects are followed when not in memory map mode */
     e_cpu_context.sam_state.ty_control_bit = 0;
 
-    coco_write_byte_to_memory(0xFF58, 0x69);
+    /* coco_write_byte_to_memory(0xFF58, 0x69); */
+    e_cpu_context.memory[0xFF48] = 0x69;
 
     assert_int_equal(coco_read_byte_from_memory(0xFF58),
                      0x69);
@@ -91,7 +92,8 @@ void sam_irq_redirected_byte_test(void **state) {
     /* Redirects for the IRQ vector are unconditionnal */
     e_cpu_context.sam_state.ty_control_bit = 0;
 
-    coco_write_byte_to_memory(0xFFF2, 0x69);
+    /* Writes not normally allowed because of ROM when !ty */
+    e_cpu_context.memory[0xBFF2] = 0x69;
 
     assert_int_equal(coco_read_byte_from_memory(0xFFF2),
                      0x69);

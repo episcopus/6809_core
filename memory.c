@@ -17,6 +17,7 @@ static const struct memory_range_handler_struct memory_handler_table[] = {
     { 0xFFE0, 0xFFFF, MT_DEDIC }
 };
 
+/* Source -> Dest memory mappings in the SAM !ty mode */
 static const uint16 memory_redirect_table[256][2] = {
     {0x0, 0x0},
     {0x1, 0x1},
@@ -281,13 +282,12 @@ const uint8 memory_table_size = sizeof(memory_handler_table) /
 
 uint16 p1_and_ty_address_adjust(uint16 address) {
     /* Implements the page number and memory map mode SAM logic */
-    uint16 effective_address = address;
+    /* uint16 effective_address = address; */
 
-    if (e_cpu_context.sam_state.p1_control_bit) {
-        /* The page control bit causes page 1 of memory (the upper
-           32K) to be accessible from $0000-$7FFF. */
-        effective_address = address < 0x8000 ? address + 0x8000 : address;
-    }
+    /* The page control bit causes page 1 of memory (the upper
+       32K) to be accessible from $0000-$7FFF. */
+    uint16 effective_address = e_cpu_context.sam_state.p1_control_bit ?
+        address ^ 0x8000 : address;
 
     return effective_address;
 }
@@ -298,6 +298,11 @@ uint8 basic_read_byte_from_memory(uint16 address) {
         return 0;
     }
 
+    /* if (e_cpu_context.sam_state.ty_control_bit && */
+    /*     address >= 0x8000) { */
+    /*     /\* TODO implement ROM addressing *\/ */
+    /* } */
+
     uint16 effective_address = p1_and_ty_address_adjust(address);
     uint8 return_byte = e_cpu_context.memory[effective_address];
     return return_byte;
@@ -305,6 +310,13 @@ uint8 basic_read_byte_from_memory(uint16 address) {
 
 void basic_write_byte_to_memory(uint16 address, uint8 byte) {
     if (address > MEMORY_SIZE - 1) {
+        assert(FALSE);
+        return;
+    }
+
+    if (!e_cpu_context.sam_state.ty_control_bit &&
+        address >= 0x8000) {
+        /* Do not allow writing to ROM address space */
         assert(FALSE);
         return;
     }

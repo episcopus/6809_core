@@ -98,12 +98,19 @@ void core_init() {
     /* Initialize PIA state to all zero's */
     e_cpu_context.pia_state.ddr_1_a = 0;
     e_cpu_context.pia_state.dddr_1_a = 0;
+    e_cpu_context.pia_state.cr_1_a = 0;
+
     e_cpu_context.pia_state.ddr_1_b = 0;
     e_cpu_context.pia_state.dddr_1_b = 0;
+    e_cpu_context.pia_state.cr_1_b = 0;
+
     e_cpu_context.pia_state.ddr_2_a = 0;
     e_cpu_context.pia_state.dddr_2_a = 0;
+    e_cpu_context.pia_state.cr_2_a = 0;
+
     e_cpu_context.pia_state.ddr_2_b = 0;
     e_cpu_context.pia_state.dddr_2_b = 0;
+    e_cpu_context.pia_state.cr_2_b = 0;
 
     e_cpu_context.swi_hook = 0;
 

@@ -4,12 +4,16 @@ struct pia_state_struct {
        in the memory array */
     uint8 ddr_1_a;
     uint8 dddr_1_a;
+    uint8 cr_1_a;
     uint8 ddr_1_b;
     uint8 dddr_1_b;
+    uint8 cr_1_b;
     uint8 ddr_2_a;
     uint8 dddr_2_a;
+    uint8 cr_2_a;
     uint8 ddr_2_b;
     uint8 dddr_2_b;
+    uint8 cr_2_b;
 };
 
 /* Memory handler routine for PIA address space 0xFF00-0xFF03, 0xFF20-0xFF23 */
