@@ -326,32 +326,6 @@ void basic_write_byte_to_memory(uint16 address, uint8 byte) {
     return;
 }
 
-uint16 basic_read_word_from_memory(uint16 address) {
-    if (address > MEMORY_SIZE - 2) {
-        assert(FALSE);
-        return 0;
-    }
-
-    uint16 return_word = 0;
-    /* data is stored big endian, needs to be flipped for little
-       endian host emulator */
-    return_word |= e_cpu_context.memory[address + 1];
-    return_word |= (uint16) e_cpu_context.memory[address] << 8;
-    return return_word;
-}
-
-void basic_write_word_to_memory(uint16 address, uint16 word) {
-    if (address > MEMORY_SIZE - 2) {
-        assert(FALSE);
-        return;
-    }
-
-    /* flip bytes due to differing endianess of CPU being emulated */
-    e_cpu_context.memory[address + 1] = (uint8) word & 0xFF;
-    e_cpu_context.memory[address] = (uint8) ((word >> 8) & 0xFF);
-    return;
-}
-
 uint8 sam_read_byte_from_memory(uint16 address) {
     switch (address) {
     case 0xFFDF:
@@ -562,28 +536,6 @@ void dedicated_write_byte_to_memory(uint16 address, uint8 byte) {
     }
     else {
         return basic_write_byte_to_memory(effective_address, byte);
-    }
-}
-
-uint16 dedicated_read_word_from_memory(uint16 address) {
-    uint16 effective_address = lookup_effective_address(address);
-
-    if (address != effective_address) {
-        return coco_read_word_from_memory(effective_address);
-    }
-    else {
-        return basic_read_word_from_memory(effective_address);
-    }
-}
-
-void dedicated_write_word_to_memory(uint16 address, uint16 word) {
-    uint16 effective_address = lookup_effective_address(address);
-
-    if (address != effective_address) {
-        return coco_write_word_to_memory(effective_address, word);
-    }
-    else {
-        return basic_write_word_to_memory(effective_address, word);
     }
 }
 

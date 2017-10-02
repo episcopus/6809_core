@@ -32,10 +32,10 @@ struct memory_range_handler_struct {
 uint16 p1_and_ty_address_adjust(uint16 address);
 uint16 lookup_effective_address(uint16 address);
 
+/* Reads and writes to main memory implementing memory map, page flip
+   logic */
 uint8 basic_read_byte_from_memory(uint16 address);
 void basic_write_byte_to_memory(uint16 address, uint8 byte);
-uint16 basic_read_word_from_memory(uint16 address);
-void basic_write_word_to_memory(uint16 address, uint16 word);
 
 /* Memory handler routine for SAM managed flags */
 uint8 sam_read_byte_from_memory(uint16 address);
@@ -44,8 +44,6 @@ void sam_write_byte_to_memory(uint16 address, uint8 byte);
 /* Memory handler routine for dedicated address space 0xFF00 - 0xFFFF */
 uint8 dedicated_read_byte_from_memory(uint16 address);
 void dedicated_write_byte_to_memory(uint16 address, uint8 byte);
-uint16 dedicated_read_word_from_memory(uint16 address);
-void dedicated_write_word_to_memory(uint16 address, uint16 word);
 
 /* Memory handler routine specific to the coco architecture */
 uint8 coco_read_byte_from_memory(uint16 address);
