@@ -646,51 +646,23 @@ void coco_write_byte_to_memory(uint16 address, uint8 byte) {
 }
 
 uint16 coco_read_word_from_memory(uint16 address) {
-    read_word_function wf = NULL;
-    switch (get_mh_type_from_address(address)) {
-    case MT_RAM:
-        wf = basic_read_word_from_memory;
-        break;
-    case MT_DEDIC:
-        wf = dedicated_read_word_from_memory;
-        break;
-        /* Don't allow word based access to SAM and PIA for now, let's see how
-           this goes. */
-    default:
+    if (address > MEMORY_SIZE - 2) {
         assert(FALSE);
-        break;
+        return 0;
     }
 
-    uint16 return_word = 0x0;
-    if (wf == NULL) {
-        assert(FALSE);
-        return return_word;
-    }
-
-    return_word = wf(address);
-    return return_word;
+    /* Delegate to byte handlers to centralize memory access logic more */
+    return (uint16) coco_read_byte_from_memory(address) << 8 |
+        (uint16) coco_read_byte_from_memory(address + 1);
 }
 
 void coco_write_word_to_memory(uint16 address, uint16 word) {
-    write_word_function bf = NULL;
-    switch (get_mh_type_from_address(address)) {
-    case MT_RAM:
-        bf = basic_write_word_to_memory;
-        break;
-    case MT_DEDIC:
-        bf = dedicated_write_word_to_memory;
-        break;
-        /* Don't allow word based access to SAM and PIA for now, let's see how
-           this goes. */
-    default:
-        assert(FALSE);
-        break;
-    }
-
-    if (bf == NULL) {
+    if (address > MEMORY_SIZE - 2) {
         assert(FALSE);
         return;
     }
 
-    bf(address, word);
+    /* Delegate to byte handlers to centralize memory access logic more */
+    coco_write_byte_to_memory(address, (uint8) (word >> 8));
+    coco_write_byte_to_memory(address + 1, (uint8) (word & 0xFF));
 }

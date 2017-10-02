@@ -456,10 +456,10 @@ void cwai_basic_irq_test(void **state) {
         OP_INCA,
         OP_RTI
     };
-    write_word_to_memory(IRQ_VECTOR, 0x200);
+
     struct mem_loader_def test_memory[] = {
         { 0x100, code_bytes, 3 },
-        { 0x200, irq_bytes, 2 },
+        { DEFAULT_IRQ_VECTOR, irq_bytes, 2 },
     };
     load_memory(test_memory, 2);
 
@@ -478,7 +478,7 @@ void cwai_basic_irq_test(void **state) {
        at the IRQ */
     e_cpu_context.irq = 1;
     cycles += run_cycles(opcode_table[OP_INCA].cycle_count);
-    assert_int_equal(get_reg_value_16(REG_PC), 0x201);
+    assert_int_equal(get_reg_value_16(REG_PC), DEFAULT_IRQ_VECTOR + 1);
     assert_int_equal(get_reg_value_8(REG_A), 0x6A);
     assert_int_equal(e_cpu_context.halted_state, HS_NONE);
     assert_int_equal(cycles, opcode_table[OP_CWAI].cycle_count +
@@ -1378,9 +1378,6 @@ void rti_basic_test(void ** state) {
     /* Save pre PC before IRQ simulation */
     int pre_pc = e_cpu_context.pc;
 
-    /* fake IRQ vector / pointer */
-    write_word_to_memory(0xFFF8, 0x5000);
-
     /* Now simulate an IRQ interrupt */
     /* Forget about the masking for now  */
     /* if (e_cpu_context.cc.i) { */
@@ -1395,7 +1392,7 @@ void rti_basic_test(void ** state) {
     push_byte_to_stack(REG_S, get_reg_value_8(REG_B));
     push_byte_to_stack(REG_S, get_reg_value_8(REG_A));
     push_byte_to_stack(REG_S, get_reg_value_8(REG_CC));
-    set_reg_value_16(REG_PC, read_word_from_memory(0xFFF8));
+    set_reg_value_16(REG_PC, DEFAULT_IRQ_VECTOR);
 
     /* simulate IRQ code execution, it will mess with the registers */
     set_reg_value_8(REG_A, 0xFE);
@@ -1411,7 +1408,7 @@ void rti_basic_test(void ** state) {
         OP_RTI
     };
     struct mem_loader_def test_memory[] = {
-        { 0x5000, code_bytes, 1 },
+        { DEFAULT_IRQ_VECTOR, code_bytes, 1 },
     };
     load_memory(test_memory, 1);
 
@@ -1447,9 +1444,6 @@ void rti_basic_firq_test(void ** state) {
     /* Save pre PC before IRQ simulation */
     int pre_pc = e_cpu_context.pc;
 
-    /* fake IRQ vector / pointer */
-    write_word_to_memory(0xFFF6, 0x5000);
-
     /* Now simulate an FIRQ interrupt */
     /* Forget about the masking for now  */
     /* if (e_cpu_context.cc.i) { */
@@ -1473,7 +1467,7 @@ void rti_basic_firq_test(void ** state) {
         OP_RTI
     };
     struct mem_loader_def test_memory[] = {
-        { 0x5000, code_bytes, 1 },
+        { DEFAULT_FIRQ_VECTOR, code_bytes, 1 },
     };
     load_memory(test_memory, 1);
 
@@ -1593,10 +1587,10 @@ void swi_basic_test(void **state) {
         OP_CLRA,
         OP_RTI
     };
-    write_word_to_memory(SWI_VECTOR, 0x200);
+
     struct mem_loader_def test_memory[] = {
         { 0x100, code_bytes, 2 },
-        { 0x200, swi_bytes, 2 }
+        { DEFAULT_SWI_VECTOR, swi_bytes, 2 }
     };
     load_memory(test_memory, 2);
 
@@ -1608,7 +1602,7 @@ void swi_basic_test(void **state) {
 
     /* One INCA's at 2 cycles plus 19 cycles for SWI */
     assert_int_equal(cycles, 21);
-    assert_int_equal(get_reg_value_16(REG_PC), 0x200);
+    assert_int_equal(get_reg_value_16(REG_PC), DEFAULT_SWI_VECTOR);
 }
 
 void swi_with_rti_test(void **state) {
@@ -1626,10 +1620,10 @@ void swi_with_rti_test(void **state) {
         OP_CLRA,
         OP_RTI
     };
-    write_word_to_memory(SWI_VECTOR, 0x200);
+
     struct mem_loader_def test_memory[] = {
         { 0x100, code_bytes, 3 },
-        { 0x200, swi_bytes, 2 }
+        { DEFAULT_SWI_VECTOR, swi_bytes, 2 }
     };
     load_memory(test_memory, 2);
 
@@ -1641,7 +1635,7 @@ void swi_with_rti_test(void **state) {
 
     /* One INCA's at 2 cycles plus 19 cycles for SWI */
     assert_int_equal(cycles, 21);
-    assert_int_equal(get_reg_value_16(REG_PC), 0x200);
+    assert_int_equal(get_reg_value_16(REG_PC), DEFAULT_SWI_VECTOR);
 
     cycles += run_cycles(opcode_table[OP_CLRA].cycle_count);
     assert_int_equal(get_reg_value_8(REG_A), 0);
@@ -1671,10 +1665,10 @@ void swi_hook_test(void **state) {
         OP_CLRA,
         OP_RTI
     };
-    write_word_to_memory(SWI_VECTOR, 0x200);
+
     struct mem_loader_def test_memory[] = {
         { 0x100, code_bytes, 3 },
-        { 0x200, swi_bytes, 2 }
+        { DEFAULT_SWI_VECTOR, swi_bytes, 2 }
     };
     load_memory(test_memory, 2);
 
@@ -1709,10 +1703,10 @@ void swi2_basic_test(void **state) {
         OP_CLRA,
         OP_RTI
     };
-    write_word_to_memory(SWI2_VECTOR, 0x200);
+
     struct mem_loader_def test_memory[] = {
         { 0x100, code_bytes, 3 },
-        { 0x200, swi2_bytes, 2 }
+        { DEFAULT_SWI2_VECTOR, swi2_bytes, 2 }
     };
     load_memory(test_memory, 2);
 
@@ -1724,7 +1718,7 @@ void swi2_basic_test(void **state) {
 
     /* One INCA's at 2 cycles plus 20 cycles for SWI2 */
     assert_int_equal(cycles, 22);
-    assert_int_equal(get_reg_value_16(REG_PC), 0x200);
+    assert_int_equal(get_reg_value_16(REG_PC), DEFAULT_SWI2_VECTOR);
 }
 
 void swi2_with_rti_test(void **state) {
@@ -1743,10 +1737,10 @@ void swi2_with_rti_test(void **state) {
         OP_CLRA,
         OP_RTI
     };
-    write_word_to_memory(SWI2_VECTOR, 0x200);
+
     struct mem_loader_def test_memory[] = {
         { 0x100, code_bytes, 4 },
-        { 0x200, swi2_bytes, 2 }
+        { DEFAULT_SWI2_VECTOR, swi2_bytes, 2 }
     };
     load_memory(test_memory, 2);
 
@@ -1758,7 +1752,7 @@ void swi2_with_rti_test(void **state) {
 
     /* One INCA's at 2 cycles plus 20 cycles for SWI2 */
     assert_int_equal(cycles, 22);
-    assert_int_equal(get_reg_value_16(REG_PC), 0x200);
+    assert_int_equal(get_reg_value_16(REG_PC), DEFAULT_SWI2_VECTOR);
 
     cycles += run_cycles(opcode_table[OP_CLRA].cycle_count);
     assert_int_equal(get_reg_value_8(REG_A), 0);
@@ -1774,7 +1768,7 @@ void swi3_basic_test(void **state) {
     (void) state; /* unused */
 
     set_reg_value_8(REG_A, 0x2);
-    set_reg_value_16(REG_PC, 0x100);
+    set_reg_value_16(REG_PC, 0x200);
 
     uint8 code_bytes[] = {
         OP_INCA,
@@ -1785,10 +1779,10 @@ void swi3_basic_test(void **state) {
         OP_CLRA,
         OP_RTI
     };
-    write_word_to_memory(SWI3_VECTOR, 0x200);
+
     struct mem_loader_def test_memory[] = {
-        { 0x100, code_bytes, 3 },
-        { 0x200, swi3_bytes, 2 }
+        { 0x200, code_bytes, 3 },
+        { DEFAULT_SWI3_VECTOR, swi3_bytes, 2 }
     };
     load_memory(test_memory, 2);
 
@@ -1800,14 +1794,14 @@ void swi3_basic_test(void **state) {
 
     /* One INCA's at 2 cycles plus 20 cycles for SWI3 */
     assert_int_equal(cycles, 22);
-    assert_int_equal(get_reg_value_16(REG_PC), 0x200);
+    assert_int_equal(get_reg_value_16(REG_PC), DEFAULT_SWI3_VECTOR);
 }
 
 void swi3_with_rti_test(void **state) {
     (void) state; /* unused */
 
     set_reg_value_8(REG_A, 0x2);
-    set_reg_value_16(REG_PC, 0x100);
+    set_reg_value_16(REG_PC, 0x200);
 
     uint8 code_bytes[] = {
         OP_INCA,
@@ -1819,10 +1813,10 @@ void swi3_with_rti_test(void **state) {
         OP_CLRA,
         OP_RTI
     };
-    write_word_to_memory(SWI3_VECTOR, 0x200);
+
     struct mem_loader_def test_memory[] = {
-        { 0x100, code_bytes, 4 },
-        { 0x200, swi3_bytes, 2 }
+        { 0x200, code_bytes, 4 },
+        { DEFAULT_SWI3_VECTOR, swi3_bytes, 2 }
     };
     load_memory(test_memory, 2);
 
@@ -1834,7 +1828,7 @@ void swi3_with_rti_test(void **state) {
 
     /* One INCA's at 2 cycles plus 20 cycles for SWI3 */
     assert_int_equal(cycles, 22);
-    assert_int_equal(get_reg_value_16(REG_PC), 0x200);
+    assert_int_equal(get_reg_value_16(REG_PC), DEFAULT_SWI3_VECTOR);
 
     cycles += run_cycles(opcode_table[OP_CLRA].cycle_count);
     assert_int_equal(get_reg_value_8(REG_A), 0);
@@ -1843,7 +1837,7 @@ void swi3_with_rti_test(void **state) {
        be restored */
     cycles += run_cycles(opcode_table[OP_RTI].cycle_count);
     assert_int_equal(get_reg_value_8(REG_A), 0x3);
-    assert_int_equal(get_reg_value_16(REG_PC), 0x103);
+    assert_int_equal(get_reg_value_16(REG_PC), 0x203);
 }
 
 void sync_basic_test(void **state) {
@@ -1921,10 +1915,10 @@ void sync_basic_irq_test(void **state) {
         OP_INCA,
         OP_RTI
     };
-    write_word_to_memory(IRQ_VECTOR, 0x200);
+
     struct mem_loader_def test_memory[] = {
         { 0x100, code_bytes, 2 },
-        { 0x200, irq_bytes, 2 },
+        { DEFAULT_IRQ_VECTOR, irq_bytes, 2 },
     };
     load_memory(test_memory, 2);
 
@@ -1943,7 +1937,7 @@ void sync_basic_irq_test(void **state) {
        at the IRQ */
     e_cpu_context.irq = 1;
     cycles += run_cycles(opcode_table[OP_CLRA].cycle_count);
-    assert_int_equal(get_reg_value_16(REG_PC), 0x200);
+    assert_int_equal(get_reg_value_16(REG_PC), DEFAULT_IRQ_VECTOR);
     assert_int_equal(e_cpu_context.halted_state, HS_NONE);
     assert_int_equal(cycles, opcode_table[OP_SYNC].cycle_count +
                      12 /* cost of pushing all registers as part of IRQ */);

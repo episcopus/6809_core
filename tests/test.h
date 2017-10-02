@@ -97,6 +97,8 @@ void sam_irq_redirected_byte_test(void **state);
 void sam_irq_redirected_byte_test_2(void **state);
 void sam_page_number_test(void **state);
 void sam_page_number_page_flip_test(void **state);
+void sam_page_number_word_test(void **state);
+void sam_page_number_page_flip_word_test(void **state);
 
 /* PIA tests */
 void pia_basic_test(void **state);

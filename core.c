@@ -27,6 +27,12 @@ extern struct opcode_def opcode_table[];
 extern struct opcode_def opcode_ext_x10_table[];
 extern struct opcode_def opcode_ext_x11_table[];
 
+void setup_default_vector(uint16 source, uint16 dest) {
+    e_cpu_context.memory[lookup_effective_address(source)] =
+        (uint8) (dest >> 8);
+    e_cpu_context.memory[lookup_effective_address(source+1)] =
+        (uint8) (dest & 0xFF);
+}
 
 void core_init() {
     e_cpu_context.x = 0;
@@ -113,6 +119,15 @@ void core_init() {
     e_cpu_context.pia_state.cr_2_b = 0;
 
     e_cpu_context.swi_hook = 0;
+
+    /* Set up default interrupt handlers, will be overridden by Basic */
+    setup_default_vector(RESET_VECTOR, DEFAULT_RESET_VECTOR);
+    setup_default_vector(NMI_VECTOR, DEFAULT_NMI_VECTOR);
+    setup_default_vector(SWI_VECTOR, DEFAULT_SWI_VECTOR);
+    setup_default_vector(IRQ_VECTOR, DEFAULT_IRQ_VECTOR);
+    setup_default_vector(FIRQ_VECTOR, DEFAULT_FIRQ_VECTOR);
+    setup_default_vector(SWI2_VECTOR, DEFAULT_SWI2_VECTOR);
+    setup_default_vector(SWI3_VECTOR, DEFAULT_SWI3_VECTOR);
 
     return;
 }

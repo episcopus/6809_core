@@ -109,6 +109,8 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(sam_irq_redirected_byte_test_2, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(sam_page_number_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(sam_page_number_page_flip_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(sam_page_number_word_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(sam_page_number_page_flip_word_test, test_setup, test_teardown),
 
     cmocka_unit_test_setup_teardown(pia_basic_test, test_setup, test_teardown),
 

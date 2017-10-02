@@ -30,6 +30,7 @@ struct memory_range_handler_struct {
 /* Read / write functions, vary dependent on component or chip being
    referenced */
 uint16 p1_and_ty_address_adjust(uint16 address);
+uint16 lookup_effective_address(uint16 address);
 
 uint8 basic_read_byte_from_memory(uint16 address);
 void basic_write_byte_to_memory(uint16 address, uint8 byte);
