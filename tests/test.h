@@ -109,6 +109,8 @@ void pia_basic_test(void **state);
 /* VDG tests */
 void get_vdg_mode_from_sam_test(void **state);
 void get_vdg_mode_from_sam_2_test(void **state);
+void get_video_starting_address_from_sam_test(void **state);
+void get_video_starting_address_from_sam_2_test(void **state);
 
 /* Immediate tests */
 void adca_immediate_test(void **state);

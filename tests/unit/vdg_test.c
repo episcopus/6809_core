@@ -36,3 +36,33 @@ void get_vdg_mode_from_sam_2_test(void **state) {
 
     assert_int_equal(get_vdg_mode_from_sam(), 0x5);
 }
+
+void get_video_starting_address_from_sam_test(void **state) {
+    (void) state; /* unused */
+
+    /* RAM / ROM mode and normal page order */
+    e_cpu_context.sam_state.f0_control_bit = 1;
+    e_cpu_context.sam_state.f1_control_bit = 0;
+    e_cpu_context.sam_state.f2_control_bit = 1;
+    e_cpu_context.sam_state.f3_control_bit = 0;
+    e_cpu_context.sam_state.f4_control_bit = 0;
+    e_cpu_context.sam_state.f5_control_bit = 0;
+    e_cpu_context.sam_state.f6_control_bit = 0;
+
+    assert_int_equal(get_video_starting_address_from_sam(), 0xA00);
+}
+
+void get_video_starting_address_from_sam_2_test(void **state) {
+    (void) state; /* unused */
+
+    /* RAM / ROM mode and normal page order */
+    e_cpu_context.sam_state.f0_control_bit = 0;
+    e_cpu_context.sam_state.f1_control_bit = 0;
+    e_cpu_context.sam_state.f2_control_bit = 0;
+    e_cpu_context.sam_state.f3_control_bit = 1;
+    e_cpu_context.sam_state.f4_control_bit = 1;
+    e_cpu_context.sam_state.f5_control_bit = 0;
+    e_cpu_context.sam_state.f6_control_bit = 1;
+
+    assert_int_equal(get_video_starting_address_from_sam(), 0xB000);
+}

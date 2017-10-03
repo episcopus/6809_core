@@ -119,6 +119,8 @@ const struct CMUnitTest tests[] = {
 
     cmocka_unit_test_setup_teardown(get_vdg_mode_from_sam_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(get_vdg_mode_from_sam_2_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(get_video_starting_address_from_sam_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(get_video_starting_address_from_sam_2_test, test_setup, test_teardown),
 
     cmocka_unit_test_setup_teardown(nop_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(nop_pc_test, test_setup, test_teardown),
