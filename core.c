@@ -60,6 +60,10 @@ void core_init() {
     for (int i = 0; i < MEMORY_SIZE; i++) {
         e_cpu_context.memory[i] = 0;
     }
+
+    e_cpu_context.color_basic = NULL;
+    e_cpu_context.extended_basic = NULL;
+
     e_cpu_context.cycle_count = 0;
     e_cpu_context.hsync_cycles = HSYNC_CYCLES_TOTAL;
     e_cpu_context.vsync_cycles = VSYNC_CYCLES_TOTAL;
@@ -134,8 +138,63 @@ void core_init() {
 
 void core_destroy() {
     free(e_cpu_context.memory);
+    if (e_cpu_context.color_basic) {
+        free(e_cpu_context.color_basic);
+    }
+    if (e_cpu_context.extended_basic) {
+        free(e_cpu_context.extended_basic);
+    }
+
+    e_cpu_context.memory = NULL;
+    e_cpu_context.color_basic = NULL;
+    e_cpu_context.extended_basic = NULL;
 }
 
+void load_rom_to_address(const char* rom_path, uint8* target) {
+    FILE* handle = fopen(rom_path, "rb");
+    if (!handle) {
+        assert(FALSE);
+        return;
+    }
+
+    /* Figure out size of file in order to size buffer accordingly */
+    int pos_beg = ftell(handle);
+    if(fseek(handle, 0, SEEK_END)) {
+        assert(FALSE);
+        fclose(handle);
+        return;
+    }
+    int pos_end = ftell(handle);
+    int file_size = pos_end - pos_beg;
+    rewind(handle);
+
+    int read_size = fread((void *) target, 1, file_size, handle);
+    if (!read_size || ferror(handle)) {
+        assert(FALSE);
+        fclose(handle);
+        return;
+    }
+    fclose(handle);
+}
+
+void load_roms() {
+    const char* basic_rom = "/Users/simon/Dropbox/Programming/c/6809_core/roms/BASIC.ROM";
+    const char* ext_rom = "/Users/simon/Dropbox/Programming/c/6809_core/roms/EXTBASIC.ROM";
+
+    e_cpu_context.color_basic = (uint8*) malloc(ROM_SIZE);
+    if (e_cpu_context.color_basic == NULL) {
+        assert(FALSE);
+        return;
+    }
+
+    e_cpu_context.extended_basic = (uint8*) malloc(ROM_SIZE);
+    if (e_cpu_context.extended_basic == NULL) {
+        assert(FALSE);
+    }
+
+    load_rom_to_address(basic_rom, e_cpu_context.color_basic);
+    load_rom_to_address(ext_rom, e_cpu_context.extended_basic);
+}
 
 enum reg_size get_reg_size(enum target_register reg) {
     switch (reg) {

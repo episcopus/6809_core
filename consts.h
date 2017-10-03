@@ -3,6 +3,7 @@
 
 /* Allocate 64K of memory by default */
 #define MEMORY_SIZE 0x10000
+#define ROM_SIZE    0x2000
 
 /* Start user space at 0x2000 given other reserved things in the CoCo
    memory map before it. This leaves 24K of usable user space under 0x7FFF. */
@@ -11,6 +12,11 @@
 /* Pin the s and u stack pointers at 4KB intervals from the user space root */
 #define S_POINTER 0x3000
 #define U_POINTER 0x4000
+
+/* The root addresses for Basic ROMs when in memory map mode (ty) */
+#define EXT_BASIC_ROM   0x8000
+#define COL_BASIC_ROM   0xA000
+#define CARTRIDGE_ROM   0xC000
 
 /* Interrupt vector / word pointer addresses */
 #define RESET_VECTOR 0xFFFE

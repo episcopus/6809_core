@@ -93,6 +93,36 @@ void core_init_test(void **state) {
     assert_int_equal(e_cpu_context.pia_state.dddr_2_b, 0);
 }
 
+void basic_rom_test(void **state) {
+    (void) state; /* unused */
+
+    load_roms();
+
+    /* RAM / ROM mode and normal page order */
+    e_cpu_context.sam_state.ty_control_bit = 0;
+    e_cpu_context.sam_state.p1_control_bit = 0;
+
+    assert_int_equal(coco_read_byte_from_memory(0xA000), 0xA1);
+    assert_int_equal(coco_read_byte_from_memory(0xA001), 0xCB);
+    assert_int_equal(coco_read_byte_from_memory(0xBFFE), 0xA0);
+    assert_int_equal(coco_read_byte_from_memory(0xBFFF), 0x27);
+}
+
+void extended_rom_test(void **state) {
+    (void) state; /* unused */
+
+    load_roms();
+
+    /* RAM / ROM mode and normal page order */
+    e_cpu_context.sam_state.ty_control_bit = 0;
+    e_cpu_context.sam_state.p1_control_bit = 0;
+
+    assert_int_equal(coco_read_byte_from_memory(0x8000), 0x45);
+    assert_int_equal(coco_read_byte_from_memory(0x8001), 0x58);
+    assert_int_equal(coco_read_byte_from_memory(0x9FFE), 0x44);
+    assert_int_equal(coco_read_byte_from_memory(0x9FFF), 0x39);
+}
+
 void test_e_flag(void **state) {
     (void) state; /* unused */
 

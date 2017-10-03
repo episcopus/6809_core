@@ -297,14 +297,25 @@ uint8 basic_read_byte_from_memory(uint16 address) {
         assert(FALSE);
         return 0;
     }
+    uint8 return_byte = 0;
 
-    /* if (e_cpu_context.sam_state.ty_control_bit && */
-    /*     address >= 0x8000) { */
-    /*     /\* TODO implement ROM addressing *\/ */
-    /* } */
+    if (!e_cpu_context.sam_state.ty_control_bit &&
+        address >= EXT_BASIC_ROM && address < COL_BASIC_ROM &&
+        e_cpu_context.extended_basic) {
+        uint16 effective_address = address - EXT_BASIC_ROM;
+        return_byte = e_cpu_context.extended_basic[effective_address];
+    }
+    else if (!e_cpu_context.sam_state.ty_control_bit &&
+             address >= COL_BASIC_ROM && address < CARTRIDGE_ROM &&
+             e_cpu_context.color_basic) {
+        uint16 effective_address = address - COL_BASIC_ROM;
+        return_byte = e_cpu_context.color_basic[effective_address];
+    }
+    else {
+        uint16 effective_address = p1_and_ty_address_adjust(address);
+        return_byte = e_cpu_context.memory[effective_address];
+    }
 
-    uint16 effective_address = p1_and_ty_address_adjust(address);
-    uint8 return_byte = e_cpu_context.memory[effective_address];
     return return_byte;
 }
 

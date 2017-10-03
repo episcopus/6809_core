@@ -135,6 +135,7 @@ void loop() {
         print_state();
         print_prompt();
         if (!process_command()) {
+            core_destroy();
             break;
         }
     }
@@ -145,11 +146,12 @@ int main(int argc, char* argv[]) {
     printf("Coco Monitor. Type 'h' for help.\nDECB file: %s\n", program_filename);
 
     core_init();
+    load_roms();
     e_cpu_context.swi_hook = 1;
+
     uint16 preambles = init_from_decb_file(program_filename);
     printf("Loaded %d preambles.\n\n", preambles);
 
     loop();
-
     return 0;
 }

@@ -2,6 +2,8 @@
 int test_setup(void **state);
 int test_teardown(void **state);
 void core_init_test(void **state);
+void basic_rom_test(void **state);
+void extended_rom_test(void **state);
 void test_e_flag(void **state);
 void test_f_flag(void **state);
 void test_h_flag(void **state);
@@ -99,6 +101,7 @@ void sam_page_number_test(void **state);
 void sam_page_number_page_flip_test(void **state);
 void sam_page_number_word_test(void **state);
 void sam_page_number_page_flip_word_test(void **state);
+void sam_ty_true_no_basic_test(void **state);
 
 /* PIA tests */
 void pia_basic_test(void **state);

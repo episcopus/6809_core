@@ -42,6 +42,8 @@ struct cpu_state {
     struct pia_state_struct pia_state;
     struct memory_handler_struct memory_handler;
     uint8* memory; /* Memory map */
+    uint8* color_basic;
+    uint8* extended_basic;
 
     uint32 cycle_count;
     /* Global counters tracking remaining amount of cycles until respective
@@ -60,6 +62,7 @@ struct cpu_state {
 };
 
 void core_init();
+void load_roms();
 void core_destroy();
 
 enum reg_size get_reg_size(enum target_register reg);

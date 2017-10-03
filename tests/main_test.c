@@ -16,6 +16,8 @@
 const char* root_test_path = "/build/tests/program/";
 const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(core_init_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(basic_rom_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(extended_rom_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(test_e_flag, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(test_f_flag, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(test_h_flag, test_setup, test_teardown),
@@ -111,6 +113,7 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(sam_page_number_page_flip_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(sam_page_number_word_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(sam_page_number_page_flip_word_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(sam_ty_true_no_basic_test, test_setup, test_teardown),
 
     cmocka_unit_test_setup_teardown(pia_basic_test, test_setup, test_teardown),
 

@@ -202,3 +202,27 @@ void sam_page_number_page_flip_word_test(void **state){
     /* assert_int_equal(read_word_from_memory(0xA000), 0x79); */
     /* assert_int_equal(e_cpu_context.memory[0x2000], 0x79); */
 }
+
+void sam_ty_true_no_basic_test(void **state) {
+    (void) state; /* unused */
+
+    load_roms();
+
+    /* RAM / ROM mode and normal page order */
+    e_cpu_context.sam_state.ty_control_bit = 1;
+    e_cpu_context.sam_state.p1_control_bit = 0;
+
+    /* For this test we are going to 64K mode (ty==1) so we don't expect to read
+       the Basic ROM bytes */
+    assert_int_equal(coco_read_byte_from_memory(0xA000), 0);
+    assert_int_equal(coco_read_byte_from_memory(0xA001), 0);
+    /* Default RESET vector set up in core_init() */
+    assert_int_equal(coco_read_byte_from_memory(0xBFFE), 0xA0);
+    assert_int_equal(coco_read_byte_from_memory(0xBFFF), 0x27);
+
+    /* No extended basic ROM either */
+    assert_int_equal(coco_read_byte_from_memory(0x8000), 0);
+    assert_int_equal(coco_read_byte_from_memory(0x8001), 0);
+    assert_int_equal(coco_read_byte_from_memory(0x9FFE), 0);
+    assert_int_equal(coco_read_byte_from_memory(0x9FFF), 0);
+}
