@@ -9,8 +9,8 @@
 #include "types.h"
 #include "pia.h"
 #include "memory.h"
-#include "core.h"
 #include "vdg.h"
+#include "core.h"
 #include "tests/test.h"
 
 extern struct cpu_state e_cpu_context;
@@ -109,4 +109,15 @@ void get_vdg_mode_4_test(void **state) {
     e_cpu_context.pia_state.ddr_2_b = 0xE8;
 
     assert_int_equal(get_vdg_mode(), VDG_G6C);
+}
+
+void vdg_init_test(void **state) {
+    (void) state; /* unused */
+
+    assert_int_equal(e_cpu_context.vdg_state.video_buf, NULL);
+    vdg_init();
+    assert_int_not_equal(e_cpu_context.vdg_state.video_buf, NULL);
+    assert_int_equal(e_cpu_context.vdg_state.video_buf[0], 0);
+    vdg_destroy();
+    assert_int_equal(e_cpu_context.vdg_state.video_buf, NULL);
 }

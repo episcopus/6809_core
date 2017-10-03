@@ -1,9 +1,11 @@
+#include <stdlib.h>
+
 #include "consts.h"
 #include "types.h"
 #include "pia.h"
 #include "memory.h"
-#include "core.h"
 #include "vdg.h"
+#include "core.h"
 
 extern struct cpu_state e_cpu_context;
 
@@ -86,4 +88,28 @@ enum vdg_mode get_vdg_mode() {
     }
 
     return ret_mode;
+}
+
+void vdg_init() {
+    e_cpu_context.vdg_state.video_buf = NULL;
+    e_cpu_context.vdg_state.video_buf = (uint32*) malloc(SCR_BUF_X *
+                                                         SCR_BUF_Y * 4);
+    if (e_cpu_context.vdg_state.video_buf == NULL) {
+        assert(FALSE);
+        return;
+    }
+    else {
+        /* Clear out the memory to since consecutive core_init() calls may
+           resurface prior core memory */
+        for (int i = 0; i < SCR_BUF_X * SCR_BUF_Y; i++) {
+            e_cpu_context.vdg_state.video_buf[i] = 0;
+        }
+    }
+}
+
+void vdg_destroy() {
+    if (e_cpu_context.vdg_state.video_buf) {
+        free(e_cpu_context.vdg_state.video_buf);
+    }
+    e_cpu_context.vdg_state.video_buf = NULL;
 }

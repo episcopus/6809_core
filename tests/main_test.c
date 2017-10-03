@@ -10,6 +10,7 @@
 #include "types.h"
 #include "pia.h"
 #include "memory.h"
+#include "vdg.h"
 #include "core.h"
 #include "tests/test.h"
 
@@ -125,6 +126,7 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(get_vdg_mode_2_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(get_vdg_mode_3_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(get_vdg_mode_4_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(vdg_init_test, test_setup, test_teardown),
 
     cmocka_unit_test_setup_teardown(nop_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(nop_pc_test, test_setup, test_teardown),

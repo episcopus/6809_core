@@ -4,6 +4,7 @@
 #include "types.h"
 #include "pia.h"
 #include "memory.h"
+#include "vdg.h"
 #include "core.h"
 
 extern struct cpu_state e_cpu_context;

@@ -41,6 +41,7 @@ struct cpu_state {
     struct sam_state_struct sam_state;
     struct pia_state_struct pia_state;
     struct memory_handler_struct memory_handler;
+    struct vdg_state_struct vdg_state;
     uint8* memory; /* Memory map */
     uint8* color_basic;
     uint8* extended_basic;

@@ -7,6 +7,7 @@
 #include "types.h"
 #include "pia.h"
 #include "memory.h"
+#include "vdg.h"
 #include "core.h"
 
 struct cpu_state e_cpu_context;
@@ -55,10 +56,12 @@ void core_init() {
     if (e_cpu_context.memory == NULL) {
         assert(FALSE);
     }
-    /* Clear out the memory to since consecutive core_init() calls may
-       resurface prior core memory */
-    for (int i = 0; i < MEMORY_SIZE; i++) {
-        e_cpu_context.memory[i] = 0;
+    else {
+        /* Clear out the memory to since consecutive core_init() calls may
+           resurface prior core memory */
+        for (int i = 0; i < MEMORY_SIZE; i++) {
+            e_cpu_context.memory[i] = 0;
+        }
     }
 
     e_cpu_context.color_basic = NULL;
@@ -76,6 +79,8 @@ void core_init() {
     e_cpu_context.memory_handler.write_byte_func = coco_write_byte_to_memory;
     e_cpu_context.memory_handler.read_word_func = coco_read_word_from_memory;
     e_cpu_context.memory_handler.write_word_func = coco_write_word_to_memory;
+
+    e_cpu_context.vdg_state.video_buf = NULL;
 
     /* Memory map mode, RAM/ROM mode */
     e_cpu_context.sam_state.ty_control_bit = 0;
@@ -137,7 +142,9 @@ void core_init() {
 }
 
 void core_destroy() {
-    free(e_cpu_context.memory);
+    if (e_cpu_context.memory) {
+        free(e_cpu_context.memory);
+    }
     if (e_cpu_context.color_basic) {
         free(e_cpu_context.color_basic);
     }
@@ -148,6 +155,8 @@ void core_destroy() {
     e_cpu_context.memory = NULL;
     e_cpu_context.color_basic = NULL;
     e_cpu_context.extended_basic = NULL;
+
+    vdg_destroy();
 }
 
 void load_rom_to_address(const char* rom_path, uint8* target) {
@@ -178,6 +187,9 @@ void load_rom_to_address(const char* rom_path, uint8* target) {
 }
 
 void load_roms() {
+    assert(!e_cpu_context.color_basic);
+    assert(!e_cpu_context.extended_basic);
+
     const char* basic_rom = "/Users/simon/Dropbox/Programming/c/6809_core/roms/BASIC.ROM";
     const char* ext_rom = "/Users/simon/Dropbox/Programming/c/6809_core/roms/EXTBASIC.ROM";
 
@@ -190,6 +202,7 @@ void load_roms() {
     e_cpu_context.extended_basic = (uint8*) malloc(ROM_SIZE);
     if (e_cpu_context.extended_basic == NULL) {
         assert(FALSE);
+        return;
     }
 
     load_rom_to_address(basic_rom, e_cpu_context.color_basic);
