@@ -111,6 +111,10 @@ void get_vdg_mode_from_sam_test(void **state);
 void get_vdg_mode_from_sam_2_test(void **state);
 void get_video_starting_address_from_sam_test(void **state);
 void get_video_starting_address_from_sam_2_test(void **state);
+void get_vdg_mode_1_test(void **state);
+void get_vdg_mode_2_test(void **state);
+void get_vdg_mode_3_test(void **state);
+void get_vdg_mode_4_test(void **state);
 
 /* Immediate tests */
 void adca_immediate_test(void **state);
