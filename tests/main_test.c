@@ -6,12 +6,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "consts.h"
-#include "types.h"
-#include "pia.h"
-#include "memory.h"
-#include "vdg.h"
-#include "core.h"
+#include "headers.h"
 #include "tests/test.h"
 
 const char* root_test_path = "/build/tests/program/";

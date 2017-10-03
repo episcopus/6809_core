@@ -6,12 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "consts.h"
-#include "types.h"
-#include "pia.h"
-#include "memory.h"
-#include "vdg.h"
-#include "core.h"
+#include "headers.h"
 #include "tests/test.h"
 
 extern struct cpu_state e_cpu_context;

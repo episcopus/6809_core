@@ -3,12 +3,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "consts.h"
-#include "types.h"
-#include "pia.h"
-#include "memory.h"
-#include "vdg.h"
-#include "core.h"
+#include "headers.h"
 
 struct cpu_state e_cpu_context;
 /* This struct captures the inverse order stacking order for register
