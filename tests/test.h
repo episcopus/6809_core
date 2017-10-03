@@ -106,6 +106,10 @@ void sam_ty_true_no_basic_test(void **state);
 /* PIA tests */
 void pia_basic_test(void **state);
 
+/* VDG tests */
+void get_vdg_mode_from_sam_test(void **state);
+void get_vdg_mode_from_sam_2_test(void **state);
+
 /* Immediate tests */
 void adca_immediate_test(void **state);
 void adcb_immediate_test(void **state);
