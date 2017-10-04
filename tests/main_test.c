@@ -122,6 +122,8 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(get_vdg_mode_3_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(get_vdg_mode_4_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(vdg_init_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(vdg_update_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(vdg_update_g1c_test, test_setup, test_teardown),
 
     cmocka_unit_test_setup_teardown(nop_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(nop_pc_test, test_setup, test_teardown),

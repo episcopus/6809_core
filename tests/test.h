@@ -116,6 +116,8 @@ void get_vdg_mode_2_test(void **state);
 void get_vdg_mode_3_test(void **state);
 void get_vdg_mode_4_test(void **state);
 void vdg_init_test(void **state);
+void vdg_update_test(void **state);
+void vdg_update_g1c_test(void **state);
 
 /* Immediate tests */
 void adca_immediate_test(void **state);

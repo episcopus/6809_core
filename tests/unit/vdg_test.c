@@ -116,3 +116,62 @@ void vdg_init_test(void **state) {
     vdg_destroy();
     assert_int_equal(e_cpu_context.vdg_state.video_buf, NULL);
 }
+
+void vdg_update_test(void **state) {
+    (void) state; /* unused */
+
+    vdg_init();
+    vdg_update();
+
+    assert_int_not_equal(e_cpu_context.vdg_state.video_buf, NULL);
+
+    /* Assume default AI video mode, go look for border color and background
+       color */
+    uint32 border_color = VDG_BLACK;
+    uint16 root_border_address = 0;
+    assert_int_equal(e_cpu_context.vdg_state.video_buf[root_border_address], VDG_R_BYTE(border_color));
+    assert_int_equal(e_cpu_context.vdg_state.video_buf[root_border_address + 1], VDG_G_BYTE(border_color));
+    assert_int_equal(e_cpu_context.vdg_state.video_buf[root_border_address + 2], VDG_B_BYTE(border_color));
+    assert_int_equal(e_cpu_context.vdg_state.video_buf[root_border_address + 3], VDG_A_BYTE(border_color));
+
+    uint16 root_bg_address = (SCR_BUF_X * ACTIVE_BUF_OFFSET * 4) + ACTIVE_BUF_OFFSET * 4;
+    uint32 bg_color = VDG_GREEN;
+    assert_int_equal(e_cpu_context.vdg_state.video_buf[root_bg_address], VDG_R_BYTE(bg_color));
+    assert_int_equal(e_cpu_context.vdg_state.video_buf[root_bg_address + 1], VDG_G_BYTE(bg_color));
+    assert_int_equal(e_cpu_context.vdg_state.video_buf[root_bg_address + 2], VDG_B_BYTE(bg_color));
+    assert_int_equal(e_cpu_context.vdg_state.video_buf[root_bg_address + 3], VDG_A_BYTE(bg_color));
+}
+
+void vdg_update_g1c_test(void **state) {
+    (void) state; /* unused */
+
+    vdg_init();
+    /* Initialize G1C mode w/ white border */
+    e_cpu_context.sam_state.v0_control_bit = 1;
+    e_cpu_context.sam_state.v1_control_bit = 0;
+    e_cpu_context.sam_state.v2_control_bit = 0;
+
+    uint8 pia_vdg_mode = e_cpu_context.pia_state.ddr_2_b;
+    pia_vdg_mode |= 0x08;
+    e_cpu_context.pia_state.ddr_2_b = pia_vdg_mode;
+
+    vdg_update();
+
+    assert_int_not_equal(e_cpu_context.vdg_state.video_buf, NULL);
+
+    /* Assume default AI video mode, go look for border color and background
+       color */
+    uint32 border_color = VDG_WHITE;
+    uint16 root_border_address = 0;
+    assert_int_equal(e_cpu_context.vdg_state.video_buf[root_border_address], VDG_R_BYTE(border_color));
+    assert_int_equal(e_cpu_context.vdg_state.video_buf[root_border_address + 1], VDG_G_BYTE(border_color));
+    assert_int_equal(e_cpu_context.vdg_state.video_buf[root_border_address + 2], VDG_B_BYTE(border_color));
+    assert_int_equal(e_cpu_context.vdg_state.video_buf[root_border_address + 3], VDG_A_BYTE(border_color));
+
+    uint16 root_bg_address = (SCR_BUF_X * ACTIVE_BUF_OFFSET * 4) + ACTIVE_BUF_OFFSET * 4;
+    uint32 bg_color = VDG_GREEN;
+    assert_int_equal(e_cpu_context.vdg_state.video_buf[root_bg_address], VDG_R_BYTE(bg_color));
+    assert_int_equal(e_cpu_context.vdg_state.video_buf[root_bg_address + 1], VDG_G_BYTE(bg_color));
+    assert_int_equal(e_cpu_context.vdg_state.video_buf[root_bg_address + 2], VDG_B_BYTE(bg_color));
+    assert_int_equal(e_cpu_context.vdg_state.video_buf[root_bg_address + 3], VDG_A_BYTE(bg_color));
+}

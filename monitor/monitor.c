@@ -11,6 +11,7 @@
 
 extern struct cpu_state e_cpu_context;
 extern struct opcode_def opcode_table[];
+void write_png(char *file_name);
 
 void disassemble_pc(char* out_buf) {
     uint8 cur_pc_byte = read_byte_from_memory(get_reg_value_16(REG_PC));
@@ -93,6 +94,27 @@ void print_memory(uint16 root_address) {
     }
 }
 
+void vdg_dump() {
+    /* Dump the frame buffer to a raw binary file as well as png */
+    const char* video_file = "/Users/simon/Dropbox/Programming/c/6809_core/picture.bin";
+    FILE* handle = fopen(video_file, "w");
+    if (!handle) {
+        assert(FALSE);
+        return;
+    }
+
+    size_t num_objects = fwrite((const void *) e_cpu_context.vdg_state.video_buf,
+                                1, SCR_BUF_Y * SCR_BUF_X * 4, handle);
+    if (!num_objects || num_objects < SCR_BUF_Y * SCR_BUF_X) {
+        assert(FALSE);
+    }
+
+    fclose(handle);
+
+    char* png_file = "/Users/simon/Dropbox/Programming/c/6809_core/picture.png";
+    write_png(png_file);
+}
+
 int process_command() {
     size_t command_cap = 80;
     char* command = (char*) malloc(command_cap);
@@ -119,6 +141,11 @@ int process_command() {
             print_memory(arg1);
         }
     }
+    else if (strncmp(command, "v", 1) == 0) {
+        vdg_update();
+        vdg_dump();
+        printf("Dumped video buffer to file\n");
+    }
     else {
         printf("Unrecognized command. Type 'h' for help.\n");
     }
@@ -143,6 +170,8 @@ int main(int argc, char* argv[]) {
 
     core_init();
     load_roms();
+    vdg_init();
+
     e_cpu_context.swi_hook = 1;
 
     uint16 preambles = init_from_decb_file(program_filename);

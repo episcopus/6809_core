@@ -2,7 +2,7 @@ BUILD_DIR = ./build/
 PROGRAM_DIR = $(BUILD_DIR)tests/program
 TARGET = $(BUILD_DIR)6809.a
 TEST_TARGET = $(BUILD_DIR)6809_tests
-TEST_LIBS = cmocka
+TEST_LIBS = -l cmocka -l png
 MON_TARGET = $(BUILD_DIR)mon
 CC = gcc
 CFLAGS = -I. -Wall -g -D TESTS
@@ -36,10 +36,10 @@ $(TARGET): $(OBJECTS)
 	ranlib $@
 
 $(TEST_TARGET): $(TARGET) $(TEST_OBJECTS) $(DECB_OBJECTS)
-	$(CC) $(TEST_OBJECTS) $(CFLAGS) -l $(TEST_LIBS) -o $@
+	$(CC) $(TEST_OBJECTS) $(CFLAGS) $(TEST_LIBS) -o $@
 
 $(MON_TARGET) : $(TARGET) $(MON_OBJECTS)
-	$(CC) $(MON_OBJECTS) -l $(TEST_LIBS) $(CFLAGS) -o $@
+	$(CC) $(MON_OBJECTS) $(TEST_LIBS) $(CFLAGS) -o $@
 
 clean:
 	rm -f $(TARGET)

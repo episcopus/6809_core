@@ -1,5 +1,7 @@
 build/
 scripts/opcode_table.c
+picture*.png
+picture.bin
 GPATH
 GRTAGS
 GTAGS
