@@ -4,6 +4,7 @@
 #include <stdio.h>
 
 #include "headers.h"
+#include "charset.h"
 
 extern struct cpu_state e_cpu_context;
 
@@ -170,41 +171,10 @@ void vdg_clear_buffer(uint32 border_color) {
                 color = border_color;
             }
 
-            /* e_cpu_context.vdg_state.video_buf[(SCR_BUF_X * i * 4) + j * 4] = (color & 0xFF000000) >> 24; */
-            /* e_cpu_context.vdg_state.video_buf[(SCR_BUF_X * i * 4) + j * 4 + 1] = (color & 0x00FF0000) >> 16; */
-            /* e_cpu_context.vdg_state.video_buf[(SCR_BUF_X * i * 4) + j * 4 + 2] = (color & 0x0000FF00) >> 8; */
-            /* e_cpu_context.vdg_state.video_buf[(SCR_BUF_X * i * 4) + j * 4 + 3] = (color & 0x000000FF); */
             vdg_buf_set_pixel(j, i, color);
         }
     }
 }
-
-const uint8 vdg_ai_characters[0x2][0xC] = {
-    { 0b00000000,
-      0b00000000,
-      0b00111100,
-      0b00010010,
-      0b00010010,
-      0b00011100,
-      0b00010010,
-      0b00010010,
-      0b00111100,
-      0b00000000,
-      0b00000000,
-      0b00000000 },
-    { 0b00000000,
-      0b00000000,
-      0b00001000,
-      0b00010100,
-      0b00100010,
-      0b00100010,
-      0b00111110,
-      0b00100010,
-      0b00100010,
-      0b00000000,
-      0b00000000,
-      0b00000000 }
-};
 
 void vdg_update_ai_sg4_mode(uint16 buf_addr) {
     int VDG_AI_X = 32;
@@ -219,8 +189,7 @@ void vdg_update_ai_sg4_mode(uint16 buf_addr) {
     /* Walk memory and paint characters on screen */
     for (int i=0; i<VDG_AI_Y; i++) {
         for (int j=0; j<VDG_AI_X; j++) {
-            /* uint8 character = e_cpu_context.memory[buf_addr + VDG_AI_X * i + j]; */
-            uint8 character = j % 2;
+            uint8 character = e_cpu_context.memory[buf_addr + VDG_AI_X * i + j];
 
             /* Draw the full character */
             for (int y=0; y<12; y++) {
