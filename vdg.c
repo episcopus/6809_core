@@ -5,6 +5,7 @@
 
 #include "headers.h"
 #include "charset.h"
+#include "semi_graphics.h"
 
 extern struct cpu_state e_cpu_context;
 
@@ -190,14 +191,21 @@ void vdg_update_ai_sg4_mode(uint16 buf_addr) {
     for (int i=0; i<VDG_AI_Y; i++) {
         for (int j=0; j<VDG_AI_X; j++) {
             uint8 character = e_cpu_context.memory[buf_addr + VDG_AI_X * i + j];
+            uint8 is_sg = character & 0x8;
 
             /* Draw the full character */
             for (int y=0; y<12; y++) {
                 for (int x=7; x>=0; x--) {
-                    uint8 set = vdg_ai_characters[character][y] & (1 << x);
-                    uint32 color = set ? fg_color : bg_color;
-
-                    vdg_buf_set_pixel(base_x + 7 - x, base_y + y, color);
+                    if (is_sg) {
+                        uint8 key = vdg_sg_characters[character & 0x7F][8 * y + 7 - x];
+                        uint32 color = vdg_sg_color_key[key];
+                        vdg_buf_set_pixel(base_x + 7 - x, base_y + y, color);
+                    }
+                    else {
+                        uint8 set = vdg_ai_characters[character][y] & (1 << x);
+                        uint32 color = set ? fg_color : bg_color;
+                        vdg_buf_set_pixel(base_x + 7 - x, base_y + y, color);
+                    }
                 }
             }
 
