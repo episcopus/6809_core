@@ -12,6 +12,9 @@
 extern struct cpu_state e_cpu_context;
 extern struct opcode_def opcode_table[];
 extern const char* root_test_path;
+extern const uint8 vdg_ai_characters[0x80][0xC];
+extern const uint8 vdg_sg_characters[0x80][0x60];
+extern const uint32 vdg_sg_color_key[0xA];
 
 void program_8_bit_addition_test(void **state) {
     (void) state; /* unused */
@@ -35,7 +38,6 @@ void program_8_bit_addition_test(void **state) {
     assert_int_equal(num_cycles, opcode_table[OP_LDA_E].cycle_count +
                      opcode_table[OP_ADDA_E].cycle_count +
                      opcode_table[OP_STA_E].cycle_count);
-
 }
 
 void program_shift_left_1_bit_test(void **state) {
@@ -175,4 +177,94 @@ void program_bubble_sort(void **state) {
     run_cycles(0xFFFFFFFF);
     perform_memory_checks(checks, sizeof(checks) / sizeof(checks[0]));
     assert_int_equal(e_cpu_context.pc, 0x129);
+}
+
+void program_charset(void **state) {
+    (void) state; /* unused */
+    e_cpu_context.swi_hook = 1;
+    vdg_init();
+
+    struct test_check checks[] = {
+        { 0x0407, 0x07 },
+        { 0x0408, 0x08 },
+        { 0x0409, 0x09 },
+        { 0x040A, 0x0A },
+        { 0x040B, 0x0B },
+        { 0x040C, 0x0C },
+        { 0x040D, 0x0D },
+        { 0x040E, 0x0E },
+        { 0x040F, 0x0F }
+    };
+
+    char* program_path = get_test_program_path("charset.bin");
+    init_from_decb_file(program_path);
+    free(program_path);
+
+    run_cycles(0xFFFFFFFF);
+    vdg_update();
+    perform_memory_checks(checks, sizeof(checks) / sizeof(checks[0]));
+
+    /* Spot check a few things */
+    int base_y = ACTIVE_BUF_OFFSET;
+    int base_x = ACTIVE_BUF_OFFSET + 12 * 8;
+    /* int VDG_AI_X = 32; */
+    /* int VDG_AI_Y = 16; */
+    uint32 fg_color = VDG_AI_INV;
+    uint32 bg_color = VDG_GREEN;
+    uint16 buf_addr = get_video_starting_address_from_sam();
+
+    uint8 character = e_cpu_context.memory[buf_addr + 12];
+    uint8 is_sg = character & 0x80;
+
+    /* Check the 'L' character on the first row */
+    for (int y=0; y<12; y++) {
+        for (int x=7; x>=0; x--) {
+            if (is_sg) {
+                uint8 key = vdg_sg_characters[character & 0x7F][8 * y + 7 - x];
+                uint32 color = vdg_sg_color_key[key];
+                vdg_buf_set_pixel(base_x + 7 - x, base_y + y, color);
+            }
+            else {
+                uint8 set = vdg_ai_characters[character][y] & (1 << x);
+                uint32 color = set ? fg_color : bg_color;
+                int this_x = base_x + 7 - x;
+                int this_y = base_y + y;
+
+                assert_int_equal(e_cpu_context.vdg_state.video_buf[(SCR_BUF_X * this_y * 4) + this_x * 4],
+                                 (color & 0xFF000000) >> 24);
+                assert_int_equal(e_cpu_context.vdg_state.video_buf[(SCR_BUF_X * this_y * 4) + this_x * 4 + 1],
+                                 (color & 0x00FF0000) >> 16);
+                assert_int_equal(e_cpu_context.vdg_state.video_buf[(SCR_BUF_X * this_y * 4) + this_x * 4 + 2],
+                                 (color & 0x0000FF00) >> 8);
+                assert_int_equal(e_cpu_context.vdg_state.video_buf[(SCR_BUF_X * this_y * 4) + this_x * 4 + 3],
+                                 (color & 0x000000FF));
+
+            }
+        }
+    }
+
+    /* Spot check a few additional pixels */
+    int this_x = 110 + ACTIVE_BUF_OFFSET;
+    int this_y = 63 + ACTIVE_BUF_OFFSET;
+    uint32 color = vdg_sg_color_key[4]; /* dark blue */
+    assert_int_equal(e_cpu_context.vdg_state.video_buf[(SCR_BUF_X * this_y * 4) + this_x * 4],
+                     (color & 0xFF000000) >> 24);
+    assert_int_equal(e_cpu_context.vdg_state.video_buf[(SCR_BUF_X * this_y * 4) + this_x * 4 + 1],
+                     (color & 0x00FF0000) >> 16);
+    assert_int_equal(e_cpu_context.vdg_state.video_buf[(SCR_BUF_X * this_y * 4) + this_x * 4 + 2],
+                     (color & 0x0000FF00) >> 8);
+    assert_int_equal(e_cpu_context.vdg_state.video_buf[(SCR_BUF_X * this_y * 4) + this_x * 4 + 3],
+                     (color & 0x000000FF));
+
+    this_x = 194 + ACTIVE_BUF_OFFSET;
+    this_y = 74 + ACTIVE_BUF_OFFSET;
+    color = vdg_sg_color_key[7]; /* lime green */
+    assert_int_equal(e_cpu_context.vdg_state.video_buf[(SCR_BUF_X * this_y * 4) + this_x * 4],
+                     (color & 0xFF000000) >> 24);
+    assert_int_equal(e_cpu_context.vdg_state.video_buf[(SCR_BUF_X * this_y * 4) + this_x * 4 + 1],
+                     (color & 0x00FF0000) >> 16);
+    assert_int_equal(e_cpu_context.vdg_state.video_buf[(SCR_BUF_X * this_y * 4) + this_x * 4 + 2],
+                     (color & 0x0000FF00) >> 8);
+    assert_int_equal(e_cpu_context.vdg_state.video_buf[(SCR_BUF_X * this_y * 4) + this_x * 4 + 3],
+                     (color & 0x000000FF));
 }

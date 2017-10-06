@@ -135,7 +135,8 @@ void vdg_update_test(void **state) {
     assert_int_equal(e_cpu_context.vdg_state.video_buf[root_border_address + 3], VDG_A_BYTE(border_color));
 
     uint16 root_bg_address = (SCR_BUF_X * ACTIVE_BUF_OFFSET * 4) + ACTIVE_BUF_OFFSET * 4;
-    uint32 bg_color = VDG_GREEN;
+    /* By default video buffer is actually full of \0's which is the '@' char inverted */
+    uint32 bg_color = VDG_AI_INV;
     assert_int_equal(e_cpu_context.vdg_state.video_buf[root_bg_address], VDG_R_BYTE(bg_color));
     assert_int_equal(e_cpu_context.vdg_state.video_buf[root_bg_address + 1], VDG_G_BYTE(bg_color));
     assert_int_equal(e_cpu_context.vdg_state.video_buf[root_bg_address + 2], VDG_B_BYTE(bg_color));
@@ -155,18 +156,20 @@ void vdg_update_g1c_test(void **state) {
     pia_vdg_mode |= 0x08;
     e_cpu_context.pia_state.ddr_2_b = pia_vdg_mode;
 
-    vdg_update();
+    enum vdg_mode mode = get_vdg_mode();
+    uint32 border_color = vdg_get_bg_color(mode);
+    vdg_clear_buffer(border_color);
 
     assert_int_not_equal(e_cpu_context.vdg_state.video_buf, NULL);
 
     /* Assume default AI video mode, go look for border color and background
        color */
-    uint32 border_color = VDG_WHITE;
+    uint32 check_border_color = VDG_WHITE;
     uint16 root_border_address = 0;
-    assert_int_equal(e_cpu_context.vdg_state.video_buf[root_border_address], VDG_R_BYTE(border_color));
-    assert_int_equal(e_cpu_context.vdg_state.video_buf[root_border_address + 1], VDG_G_BYTE(border_color));
-    assert_int_equal(e_cpu_context.vdg_state.video_buf[root_border_address + 2], VDG_B_BYTE(border_color));
-    assert_int_equal(e_cpu_context.vdg_state.video_buf[root_border_address + 3], VDG_A_BYTE(border_color));
+    assert_int_equal(e_cpu_context.vdg_state.video_buf[root_border_address], VDG_R_BYTE(check_border_color));
+    assert_int_equal(e_cpu_context.vdg_state.video_buf[root_border_address + 1], VDG_G_BYTE(check_border_color));
+    assert_int_equal(e_cpu_context.vdg_state.video_buf[root_border_address + 2], VDG_B_BYTE(check_border_color));
+    assert_int_equal(e_cpu_context.vdg_state.video_buf[root_border_address + 3], VDG_A_BYTE(check_border_color));
 
     uint16 root_bg_address = (SCR_BUF_X * ACTIVE_BUF_OFFSET * 4) + ACTIVE_BUF_OFFSET * 4;
     uint32 bg_color = VDG_GREEN;

@@ -592,3 +592,4 @@ void program_find_larger_of_two_numbers_test(void **state);
 void program_table_of_squares_test(void **state);
 void program_8_bit_add_with_carry(void **state);
 void program_bubble_sort(void **state);
+void program_charset(void **state);
