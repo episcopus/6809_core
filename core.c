@@ -1197,9 +1197,10 @@ uint16 init_from_decb_file(const char* filename) {
         return 0;
     }
 
+    uint16 ret_preambles = init_from_decb_memory(my_buffer, (uint16) read_size);
+
     free((void *) my_buffer);
     fclose(handle);
 
-    uint16 ret_preambles = init_from_decb_memory(my_buffer, (uint16) read_size);
     return ret_preambles;
 }

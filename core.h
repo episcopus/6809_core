@@ -62,9 +62,9 @@ struct cpu_state {
     uint8 swi_hook;
 };
 
-void core_init();
-void load_roms();
-void core_destroy();
+void core_init(void);
+void load_roms(void);
+void core_destroy(void);
 
 enum reg_size get_reg_size(enum target_register reg);
 uint8 get_reg_value_8(enum target_register reg);
@@ -91,7 +91,7 @@ uint16 pull_word_from_stack(enum target_register t_r);
 uint8 push_registers_to_stack(uint8 reg_field, enum target_register reg_stack);
 uint8 pull_registers_from_stack(uint8 reg_field, enum target_register reg_stack);
 
-uint16 decode_indexed_addressing_postbyte();
+uint16 decode_indexed_addressing_postbyte(uint8* out_extra_cycles);
 enum target_register decode_register_from_indexed_postbyte(uint8 postbyte);
 uint16 decode_constant_offset_postbyte(uint8* out_extra_cycles);
 uint16 decode_accumulator_offset_postbyte(uint8* out_extra_cycles);
@@ -104,9 +104,9 @@ uint16 init_from_decb_memory(const uint8* buffer, uint16 buffer_size);
 uint16 init_from_decb_file(const char* filename);
 
 uint32 run_cycles(uint32 wanted_cycles);
-uint32 run_hsync_interval();
+uint32 run_hsync_interval(void);
 void perform_tick_housekeeping(uint32 cycles);
 void perform_hsync_housekeeping(uint32 cycles);
 void perform_vsync_housekeeping(uint32 cycles);
-uint32 process_interrupts();
+uint32 process_interrupts(void);
 uint32 process_swi(enum swi_type swi);

@@ -39,12 +39,12 @@ struct vdg_state_struct {
     uint8* video_buf;
 };
 
-uint8 get_vdg_mode_from_sam();
-uint16 get_video_starting_address_from_sam();
-enum vdg_mode get_vdg_mode();
-void vdg_init();
-void vdg_destroy();
-void vdg_update();
+uint8 get_vdg_mode_from_sam(void);
+uint16 get_video_starting_address_from_sam(void);
+enum vdg_mode get_vdg_mode(void);
+void vdg_init(void);
+void vdg_destroy(void);
+void vdg_update(void);
 void vdg_buf_set_pixel(uint16 x, uint16 y, uint32 color);
 void vdg_clear_buffer(uint32 border_color);
 void vdg_update_ai_sg4_mode(uint16 buf_addr);
