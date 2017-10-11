@@ -37,6 +37,8 @@ void core_init_test(void **state) {
     assert_int_equal(e_cpu_context.firq, 0);
     assert_int_equal(e_cpu_context.nmi, 0);
     assert_int_equal(e_cpu_context.halted_state, HS_NONE);
+    assert_int_equal(e_cpu_context.swi_hook, 0);
+    assert_int_equal(e_cpu_context.swi_hook_set, 0);
 
     for (int i = 0; i < MEMORY_SIZE; i++) {
         /* Skip the default interrupt vector locations initiatlized in

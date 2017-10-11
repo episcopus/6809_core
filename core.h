@@ -60,6 +60,7 @@ struct cpu_state {
 
     /* Set this to true to break in the monitor during the SWI instruction */
     uint8 swi_hook;
+    uint8 swi_hook_set;
 };
 
 void core_init(void);

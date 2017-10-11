@@ -123,6 +123,7 @@ void core_init() {
     e_cpu_context.pia_state.cr_2_b = 0;
 
     e_cpu_context.swi_hook = 0;
+    e_cpu_context.swi_hook_set = 0;
 
     /* Set up default interrupt handlers, will be overridden by Basic */
     setup_default_vector(RESET_VECTOR, DEFAULT_RESET_VECTOR);
@@ -830,6 +831,12 @@ uint32 run_cycles(uint32 wanted_cycles) {
     while (completed_cycles < wanted_cycles) {
         int this_completed_cycles = 0;
 
+        if (e_cpu_context.swi_hook_set) {
+            /* Execution breaks to the monitor since SWI was called after the
+               swi_hook was turned on */
+            break;
+        }
+
         if (e_cpu_context.nmi || e_cpu_context.firq ||
             e_cpu_context.irq) {
             this_completed_cycles = process_interrupts();
@@ -853,9 +860,6 @@ uint32 run_cycles(uint32 wanted_cycles) {
 
         this_completed_cycles = this_opcode.func(opcode, this_opcode.t_r,
                                                   this_opcode.mode);
-        if (!this_completed_cycles && e_cpu_context.swi_hook) {
-            break;
-        }
         completed_cycles += this_completed_cycles;
         perform_tick_housekeeping(this_completed_cycles);
     }
@@ -992,6 +996,7 @@ uint32 process_swi(enum swi_type swi) {
 
     /* Special trap for monitor execution */
     if (e_cpu_context.swi_hook) {
+        e_cpu_context.swi_hook_set = 1;
         return 0;
     }
 

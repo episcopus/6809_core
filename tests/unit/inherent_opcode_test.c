@@ -1599,6 +1599,7 @@ void swi_basic_test(void **state) {
     /* One INCA's at 2 cycles plus 19 cycles for SWI */
     assert_int_equal(cycles, 21);
     assert_int_equal(get_reg_value_16(REG_PC), DEFAULT_SWI_VECTOR);
+    assert_int_equal(e_cpu_context.swi_hook_set, 0);
 }
 
 void swi_with_rti_test(void **state) {
@@ -1635,6 +1636,7 @@ void swi_with_rti_test(void **state) {
 
     cycles += run_cycles(opcode_table[OP_CLRA].cycle_count);
     assert_int_equal(get_reg_value_8(REG_A), 0);
+    assert_int_equal(e_cpu_context.swi_hook_set, 0);
 
     /* Now return from the interrupt and the previous value of a should
        be restored */
@@ -1681,7 +1683,8 @@ void swi_hook_test(void **state) {
     /* Ensure that we did not do the interrupt routine */
     cycles += run_cycles(opcode_table[OP_NOP].cycle_count);
     assert_int_equal(get_reg_value_8(REG_A), 3);
-    assert_int_equal(get_reg_value_16(REG_PC), 0x103);
+    assert_int_equal(get_reg_value_16(REG_PC), 0x102);
+    assert_int_equal(e_cpu_context.swi_hook_set, 1);
 }
 
 void swi2_basic_test(void **state) {
@@ -1715,6 +1718,7 @@ void swi2_basic_test(void **state) {
     /* One INCA's at 2 cycles plus 20 cycles for SWI2 */
     assert_int_equal(cycles, 22);
     assert_int_equal(get_reg_value_16(REG_PC), DEFAULT_SWI2_VECTOR);
+    assert_int_equal(e_cpu_context.swi_hook_set, 0);
 }
 
 void swi2_with_rti_test(void **state) {
@@ -1758,6 +1762,7 @@ void swi2_with_rti_test(void **state) {
     cycles += run_cycles(opcode_table[OP_RTI].cycle_count);
     assert_int_equal(get_reg_value_8(REG_A), 0x3);
     assert_int_equal(get_reg_value_16(REG_PC), 0x103);
+    assert_int_equal(e_cpu_context.swi_hook_set, 0);
 }
 
 void swi3_basic_test(void **state) {
@@ -1791,6 +1796,7 @@ void swi3_basic_test(void **state) {
     /* One INCA's at 2 cycles plus 20 cycles for SWI3 */
     assert_int_equal(cycles, 22);
     assert_int_equal(get_reg_value_16(REG_PC), DEFAULT_SWI3_VECTOR);
+    assert_int_equal(e_cpu_context.swi_hook_set, 0);
 }
 
 void swi3_with_rti_test(void **state) {
@@ -1834,6 +1840,7 @@ void swi3_with_rti_test(void **state) {
     cycles += run_cycles(opcode_table[OP_RTI].cycle_count);
     assert_int_equal(get_reg_value_8(REG_A), 0x3);
     assert_int_equal(get_reg_value_16(REG_PC), 0x203);
+    assert_int_equal(e_cpu_context.swi_hook_set, 0);
 }
 
 void sync_basic_test(void **state) {
