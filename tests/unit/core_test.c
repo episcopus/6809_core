@@ -89,6 +89,9 @@ void core_init_test(void **state) {
     assert_int_equal(e_cpu_context.pia_state.dddr_2_a, 0);
     assert_int_equal(e_cpu_context.pia_state.ddr_2_b, 0);
     assert_int_equal(e_cpu_context.pia_state.dddr_2_b, 0);
+    for (int i = 0; i < PIA_KEYBOARD_SIZE; i++) {
+        assert_int_equal(e_cpu_context.pia_state.host_keys[i], 0);
+    }
 }
 
 void basic_rom_test(void **state) {

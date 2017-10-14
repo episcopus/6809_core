@@ -104,3 +104,47 @@ void pia_write_byte_to_memory(uint16 address, uint8 byte) {
         break;
     }
 }
+
+void pia_update_keyboard() {
+    /* Update keyboard state based on host keys. Algorithm:
+       Determine PIA direction strobe (control register) direction.
+       Determine keyboard column being strobed.
+       Walk through keys of said column clearing input bits for
+       those keys that are down according to host.
+       Update input data register. */
+
+    /* TODO flip based on actual control register direction */
+    uint8* output_ddr = &e_cpu_context.pia_state.ddr_1_b;
+    uint8* input_ddr = &e_cpu_context.pia_state.ddr_1_a;
+
+    /* 0 is set for down key, by default nothing will be down. */
+    uint8 input_value = 0xFF;
+    uint8 output_value = ~*output_ddr;
+
+    for (uint8 iter_value = 0x1, less_sig_nibble = 0; iter_value <= 0xFF;
+         iter_value <<= 1, less_sig_nibble++) {
+        /* The iter_value column is being strobed (low), assess any keys within
+           it */
+        if (!(iter_value & output_value)) {
+            /* Nothing to do for this column */
+            continue;
+        }
+
+        for (uint8 most_sig_nibble = 0, inner_mask = 0x1; most_sig_nibble < 57;
+             most_sig_nibble += 8, inner_mask <<= 1) {
+            uint8 table_lookup = most_sig_nibble + less_sig_nibble;
+            /* uint8 host_table_index = 1; /\* TODO implement PIA - HOST mapping table *\/ */
+
+            /* look up in host's key state */
+            if (e_cpu_context.pia_state.host_keys[table_lookup]) {
+                /* Clear corresponding PIA input bit */
+                input_value ^= inner_mask;
+            }
+        }
+
+        break;
+    }
+
+    /* Update input data register. */
+    *input_ddr = input_value;
+}

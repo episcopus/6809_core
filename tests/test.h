@@ -105,6 +105,8 @@ void sam_ty_true_no_basic_test(void **state);
 
 /* PIA tests */
 void pia_basic_test(void **state);
+void pia_update_keyboard_test(void **state);
+void pia_update_keyboard_no_key_test(void **state);
 
 /* VDG tests */
 void get_vdg_mode_from_sam_test(void **state);

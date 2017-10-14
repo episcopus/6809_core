@@ -122,6 +122,10 @@ void core_init() {
     e_cpu_context.pia_state.dddr_2_b = 0;
     e_cpu_context.pia_state.cr_2_b = 0;
 
+    for (int i=0; i<PIA_KEYBOARD_SIZE; i++) {
+        e_cpu_context.pia_state.host_keys[i] = 0;
+    }
+
     e_cpu_context.swi_hook = 0;
     e_cpu_context.swi_hook_set = 0;
 
