@@ -1111,7 +1111,14 @@ uint8 disassemble_instruction(uint16 pc, char* decoded) {
     else {
         switch (this_opcode.mode) {
         case IMMEDIATE:
-            assert(FALSE);
+            if (get_reg_size(this_opcode.t_r) == REG_SIZE_8) {
+                num_bytes++;
+                uint8 operand = e_cpu_context.memory[pc + 1];
+                sprintf(decoded, "%s #$%.2X", this_opcode.instruction, operand);
+            }
+            else {
+                assert(FALSE);
+            }
             break;
         case DIRECT:
             assert(FALSE);

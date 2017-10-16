@@ -1666,6 +1666,26 @@ void disassemble_instruction_inherent_test(void **state) {
     assert_string_equal(decoded, "MUL");
 }
 
+void disassemble_instruction_immediate_test(void **state) {
+    (void) state; /* unused */
+
+    uint8 code_bytes[] = {
+        OP_CMPA,
+        0x69
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 },
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.pc = USER_SPACE_ROOT;
+
+    char decoded[100];
+    uint8 num_bytes = disassemble_instruction(e_cpu_context.pc, decoded);
+
+    assert_int_equal(num_bytes, 2);
+    assert_string_equal(decoded, "CMPA #$69");
+}
+
 void get_reg_value_8_test(void **state) {
     (void) state; /* unused */
 
