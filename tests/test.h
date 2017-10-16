@@ -73,6 +73,7 @@ void decode_source_target_postbyte_2_test(void **state);
 void decode_source_target_postbyte_invalid_test(void **state);
 void disassemble_instruction_notimpl_test(void **state);
 void disassemble_instruction_ext_notimpl_test(void **state);
+void disassemble_instruction_inherent_test(void **state);
 void get_reg_value_8_test(void **state);
 void get_reg_value_8_invalid_test(void **state);
 void set_reg_value_8_test(void **state);

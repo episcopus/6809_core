@@ -1086,21 +1086,20 @@ void decode_source_target_postbyte(uint8 postbyte, enum target_register* out_sou
 uint8 disassemble_instruction(uint16 pc, char* decoded) {
     uint8 opcode = e_cpu_context.memory[pc];
     struct opcode_def this_opcode = opcode_table[opcode];
-    uint8 num_bytes = 0;
+    uint8 num_bytes = 1;
 
     if (this_opcode.opcode == OP_EXTENDED_X10) {
-        num_bytes++;
         opcode = e_cpu_context.memory[pc + 1];
         this_opcode = opcode_ext_x10_table[opcode];
+        num_bytes++;
     }
     else if (this_opcode.opcode == OP_EXTENDED_X11) {
-        num_bytes++;
         opcode = e_cpu_context.memory[pc + 1];
         this_opcode = opcode_ext_x11_table[opcode];
+        num_bytes++;
     }
 
     if (strncmp("NOTIMPL", this_opcode.instruction, 7) == 0) {
-        num_bytes++;
         if (num_bytes == 2) {
             uint8 prev_opcode = e_cpu_context.memory[pc];
             sprintf(decoded, "$%.2X $%.2X", prev_opcode, opcode);
@@ -1112,14 +1111,19 @@ uint8 disassemble_instruction(uint16 pc, char* decoded) {
     else {
         switch (this_opcode.mode) {
         case IMMEDIATE:
+            assert(FALSE);
             break;
         case DIRECT:
+            assert(FALSE);
             break;
         case INDEXED:
+            assert(FALSE);
             break;
         case EXTENDED:
+            assert(FALSE);
             break;
         case INHERENT:
+            sprintf(decoded, "%s", this_opcode.instruction);
             break;
         }
     }

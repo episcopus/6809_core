@@ -83,6 +83,7 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(decode_source_target_postbyte_invalid_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(disassemble_instruction_notimpl_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(disassemble_instruction_ext_notimpl_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(disassemble_instruction_inherent_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(get_reg_value_8_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(get_reg_value_8_invalid_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(set_reg_value_8_test, test_setup, test_teardown),
