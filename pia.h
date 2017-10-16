@@ -21,7 +21,7 @@ struct pia_state_struct {
 /* Memory handler routine for PIA address space 0xFF00-0xFF03, 0xFF20-0xFF23 */
 uint8 pia_read_byte_from_memory(uint16 address);
 void pia_write_byte_to_memory(uint16 address, uint8 byte);
-void pia_update_keyboard();
+void pia_update_keyboard(void);
 
 /* Coco keyboard keys PIA id's follow */
 #define PIA_KEYBOARD_SIZE 56

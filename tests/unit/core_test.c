@@ -1608,6 +1608,45 @@ void decode_source_target_postbyte_invalid_test(void **state) {
     assert_int_equal(trg, REG_NONE);
 }
 
+void disassemble_instruction_notimpl_test(void **state) {
+    (void) state; /* unused */
+
+    uint8 code_bytes[] = {
+        0x1
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 1 },
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.pc = USER_SPACE_ROOT;
+
+    char decoded[100];
+    uint8 num_bytes = disassemble_instruction(e_cpu_context.pc, decoded);
+
+    assert_int_equal(num_bytes, 1);
+    assert_string_equal(decoded, "$01");
+}
+
+void disassemble_instruction_ext_notimpl_test(void **state) {
+    (void) state; /* unused */
+
+    uint8 code_bytes[] = {
+        0x10,
+        0x1
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 },
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.pc = USER_SPACE_ROOT;
+
+    char decoded[100];
+    uint8 num_bytes = disassemble_instruction(e_cpu_context.pc, decoded);
+
+    assert_int_equal(num_bytes, 2);
+    assert_string_equal(decoded, "$10 $01");
+}
+
 void get_reg_value_8_test(void **state) {
     (void) state; /* unused */
 
