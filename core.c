@@ -1084,24 +1084,24 @@ void decode_source_target_postbyte(uint8 postbyte, enum target_register* out_sou
 }
 
 uint8 disassemble_instruction(uint16 pc, char* decoded) {
-    uint8 opcode = e_cpu_context.memory[pc];
+    uint8 opcode = e_cpu_context.memory[pc++];
     struct opcode_def this_opcode = opcode_table[opcode];
     uint8 num_bytes = 1;
 
     if (this_opcode.opcode == OP_EXTENDED_X10) {
-        opcode = e_cpu_context.memory[pc + 1];
+        opcode = e_cpu_context.memory[pc++];
         this_opcode = opcode_ext_x10_table[opcode];
         num_bytes++;
     }
     else if (this_opcode.opcode == OP_EXTENDED_X11) {
-        opcode = e_cpu_context.memory[pc + 1];
+        opcode = e_cpu_context.memory[pc++];
         this_opcode = opcode_ext_x11_table[opcode];
         num_bytes++;
     }
 
     if (strncmp("NOTIMPL", this_opcode.instruction, 7) == 0) {
         if (num_bytes == 2) {
-            uint8 prev_opcode = e_cpu_context.memory[pc];
+            uint8 prev_opcode = e_cpu_context.memory[pc - 2];
             sprintf(decoded, "$%.2X $%.2X", prev_opcode, opcode);
         }
         else {
@@ -1113,11 +1113,13 @@ uint8 disassemble_instruction(uint16 pc, char* decoded) {
         case IMMEDIATE:
             if (get_reg_size(this_opcode.t_r) == REG_SIZE_8) {
                 num_bytes++;
-                uint8 operand = e_cpu_context.memory[pc + 1];
+                uint8 operand = e_cpu_context.memory[pc++];
                 sprintf(decoded, "%s #$%.2X", this_opcode.instruction, operand);
             }
             else {
-                assert(FALSE);
+                num_bytes += 2;
+                uint16 operand = e_cpu_context.memory[pc] << 8 | e_cpu_context.memory[pc + 1];
+                sprintf(decoded, "%s #$%.4X", this_opcode.instruction, operand);
             }
             break;
         case DIRECT:

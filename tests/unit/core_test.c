@@ -1631,7 +1631,7 @@ void disassemble_instruction_ext_notimpl_test(void **state) {
     (void) state; /* unused */
 
     uint8 code_bytes[] = {
-        0x10,
+        OP_EXTENDED_X10,
         0x1
     };
     struct mem_loader_def test_memory[] = {
@@ -1684,6 +1684,49 @@ void disassemble_instruction_immediate_test(void **state) {
 
     assert_int_equal(num_bytes, 2);
     assert_string_equal(decoded, "CMPA #$69");
+}
+
+void disassemble_instruction_immediate_16_bit_test(void **state) {
+    (void) state; /* unused */
+
+    uint8 code_bytes[] = {
+        OP_CMPX,
+        0x12,
+        0x34
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 3 },
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.pc = USER_SPACE_ROOT;
+
+    char decoded[100];
+    uint8 num_bytes = disassemble_instruction(e_cpu_context.pc, decoded);
+
+    assert_int_equal(num_bytes, 3);
+    assert_string_equal(decoded, "CMPX #$1234");
+}
+
+void disassemble_instruction_immediate_ext_16_bit_test(void **state) {
+    (void) state; /* unused */
+
+    uint8 code_bytes[] = {
+        OP_EXTENDED_X10,
+        OP_LDS,
+        0x12,
+        0x34
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 4 },
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.pc = USER_SPACE_ROOT;
+
+    char decoded[100];
+    uint8 num_bytes = disassemble_instruction(e_cpu_context.pc, decoded);
+
+    assert_int_equal(num_bytes, 4);
+    assert_string_equal(decoded, "LDS #$1234");
 }
 
 void get_reg_value_8_test(void **state) {
