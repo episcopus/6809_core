@@ -1185,8 +1185,8 @@ uint8 disassemble_indexed_addressing_postbyte(uint16 pc, char* decoded) {
         case 0x5:
         case 0x6:
         case 0xB:
-            /* return_address = decode_accumulator_offset_postbyte(out_extra_cycles); */
-            /* break; */
+            return_bytes = disassemble_accumulator_offset_postbyte(pc, decoded);
+            break;
         case 0x0:
         case 0x1:
         case 0x2:
@@ -1261,6 +1261,44 @@ uint8 disassemble_extended_indirect(uint16 pc, char* decoded) {
     sprintf(decoded, "[$%.4X]", base_address);
 
     return 3;
+}
+
+uint8 disassemble_accumulator_offset_postbyte(uint16 pc, char* decoded) {
+    uint8 postbyte = read_byte_from_memory(pc++);
+    enum target_register tr = decode_register_from_indexed_postbyte(postbyte);
+    enum target_register or = REG_NONE;
+    uint8 return_bytes = 1;
+    uint8 indirect = postbyte & 0x10;
+
+    uint8 lower_nibble = postbyte & 0xF;
+    switch (lower_nibble) {
+    case 0x6:
+        or = REG_A;
+        break;
+    case 0x5:
+        or = REG_B;
+        break;
+    case 0xB:
+        or = REG_D;
+        break;
+    default:
+        assert(FALSE);
+        break;
+    }
+
+    char* index_register_string = register_names[tr];
+    char* offset_register_string = register_names[or];
+
+    if (indirect) {
+        sprintf(decoded, "[%s,%s]", offset_register_string,
+                index_register_string);
+    }
+    else {
+        sprintf(decoded, "%s,%s", offset_register_string,
+                index_register_string);
+    }
+
+    return return_bytes;
 }
 
 uint16 init_from_decb_memory(const uint8* buffer, uint16 buffer_size) {

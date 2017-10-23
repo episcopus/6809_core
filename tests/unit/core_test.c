@@ -1876,6 +1876,42 @@ void disassemble_instruction_indexed_const_off_8_bit_indirect_test(void **state)
     assert_string_equal(decoded, "JSR [-20,U]");
 }
 
+void disassemble_instruction_indexed_acc_test(void **state) {
+    uint8 code_bytes[] = {
+        OP_SBCA_I,
+        0x85 /* B acc offset from X */
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 },
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.pc = USER_SPACE_ROOT;
+
+    char decoded[100] = { 0 };
+    uint8 num_bytes = disassemble_instruction(e_cpu_context.pc, decoded);
+
+    assert_int_equal(num_bytes, 2);
+    assert_string_equal(decoded, "SBCA B,X");
+}
+
+void disassemble_instruction_indexed_acc_indirect_test(void **state) {
+    uint8 code_bytes[] = {
+        OP_ANDA_I,
+        0xF6 /* A acc offset from S, indirected */
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 },
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.pc = USER_SPACE_ROOT;
+
+    char decoded[100] = { 0 };
+    uint8 num_bytes = disassemble_instruction(e_cpu_context.pc, decoded);
+
+    assert_int_equal(num_bytes, 2);
+    assert_string_equal(decoded, "ANDA [A,S]");
+}
+
 void get_reg_value_8_test(void **state) {
     (void) state; /* unused */
 
