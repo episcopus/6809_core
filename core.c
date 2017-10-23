@@ -1175,29 +1175,30 @@ uint8 disassemble_indexed_addressing_postbyte(uint16 pc, char* decoded) {
         return_bytes = disassemble_extended_indirect(pc, decoded);
     }
     else {
-        /* uint8 lower_nibble = postbyte & 0xF; */
-        /* switch (lower_nibble) { */
-        /* case 0x4: */
-        /* case 0x8: */
-        /* case 0x9: */
-        /*     return_address = decode_constant_offset_postbyte(out_extra_cycles); */
-        /*     break; */
-        /* case 0x5: */
-        /* case 0x6: */
-        /* case 0xB: */
-        /*     return_address = decode_accumulator_offset_postbyte(out_extra_cycles); */
-        /*     break; */
-        /* case 0x0: */
-        /* case 0x1: */
-        /* case 0x2: */
-        /* case 0x3: */
-        /*     return_address = decode_inc_dec_offset_postbyte(out_extra_cycles); */
-        /*     break; */
-        /* case 0xC: */
-        /* case 0xD: */
-        /*     return_address = decode_constant_offset_from_pc(out_extra_cycles); */
-        /*     break; */
-        /* } */
+        uint8 lower_nibble = postbyte & 0xF;
+        switch (lower_nibble) {
+        case 0x4:
+        case 0x8:
+        case 0x9:
+            return_bytes = disassemble_constant_offset_postbyte(pc, decoded);
+            break;
+        case 0x5:
+        case 0x6:
+        case 0xB:
+            /* return_address = decode_accumulator_offset_postbyte(out_extra_cycles); */
+            /* break; */
+        case 0x0:
+        case 0x1:
+        case 0x2:
+        case 0x3:
+            /* return_address = decode_inc_dec_offset_postbyte(out_extra_cycles); */
+            /* break; */
+        case 0xC:
+        case 0xD:
+            /* return_address = decode_constant_offset_from_pc(out_extra_cycles); */
+            /* break; */
+            break;
+        }
     }
 
     return return_bytes;
@@ -1232,7 +1233,7 @@ uint8 disassemble_constant_offset_postbyte(uint16 pc, char* decoded) {
             offset = (int) one_byte_offset;
             break;
         case 0x9:
-            offset = (int) read_word_from_memory(e_cpu_context.pc);
+            offset = (int) read_word_from_memory(pc);
             pc += 2;
             return_bytes += 2;
             break;
