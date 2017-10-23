@@ -1912,6 +1912,42 @@ void disassemble_instruction_indexed_acc_indirect_test(void **state) {
     assert_string_equal(decoded, "ANDA [A,S]");
 }
 
+void disassemble_instruction_indexed_inc_test(void **state) {
+    uint8 code_bytes[] = {
+        OP_SUBA_I,
+        0xA0 /* 0 offset from Y, post-incremented */
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 },
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.pc = USER_SPACE_ROOT;
+
+    char decoded[100] = { 0 };
+    uint8 num_bytes = disassemble_instruction(e_cpu_context.pc, decoded);
+
+    assert_int_equal(num_bytes, 2);
+    assert_string_equal(decoded, "SUBA ,Y+");
+}
+
+void disassemble_instruction_indexed_dec_indexed_test(void **state) {
+    uint8 code_bytes[] = {
+        OP_ORA_I,
+        0xD3 /* 0 offset from U, pre-decremented */
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 },
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.pc = USER_SPACE_ROOT;
+
+    char decoded[100] = { 0 };
+    uint8 num_bytes = disassemble_instruction(e_cpu_context.pc, decoded);
+
+    assert_int_equal(num_bytes, 2);
+    assert_string_equal(decoded, "ORA [,--U]");
+}
+
 void get_reg_value_8_test(void **state) {
     (void) state; /* unused */
 

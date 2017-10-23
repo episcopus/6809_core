@@ -106,6 +106,7 @@ uint8 disassemble_indexed_addressing_postbyte(uint16 pc, char* decoded);
 uint8 disassemble_constant_offset_postbyte(uint16 pc, char* decoded);
 uint8 disassemble_extended_indirect(uint16 pc, char* decoded);
 uint8 disassemble_accumulator_offset_postbyte(uint16 pc, char* decoded);
+uint8 disassemble_inc_dec_offset_postbyte(uint16 pc, char* decoded);
 
 uint16 init_from_decb_memory(const uint8* buffer, uint16 buffer_size);
 uint16 init_from_decb_file(const char* filename);

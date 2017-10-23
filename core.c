@@ -1191,8 +1191,8 @@ uint8 disassemble_indexed_addressing_postbyte(uint16 pc, char* decoded) {
         case 0x1:
         case 0x2:
         case 0x3:
-            /* return_address = decode_inc_dec_offset_postbyte(out_extra_cycles); */
-            /* break; */
+            return_bytes = disassemble_inc_dec_offset_postbyte(pc, decoded);
+            break;
         case 0xC:
         case 0xD:
             /* return_address = decode_constant_offset_from_pc(out_extra_cycles); */
@@ -1296,6 +1296,42 @@ uint8 disassemble_accumulator_offset_postbyte(uint16 pc, char* decoded) {
     else {
         sprintf(decoded, "%s,%s", offset_register_string,
                 index_register_string);
+    }
+
+    return return_bytes;
+}
+
+uint8 disassemble_inc_dec_offset_postbyte(uint16 pc, char* decoded) {
+    uint8 postbyte = read_byte_from_memory(pc++);
+    enum target_register tr = decode_register_from_indexed_postbyte(postbyte);
+    uint8 indirect = postbyte & 0x10;
+    uint8 return_bytes = 1;
+
+    uint8 lower_nibble = postbyte & 0xF;
+    char* pre_dec = "";
+    char* post_inc = "";
+
+    switch (lower_nibble) {
+    case 0x0:
+        post_inc = "+";
+        break;
+    case 0x1:
+        post_inc = "++";
+        break;
+    case 0x2:
+        pre_dec = "-";
+        break;
+    case 0x3:
+        pre_dec = "--";
+        break;
+    }
+
+    char* register_string = register_names[tr];
+    if (indirect) {
+        sprintf(decoded, "[,%s%s%s]", pre_dec, register_string, post_inc);
+    }
+    else {
+        sprintf(decoded, ",%s%s%s", pre_dec, register_string, post_inc);
     }
 
     return return_bytes;

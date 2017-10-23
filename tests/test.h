@@ -86,6 +86,8 @@ void disassemble_instruction_indexed_const_off_16_bit_test(void **state);
 void disassemble_instruction_indexed_const_off_8_bit_indirect_test(void **state);
 void disassemble_instruction_indexed_acc_test(void **state);
 void disassemble_instruction_indexed_acc_indirect_test(void **state);
+void disassemble_instruction_indexed_inc_test(void **state);
+void disassemble_instruction_indexed_dec_indexed_test(void **state);
 void get_reg_value_8_test(void **state);
 void get_reg_value_8_invalid_test(void **state);
 void set_reg_value_8_test(void **state);
