@@ -1855,6 +1855,27 @@ void disassemble_instruction_indexed_const_off_16_bit_test(void **state) {
     assert_string_equal(decoded, "ADDA 4660,Y");
 }
 
+void disassemble_instruction_indexed_const_off_8_bit_indirect_test(void **state) {
+    (void) state; /* unused */
+
+    uint8 code_bytes[] = {
+        OP_JSR_I,
+        0xD8, /* const offset of -20 from U, indirected */
+        0xEC
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 3 },
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.pc = USER_SPACE_ROOT;
+
+    char decoded[100];
+    uint8 num_bytes = disassemble_instruction(e_cpu_context.pc, decoded);
+
+    assert_int_equal(num_bytes, 3);
+    assert_string_equal(decoded, "JSR [-20,U]");
+}
+
 void get_reg_value_8_test(void **state) {
     (void) state; /* unused */
 

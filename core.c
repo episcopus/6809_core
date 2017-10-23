@@ -1246,7 +1246,12 @@ uint8 disassemble_constant_offset_postbyte(uint16 pc, char* decoded) {
         sprintf(offset_string, "%d", offset);
     }
     char* register_string = register_names[tr];
-    sprintf(decoded, "%s,%s", offset_string, register_string);
+    if (indirect) {
+        sprintf(decoded, "[%s,%s]", offset_string, register_string);
+    }
+    else {
+        sprintf(decoded, "%s,%s", offset_string, register_string);
+    }
 
     return return_bytes;
 }
