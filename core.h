@@ -102,6 +102,9 @@ uint16 decode_extended_indirect(uint8* out_extra_cycles);
 void decode_source_target_postbyte(uint8 postbyte, enum target_register* out_source, enum target_register* out_target);
 
 uint8 disassemble_instruction(uint16 pc, char* decoded);
+uint8 disassemble_indexed_addressing_postbyte(uint16 pc, char* decoded);
+uint8 disassemble_constant_offset_postbyte(uint16 pc, char* decoded);
+uint8 disassemble_extended_indirect(uint16 pc, char* decoded);
 
 uint16 init_from_decb_memory(const uint8* buffer, uint16 buffer_size);
 uint16 init_from_decb_file(const char* filename);

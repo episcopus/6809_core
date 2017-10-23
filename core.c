@@ -19,6 +19,20 @@ const struct stack_op_postbyte_entry stack_op_pb_entry_table[] = {
     { REG_PC, 7 }
 };
 
+char register_names[11][4] = {
+    "NONE",
+    "X",
+    "Y",
+    "U",
+    "S",
+    "PC",
+    "D",
+    "DP",
+    "A",
+    "B",
+    "CC"
+};
+
 extern struct opcode_def opcode_table[];
 extern struct opcode_def opcode_ext_x10_table[];
 extern struct opcode_def opcode_ext_x11_table[];
@@ -1123,13 +1137,20 @@ uint8 disassemble_instruction(uint16 pc, char* decoded) {
             }
             break;
         case DIRECT:
-            assert(FALSE);
+            num_bytes++;
+            uint8 dp = get_reg_value_8(REG_DP);
+            uint16 operand = dp << 8 | e_cpu_context.memory[pc];
+            sprintf(decoded, "%s >$%.4X", this_opcode.instruction, operand);
             break;
         case INDEXED:
-            assert(FALSE);
+            sprintf(decoded, "%s ", this_opcode.instruction);
+            uint8 offset = strlen(decoded);
+            num_bytes += disassemble_indexed_addressing_postbyte(pc, decoded + offset);
             break;
         case EXTENDED:
-            assert(FALSE);
+            num_bytes += 2;
+            operand = e_cpu_context.memory[pc] << 8 | e_cpu_context.memory[pc + 1];
+            sprintf(decoded, "%s >$%.4X", this_opcode.instruction, operand);
             break;
         case INHERENT:
             sprintf(decoded, "%s", this_opcode.instruction);
@@ -1138,6 +1159,102 @@ uint8 disassemble_instruction(uint16 pc, char* decoded) {
     }
 
     return num_bytes;
+}
+
+uint8 disassemble_indexed_addressing_postbyte(uint16 pc, char* decoded) {
+    uint8 postbyte = e_cpu_context.memory[pc];
+    uint8 return_bytes = 1;
+
+    // Handle special / unique cases first and then switch on the main types.
+    if (!(postbyte & 0x80)) {
+        // 5 bit Constant Offset
+        return_bytes = disassemble_constant_offset_postbyte(pc, decoded);
+    }
+    else if (postbyte == 0x9F) {
+        // Extended Indirect
+        return_bytes = disassemble_extended_indirect(pc, decoded);
+    }
+    else {
+        /* uint8 lower_nibble = postbyte & 0xF; */
+        /* switch (lower_nibble) { */
+        /* case 0x4: */
+        /* case 0x8: */
+        /* case 0x9: */
+        /*     return_address = decode_constant_offset_postbyte(out_extra_cycles); */
+        /*     break; */
+        /* case 0x5: */
+        /* case 0x6: */
+        /* case 0xB: */
+        /*     return_address = decode_accumulator_offset_postbyte(out_extra_cycles); */
+        /*     break; */
+        /* case 0x0: */
+        /* case 0x1: */
+        /* case 0x2: */
+        /* case 0x3: */
+        /*     return_address = decode_inc_dec_offset_postbyte(out_extra_cycles); */
+        /*     break; */
+        /* case 0xC: */
+        /* case 0xD: */
+        /*     return_address = decode_constant_offset_from_pc(out_extra_cycles); */
+        /*     break; */
+        /* } */
+    }
+
+    return return_bytes;
+}
+
+uint8 disassemble_constant_offset_postbyte(uint16 pc, char* decoded) {
+    uint8 postbyte = read_byte_from_memory(pc++);
+    enum target_register tr = decode_register_from_indexed_postbyte(postbyte);
+    short int offset = 0;
+    uint8 return_bytes = 1;
+    uint8 indirect = postbyte & 0x10;
+
+    if (!(postbyte & 0x80)) {
+        // 5 bit Constant Offset
+        offset = postbyte & 0x1F;
+        // Poor attempt at 5-bit to 16-bit two's complement conversion follows.
+        // Hope it works
+        offset |= (offset & 0x10) ? 0xFFF0 : 0;
+        // 5-bit offset has no indirect mode
+        indirect = 0;
+    }
+    else {
+        uint8 lower_nibble = postbyte & 0xF;
+        char one_byte_offset = 0;
+        switch (lower_nibble) {
+        case 0x4:
+            offset = 0;
+            break;
+        case 0x8:
+            one_byte_offset = (char) read_byte_from_memory(pc++);
+            return_bytes++;
+            offset = (int) one_byte_offset;
+            break;
+        case 0x9:
+            offset = (int) read_word_from_memory(e_cpu_context.pc);
+            pc += 2;
+            return_bytes += 2;
+            break;
+        }
+    }
+
+    /* TODO indirect addressing */
+    char offset_string[80] = { 0 };
+    if (offset != 0) {
+        sprintf(offset_string, "%d", offset);
+    }
+    char* register_string = register_names[tr];
+    sprintf(decoded, "%s,%s", offset_string, register_string);
+
+    return return_bytes;
+}
+
+uint8 disassemble_extended_indirect(uint16 pc, char* decoded) {
+    uint16 base_address = read_word_from_memory(pc + 1);
+    sprintf(decoded, "[$%.4X]", base_address);
+
+    return 3;
 }
 
 uint16 init_from_decb_memory(const uint8* buffer, uint16 buffer_size) {

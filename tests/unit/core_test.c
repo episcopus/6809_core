@@ -1729,6 +1729,90 @@ void disassemble_instruction_immediate_ext_16_bit_test(void **state) {
     assert_string_equal(decoded, "LDS #$1234");
 }
 
+void disassemble_instruction_extended_test(void **state) {
+    (void) state; /* unused */
+
+    uint8 code_bytes[] = {
+        OP_DEC_E,
+        0x12,
+        0x34
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 3 },
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.pc = USER_SPACE_ROOT;
+
+    char decoded[100];
+    uint8 num_bytes = disassemble_instruction(e_cpu_context.pc, decoded);
+
+    assert_int_equal(num_bytes, 3);
+    assert_string_equal(decoded, "DEC >$1234");
+}
+
+void disassemble_instruction_direct_test(void **state) {
+    (void) state; /* unused */
+
+    uint8 code_bytes[] = {
+        OP_DEC_D,
+        0x34
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 },
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.pc = USER_SPACE_ROOT;
+    e_cpu_context.dp = 0x12;
+
+    char decoded[100];
+    uint8 num_bytes = disassemble_instruction(e_cpu_context.pc, decoded);
+
+    assert_int_equal(num_bytes, 2);
+    assert_string_equal(decoded, "DEC >$1234");
+}
+
+void disassemble_instruction_indexed_const_off_test(void **state) {
+    (void) state; /* unused */
+
+    uint8 code_bytes[] = {
+        OP_STA_I,
+        0x64 /* const offset of +4 from S */
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 },
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.pc = USER_SPACE_ROOT;
+
+    char decoded[100];
+    uint8 num_bytes = disassemble_instruction(e_cpu_context.pc, decoded);
+
+    assert_int_equal(num_bytes, 2);
+    assert_string_equal(decoded, "STA 4,S");
+}
+
+void disassemble_instruction_indexed_ext_indirect_test(void **state) {
+    (void) state; /* unused */
+
+    uint8 code_bytes[] = {
+        OP_ORA_I,
+        0x9F, /* extended indirect */
+        0x12,
+        0x34
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 4 },
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.pc = USER_SPACE_ROOT;
+
+    char decoded[100];
+    uint8 num_bytes = disassemble_instruction(e_cpu_context.pc, decoded);
+
+    assert_int_equal(num_bytes, 4);
+    assert_string_equal(decoded, "ORA [$1234]");
+}
+
 void get_reg_value_8_test(void **state) {
     (void) state; /* unused */
 
