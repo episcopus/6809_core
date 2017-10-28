@@ -1195,8 +1195,7 @@ uint8 disassemble_indexed_addressing_postbyte(uint16 pc, char* decoded) {
             break;
         case 0xC:
         case 0xD:
-            /* return_address = decode_constant_offset_from_pc(out_extra_cycles); */
-            /* break; */
+            return_bytes = disassemble_constant_offset_from_pc(pc, decoded);
             break;
         }
     }
@@ -1332,6 +1331,37 @@ uint8 disassemble_inc_dec_offset_postbyte(uint16 pc, char* decoded) {
     }
     else {
         sprintf(decoded, ",%s%s%s", pre_dec, register_string, post_inc);
+    }
+
+    return return_bytes;
+}
+
+uint8 disassemble_constant_offset_from_pc(uint16 pc, char* decoded) {
+    uint8 postbyte = read_byte_from_memory(pc++);
+    short int offset = 0;
+    uint8 indirect = postbyte & 0x10;
+    uint8 lower_nibble = postbyte & 0xF;
+    char one_byte_offset = 0;
+    uint8 return_bytes = 1;
+
+    switch (lower_nibble) {
+    case 0xC:
+        one_byte_offset = (char) read_byte_from_memory(pc++);
+        offset = (int) one_byte_offset;
+        return_bytes++;
+        break;
+    case 0xD:
+        offset = (int) read_word_from_memory(e_cpu_context.pc);
+        pc += 2;
+        return_bytes += 2;
+        break;
+    }
+
+    if (indirect) {
+        sprintf(decoded, "[%d,PCR]", offset);
+    }
+    else {
+        sprintf(decoded, "%d,PCR", offset);
     }
 
     return return_bytes;

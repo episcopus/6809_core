@@ -1948,6 +1948,25 @@ void disassemble_instruction_indexed_dec_indexed_test(void **state) {
     assert_string_equal(decoded, "ORA [,--U]");
 }
 
+void disassemble_instruction_indexed_pc_off_8_bit_test(void **state) {
+    uint8 code_bytes[] = {
+        OP_INC_I,
+        0x8C, /* 8-bit const offset of 46 from PC */
+        0x2E
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 3 },
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.pc = USER_SPACE_ROOT;
+
+    char decoded[100] = { 0 };
+    uint8 num_bytes = disassemble_instruction(e_cpu_context.pc, decoded);
+
+    assert_int_equal(num_bytes, 3);
+    assert_string_equal(decoded, "INC 46,PCR");
+}
+
 void get_reg_value_8_test(void **state) {
     (void) state; /* unused */
 
