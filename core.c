@@ -1351,7 +1351,7 @@ uint8 disassemble_constant_offset_from_pc(uint16 pc, char* decoded) {
         return_bytes++;
         break;
     case 0xD:
-        offset = (int) read_word_from_memory(e_cpu_context.pc);
+        offset = (int) read_word_from_memory(pc);
         pc += 2;
         return_bytes += 2;
         break;

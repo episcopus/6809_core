@@ -99,6 +99,7 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(disassemble_instruction_indexed_inc_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(disassemble_instruction_indexed_dec_indexed_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(disassemble_instruction_indexed_pc_off_8_bit_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(disassemble_instruction_indexed_pc_off_16_bit_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(get_reg_value_8_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(get_reg_value_8_invalid_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(set_reg_value_8_test, test_setup, test_teardown),
