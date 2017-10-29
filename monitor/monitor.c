@@ -94,6 +94,29 @@ void print_memory(uint16 root_address) {
     }
 }
 
+void disassemble_memory(uint16 root_address) {
+    uint8 num_lines = 16;
+    char disassembled_string[80] = { 0 };
+
+    for (int i=0; i<num_lines; i++) {
+        printf("$%.4hX:  ", root_address);
+        uint8 num_bytes = disassemble_instruction(root_address, disassembled_string);
+
+        for (int j=0; j<num_bytes; j++) {
+            printf("%.2hX ", (uint16) read_byte_from_memory(root_address + j));
+        }
+
+        /* Pad bytes to align disassembly */
+        uint8 pad = 12 - 3 * num_bytes;
+        for (int j=0; j<pad; j++) {
+            printf(" ");
+        }
+
+        printf("%s\n", disassembled_string);
+        root_address += num_bytes;
+    }
+}
+
 void vdg_dump() {
     /* Dump the frame buffer to a raw binary file as well as png */
     const char* video_file = "/Users/simon/Dropbox/Programming/c/6809_core/picture.bin";
@@ -145,6 +168,16 @@ int process_command() {
         vdg_update();
         vdg_dump();
         printf("Dumped video buffer to file\n");
+    }
+    else if (strncmp(command, "d", 1) == 0) {
+        uint16 arg1 = 0;
+        int nTok = sscanf(command, "d %4hX", &arg1);
+        if (nTok < 1) {
+            /* Default to PC if no address */
+            arg1 = get_reg_value_16(REG_PC);
+        }
+
+        disassemble_memory(arg1);
     }
     else {
         printf("Unrecognized command. Type 'h' for help.\n");

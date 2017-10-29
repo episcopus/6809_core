@@ -32,7 +32,9 @@ enum addressing_mode {
     DIRECT,
     INDEXED,
     EXTENDED,
-    INHERENT
+    INHERENT,
+    SHORT_BRANCH,
+    LONG_BRANCH
 };
 
 enum target_register {

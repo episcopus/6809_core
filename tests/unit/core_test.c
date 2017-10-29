@@ -1987,6 +1987,82 @@ void disassemble_instruction_indexed_pc_off_16_bit_test(void **state) {
     assert_string_equal(decoded, "BITB [-4096,PCR]");
 }
 
+void disassemble_instruction_short_branch_test(void **state) {
+    uint8 code_bytes[] = {
+        OP_BNE,
+        0x10 /* short branch of +$10 bytes */
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 },
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.pc = USER_SPACE_ROOT;
+
+    char decoded[100] = { 0 };
+    uint8 num_bytes = disassemble_instruction(e_cpu_context.pc, decoded);
+
+    assert_int_equal(num_bytes, 2);
+    assert_string_equal(decoded, "BNE +16 ($2012)");
+}
+
+void disassemble_instruction_short_branch_neg_test(void **state) {
+    uint8 code_bytes[] = {
+        OP_BNE,
+        0xF0 /* short branch of -$10 bytes */
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 },
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.pc = USER_SPACE_ROOT;
+
+    char decoded[100] = { 0 };
+    uint8 num_bytes = disassemble_instruction(e_cpu_context.pc, decoded);
+
+    assert_int_equal(num_bytes, 2);
+    assert_string_equal(decoded, "BNE -16 ($1FF2)");
+}
+
+void disassemble_instruction_long_branch_test(void **state) {
+    uint8 code_bytes[] = {
+        OP_EXTENDED_X10,
+        OP_LBPL,
+        0x10,
+        0x0   /* long branch of +$1000 bytes */
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 4 },
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.pc = USER_SPACE_ROOT;
+
+    char decoded[100] = { 0 };
+    uint8 num_bytes = disassemble_instruction(e_cpu_context.pc, decoded);
+
+    assert_int_equal(num_bytes, 4);
+    assert_string_equal(decoded, "LBPL +4096 ($3004)");
+}
+
+void disassemble_instruction_long_branch_neg_test(void **state) {
+    uint8 code_bytes[] = {
+        OP_EXTENDED_X10,
+        OP_LBPL,
+        0xF0,
+        0x0   /* long branch of -$1000 bytes */
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 4 },
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.pc = USER_SPACE_ROOT;
+
+    char decoded[100] = { 0 };
+    uint8 num_bytes = disassemble_instruction(e_cpu_context.pc, decoded);
+
+    assert_int_equal(num_bytes, 4);
+    assert_string_equal(decoded, "LBPL -4096 ($1004)");
+}
+
 void get_reg_value_8_test(void **state) {
     (void) state; /* unused */
 

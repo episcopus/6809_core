@@ -1155,6 +1155,23 @@ uint8 disassemble_instruction(uint16 pc, char* decoded) {
         case INHERENT:
             sprintf(decoded, "%s", this_opcode.instruction);
             break;
+        case SHORT_BRANCH:
+            num_bytes++;
+            short int jump = 0;
+            jump = (char) read_byte_from_memory(pc++);
+            uint16 targ_addr = pc + jump;
+            char* plus = jump > 0 ? "+" : "";
+            sprintf(decoded, "%s %s%d ($%.4X)", this_opcode.instruction, plus, jump, targ_addr);
+            break;
+        case LONG_BRANCH:
+            num_bytes += 2;
+            short int ljump = 0;
+            ljump = (short int) read_word_from_memory(pc);
+            pc += 2;
+            targ_addr = pc + ljump;
+            plus = ljump > 0 ? "+" : "";
+            sprintf(decoded, "%s %s%d ($%.4X)", this_opcode.instruction, plus, ljump, targ_addr);
+            break;
         }
     }
 
