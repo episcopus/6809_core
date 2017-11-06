@@ -2099,6 +2099,42 @@ void disassemble_instruction_immediate_push_2_test(void **state) {
     assert_string_equal(decoded, "PSHU CC");
 }
 
+void disassemble_instruction_immediate_pull_test(void **state) {
+    uint8 code_bytes[] = {
+        OP_PULS,
+        0x55 /* pull CC, B, X, U from S pointed stack */
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 },
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.pc = USER_SPACE_ROOT;
+
+    char decoded[100] = { 0 };
+    uint8 num_bytes = disassemble_instruction(e_cpu_context.pc, decoded);
+
+    assert_int_equal(num_bytes, 2);
+    assert_string_equal(decoded, "PULS CC,B,X,U");
+}
+
+void disassemble_instruction_immediate_pull_2_test(void **state) {
+    uint8 code_bytes[] = {
+        OP_PULU,
+        0x80 /* pull PC from U pointed stack */
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 },
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.pc = USER_SPACE_ROOT;
+
+    char decoded[100] = { 0 };
+    uint8 num_bytes = disassemble_instruction(e_cpu_context.pc, decoded);
+
+    assert_int_equal(num_bytes, 2);
+    assert_string_equal(decoded, "PULU PC");
+}
+
 void get_reg_value_8_test(void **state) {
     (void) state; /* unused */
 

@@ -106,6 +106,8 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(disassemble_instruction_long_branch_neg_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(disassemble_instruction_immediate_push_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(disassemble_instruction_immediate_push_2_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(disassemble_instruction_immediate_pull_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(disassemble_instruction_immediate_pull_2_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(get_reg_value_8_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(get_reg_value_8_invalid_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(set_reg_value_8_test, test_setup, test_teardown),

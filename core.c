@@ -432,6 +432,7 @@ uint16 get_memory_address_from_postbyte(enum addressing_mode am, uint8* out_extr
     switch (am) {
     case IMMEDIATE:
     case IMMEDIATE_PUSH:
+    case IMMEDIATE_PULL:
         /* byte is located right at the pc */
         return_addr = e_cpu_context.pc++;
         break;
@@ -1179,7 +1180,11 @@ uint8 disassemble_instruction(uint16 pc, char* decoded) {
             num_bytes += disassemble_immediate_push(pc, decoded + offset);
             break;
         case IMMEDIATE_PULL:
-            assert(FALSE);
+            sprintf(decoded, "%s ", this_opcode.instruction);
+            offset = strlen(decoded);
+            num_bytes += disassemble_immediate_pull(pc,
+                                                    this_opcode.opcode == OP_PULS ? REG_S : REG_U,
+                                                    decoded + offset);
             break;
         }
     }
@@ -1408,6 +1413,41 @@ uint8 disassemble_immediate_push(uint16 pc, char* decoded) {
     for (int i = sizeof_table - 1; i >= 0; i--) {
         if (postbyte & (1 << i)) {
             enum target_register this_t_r = stack_op_pb_entry_table[i].reg;
+
+            char* register_string = register_names[this_t_r];
+            if (first) {
+                sprintf(decoded, "%s", register_string);
+                first = 0;
+            }
+            else {
+                sprintf(decoded, ",%s", register_string);
+            }
+
+            uint8 offset = strlen(decoded);
+            decoded += offset;
+        }
+    }
+
+    return return_bytes;
+}
+
+uint8 disassemble_immediate_pull(uint16 pc, enum target_register reg_stack, char* decoded) {
+    uint8 postbyte = read_byte_from_memory(pc++);
+    uint8 return_bytes = 1;
+
+    /* number of possible registers to pull - it's really 8 but
+       the REG_S value is special and needs to toggle since can't pull own
+       stack pointer */
+    int sizeof_table = sizeof(stack_op_pb_entry_table) /
+        sizeof(struct stack_op_postbyte_entry);
+
+    uint8 first = 1;
+    /* pull all necessary registers as requested in the postbyte according
+       to the 6809 spec. */
+    for (int i = 0; i < sizeof_table; i++) {
+        if (postbyte & (1 << i)) {
+            enum target_register this_t_r = stack_op_pb_entry_table[i].reg;
+            this_t_r == REG_S && reg_stack == REG_S ? this_t_r = REG_U : REG_S;
 
             char* register_string = register_names[this_t_r];
             if (first) {
