@@ -1177,7 +1177,8 @@ uint8 disassemble_instruction(uint16 pc, char* decoded) {
         case IMMEDIATE_PUSH:
             sprintf(decoded, "%s ", this_opcode.instruction);
             offset = strlen(decoded);
-            num_bytes += disassemble_immediate_push(pc, decoded + offset);
+            num_bytes += disassemble_immediate_push(pc, this_opcode.opcode == OP_PSHS ? REG_S : REG_U,
+                                                    decoded + offset);
             break;
         case IMMEDIATE_PULL:
             sprintf(decoded, "%s ", this_opcode.instruction);
@@ -1397,7 +1398,7 @@ uint8 disassemble_constant_offset_from_pc(uint16 pc, char* decoded) {
     return return_bytes;
 }
 
-uint8 disassemble_immediate_push(uint16 pc, char* decoded) {
+uint8 disassemble_immediate_push(uint16 pc, enum target_register reg_stack, char* decoded) {
     uint8 postbyte = read_byte_from_memory(pc++);
     uint8 return_bytes = 1;
 
@@ -1413,6 +1414,7 @@ uint8 disassemble_immediate_push(uint16 pc, char* decoded) {
     for (int i = sizeof_table - 1; i >= 0; i--) {
         if (postbyte & (1 << i)) {
             enum target_register this_t_r = stack_op_pb_entry_table[i].reg;
+            this_t_r == REG_S && reg_stack == REG_S ? this_t_r = REG_U : REG_S;
 
             char* register_string = register_names[this_t_r];
             if (first) {
