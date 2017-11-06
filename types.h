@@ -34,7 +34,9 @@ enum addressing_mode {
     EXTENDED,
     INHERENT,
     SHORT_BRANCH,
-    LONG_BRANCH
+    LONG_BRANCH,
+    IMMEDIATE_PUSH,
+    IMMEDIATE_PULL
 };
 
 enum target_register {

@@ -431,6 +431,7 @@ uint16 get_memory_address_from_postbyte(enum addressing_mode am, uint8* out_extr
     *out_extra_cycles = 0;
     switch (am) {
     case IMMEDIATE:
+    case IMMEDIATE_PUSH:
         /* byte is located right at the pc */
         return_addr = e_cpu_context.pc++;
         break;
@@ -1172,6 +1173,14 @@ uint8 disassemble_instruction(uint16 pc, char* decoded) {
             plus = ljump > 0 ? "+" : "";
             sprintf(decoded, "%s %s%d ($%.4X)", this_opcode.instruction, plus, ljump, targ_addr);
             break;
+        case IMMEDIATE_PUSH:
+            sprintf(decoded, "%s ", this_opcode.instruction);
+            offset = strlen(decoded);
+            num_bytes += disassemble_immediate_push(pc, decoded + offset);
+            break;
+        case IMMEDIATE_PULL:
+            assert(FALSE);
+            break;
         }
     }
 
@@ -1256,7 +1265,6 @@ uint8 disassemble_constant_offset_postbyte(uint16 pc, char* decoded) {
         }
     }
 
-    /* TODO indirect addressing */
     char offset_string[80] = { 0 };
     if (offset != 0) {
         sprintf(offset_string, "%d", offset);
@@ -1379,6 +1387,40 @@ uint8 disassemble_constant_offset_from_pc(uint16 pc, char* decoded) {
     }
     else {
         sprintf(decoded, "%d,PCR", offset);
+    }
+
+    return return_bytes;
+}
+
+uint8 disassemble_immediate_push(uint16 pc, char* decoded) {
+    uint8 postbyte = read_byte_from_memory(pc++);
+    uint8 return_bytes = 1;
+
+    /* number of possible registers to push - it's really 8 but
+       the REG_S value is special and needs to toggle since can't push own
+       stack pointer */
+    int sizeof_table = sizeof(stack_op_pb_entry_table) /
+        sizeof(struct stack_op_postbyte_entry);
+
+    uint8 first = 1;
+    /* push all necessary registers as requested in the postbyte according
+       to the 6809 spec. */
+    for (int i = sizeof_table - 1; i >= 0; i--) {
+        if (postbyte & (1 << i)) {
+            enum target_register this_t_r = stack_op_pb_entry_table[i].reg;
+
+            char* register_string = register_names[this_t_r];
+            if (first) {
+                sprintf(decoded, "%s", register_string);
+                first = 0;
+            }
+            else {
+                sprintf(decoded, ",%s", register_string);
+            }
+
+            uint8 offset = strlen(decoded);
+            decoded += offset;
+        }
     }
 
     return return_bytes;

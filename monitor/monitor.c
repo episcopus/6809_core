@@ -14,26 +14,7 @@ extern struct opcode_def opcode_table[];
 void write_png(char *file_name);
 
 void disassemble_pc(char* out_buf) {
-    uint8 cur_pc_byte = read_byte_from_memory(get_reg_value_16(REG_PC));
-    struct opcode_def od = opcode_table[cur_pc_byte];
-    char* opcode = od.instruction;
-    switch (od.mode) {
-    case IMMEDIATE:
-        sprintf(out_buf, "%s", opcode);
-        break;
-    case DIRECT:
-        sprintf(out_buf, "%s", opcode);
-        break;
-    case INDEXED:
-        sprintf(out_buf, "%s", opcode);
-        break;
-    case EXTENDED:
-        sprintf(out_buf, "%s", opcode);
-        break;
-    case INHERENT:
-        sprintf(out_buf, "%s", opcode);
-        break;
-    }
+    disassemble_instruction(get_reg_value_16(REG_PC), out_buf);
 }
 
 void print_state() {

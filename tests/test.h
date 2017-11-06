@@ -94,6 +94,8 @@ void disassemble_instruction_short_branch_test(void **state);
 void disassemble_instruction_short_branch_neg_test(void **state);
 void disassemble_instruction_long_branch_test(void **state);
 void disassemble_instruction_long_branch_neg_test(void **state);
+void disassemble_instruction_immediate_push_test(void **state);
+void disassemble_instruction_immediate_push_2_test(void **state);
 void get_reg_value_8_test(void **state);
 void get_reg_value_8_invalid_test(void **state);
 void set_reg_value_8_test(void **state);

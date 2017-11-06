@@ -2063,6 +2063,42 @@ void disassemble_instruction_long_branch_neg_test(void **state) {
     assert_string_equal(decoded, "LBPL -4096 ($1004)");
 }
 
+void disassemble_instruction_immediate_push_test(void **state) {
+    uint8 code_bytes[] = {
+        OP_PSHS,
+        0xAA /* push PC, Y, DP and A to S pointed stack */
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 },
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.pc = USER_SPACE_ROOT;
+
+    char decoded[100] = { 0 };
+    uint8 num_bytes = disassemble_instruction(e_cpu_context.pc, decoded);
+
+    assert_int_equal(num_bytes, 2);
+    assert_string_equal(decoded, "PSHS PC,Y,DP,A");
+}
+
+void disassemble_instruction_immediate_push_2_test(void **state) {
+    uint8 code_bytes[] = {
+        OP_PSHU,
+        0x1 /* push CC to U pointed stack */
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 },
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.pc = USER_SPACE_ROOT;
+
+    char decoded[100] = { 0 };
+    uint8 num_bytes = disassemble_instruction(e_cpu_context.pc, decoded);
+
+    assert_int_equal(num_bytes, 2);
+    assert_string_equal(decoded, "PSHU CC");
+}
+
 void get_reg_value_8_test(void **state) {
     (void) state; /* unused */
 
