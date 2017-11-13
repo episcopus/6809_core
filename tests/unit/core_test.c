@@ -124,6 +124,16 @@ void extended_rom_test(void **state) {
     assert_int_equal(coco_read_byte_from_memory(0x9FFF), 0x39);
 }
 
+void core_reset_test(void **state) {
+    (void) state; /* unused */
+
+    core_reset();
+
+    assert_int_equal(e_cpu_context.cc.i, 1);
+    assert_int_equal(e_cpu_context.cc.f, 1);
+    assert_int_equal(get_reg_value_16(REG_PC), DEFAULT_RESET_VECTOR);
+}
+
 void test_e_flag(void **state) {
     (void) state; /* unused */
 

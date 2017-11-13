@@ -66,6 +66,7 @@ struct cpu_state {
 void core_init(void);
 void load_roms(void);
 void core_destroy(void);
+void core_reset(void);
 
 enum reg_size get_reg_size(enum target_register reg);
 uint8 get_reg_value_8(enum target_register reg);

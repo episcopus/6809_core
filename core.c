@@ -173,6 +173,20 @@ void core_destroy() {
     vdg_destroy();
 }
 
+void core_reset() {
+    core_destroy();
+    core_init();
+    vdg_init();
+    load_roms();
+
+    /* Load the reset vector and mask interrupts */
+    e_cpu_context.cc.i = 1;
+    e_cpu_context.cc.f = 1;
+
+    uint16 reset_vector = read_word_from_memory(RESET_VECTOR);
+    set_reg_value_16(REG_PC, reset_vector);
+}
+
 void load_rom_to_address(const char* rom_path, uint8* target) {
     FILE* handle = fopen(rom_path, "rb");
     if (!handle) {

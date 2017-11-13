@@ -14,6 +14,7 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(core_init_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(basic_rom_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(extended_rom_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(core_reset_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(test_e_flag, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(test_f_flag, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(test_h_flag, test_setup, test_teardown),

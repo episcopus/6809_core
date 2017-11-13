@@ -4,6 +4,7 @@ int test_teardown(void **state);
 void core_init_test(void **state);
 void basic_rom_test(void **state);
 void extended_rom_test(void **state);
+void core_reset_test(void **state);
 void test_e_flag(void **state);
 void test_f_flag(void **state);
 void test_h_flag(void **state);
