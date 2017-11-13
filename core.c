@@ -1116,24 +1116,24 @@ void decode_source_target_postbyte(uint8 postbyte, enum target_register* out_sou
 }
 
 uint8 disassemble_instruction(uint16 pc, char* decoded) {
-    uint8 opcode = e_cpu_context.memory[pc++];
+    uint8 opcode = read_byte_from_memory(pc++);
     struct opcode_def this_opcode = opcode_table[opcode];
     uint8 num_bytes = 1;
 
     if (this_opcode.opcode == OP_EXTENDED_X10) {
-        opcode = e_cpu_context.memory[pc++];
+        opcode = read_byte_from_memory(pc++);
         this_opcode = opcode_ext_x10_table[opcode];
         num_bytes++;
     }
     else if (this_opcode.opcode == OP_EXTENDED_X11) {
-        opcode = e_cpu_context.memory[pc++];
+        opcode = read_byte_from_memory(pc++);
         this_opcode = opcode_ext_x11_table[opcode];
         num_bytes++;
     }
 
     if (strncmp("NOTIMPL", this_opcode.instruction, 7) == 0) {
         if (num_bytes == 2) {
-            uint8 prev_opcode = e_cpu_context.memory[pc - 2];
+            uint8 prev_opcode = read_byte_from_memory(pc - 2);
             sprintf(decoded, "$%.2X $%.2X", prev_opcode, opcode);
         }
         else {
@@ -1145,19 +1145,19 @@ uint8 disassemble_instruction(uint16 pc, char* decoded) {
         case IMMEDIATE:
             if (get_reg_size(this_opcode.t_r) == REG_SIZE_8) {
                 num_bytes++;
-                uint8 operand = e_cpu_context.memory[pc++];
+                uint8 operand = read_byte_from_memory(pc++);
                 sprintf(decoded, "%s #$%.2X", this_opcode.instruction, operand);
             }
             else {
                 num_bytes += 2;
-                uint16 operand = e_cpu_context.memory[pc] << 8 | e_cpu_context.memory[pc + 1];
+                uint16 operand = read_byte_from_memory(pc) << 8 | read_byte_from_memory(pc + 1);
                 sprintf(decoded, "%s #$%.4X", this_opcode.instruction, operand);
             }
             break;
         case DIRECT:
             num_bytes++;
             uint8 dp = get_reg_value_8(REG_DP);
-            uint16 operand = dp << 8 | e_cpu_context.memory[pc];
+            uint16 operand = dp << 8 | read_byte_from_memory(pc);
             sprintf(decoded, "%s >$%.4X", this_opcode.instruction, operand);
             break;
         case INDEXED:
@@ -1167,7 +1167,7 @@ uint8 disassemble_instruction(uint16 pc, char* decoded) {
             break;
         case EXTENDED:
             num_bytes += 2;
-            operand = e_cpu_context.memory[pc] << 8 | e_cpu_context.memory[pc + 1];
+            operand = read_byte_from_memory(pc) << 8 | read_byte_from_memory(pc + 1);
             sprintf(decoded, "%s >$%.4X", this_opcode.instruction, operand);
             break;
         case INHERENT:
@@ -1210,7 +1210,7 @@ uint8 disassemble_instruction(uint16 pc, char* decoded) {
 }
 
 uint8 disassemble_indexed_addressing_postbyte(uint16 pc, char* decoded) {
-    uint8 postbyte = e_cpu_context.memory[pc];
+    uint8 postbyte = read_byte_from_memory(pc);
     uint8 return_bytes = 1;
 
     // Handle special / unique cases first and then switch on the main types.

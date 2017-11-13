@@ -2165,6 +2165,18 @@ void disassemble_instruction_immediate_pull_2_test(void **state) {
     assert_string_equal(decoded, "PULU PC");
 }
 
+void disassemble_instruction_basic_rom_test(void **state) {
+    /* The purpose of this test is to ensure that disassembly functions go through the memory
+       accessors which will do the right thing with ROM address space */
+    core_reset();
+
+    char decoded[100] = { 0 };
+    uint8 num_bytes = disassemble_instruction(e_cpu_context.pc, decoded);
+
+    assert_int_equal(num_bytes, 3);
+    assert_string_equal(decoded, "LEAY -28,PCR");
+}
+
 void get_reg_value_8_test(void **state) {
     (void) state; /* unused */
 
