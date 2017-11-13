@@ -182,6 +182,8 @@ void core_reset() {
     /* Load the reset vector and mask interrupts */
     e_cpu_context.cc.i = 1;
     e_cpu_context.cc.f = 1;
+    e_cpu_context.u = 0;
+    e_cpu_context.s = 0;
 
     uint16 reset_vector = read_word_from_memory(RESET_VECTOR);
     set_reg_value_16(REG_PC, reset_vector);

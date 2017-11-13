@@ -132,6 +132,8 @@ void core_reset_test(void **state) {
     assert_int_equal(e_cpu_context.cc.i, 1);
     assert_int_equal(e_cpu_context.cc.f, 1);
     assert_int_equal(get_reg_value_16(REG_PC), DEFAULT_RESET_VECTOR);
+    assert_int_equal(e_cpu_context.u, 0);
+    assert_int_equal(e_cpu_context.s, 0);
 }
 
 void test_e_flag(void **state) {
