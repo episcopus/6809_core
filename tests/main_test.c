@@ -27,6 +27,7 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(test_load_memory, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(test_load_memory_too_big, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(test_load_memory_too_far, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(decode_indexed_addressing_postbyte_rom_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(run_cycles_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(run_cycles_multiple_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(run_cycles_notimpl_test, test_setup, test_teardown),

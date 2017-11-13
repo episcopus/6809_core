@@ -190,7 +190,7 @@ void vdg_update_ai_sg4_mode(uint16 buf_addr) {
     /* Walk memory and paint characters on screen */
     for (int i=0; i<VDG_AI_Y; i++) {
         for (int j=0; j<VDG_AI_X; j++) {
-            uint8 character = e_cpu_context.memory[buf_addr + VDG_AI_X * i + j];
+            uint8 character = read_byte_from_memory(buf_addr + VDG_AI_X * i + j);
             uint8 is_sg = character & 0x80;
 
             /* Draw the full character */

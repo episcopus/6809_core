@@ -57,6 +57,7 @@ void get_memory_address_from_postbyte_indexed_pc_offset_16_test(void **state);
 void get_memory_address_from_postbyte_indexed_pc_offset_8_indirect_test(void **state);
 void get_memory_address_from_postbyte_indexed_pc_offset_16_indirect_test(void **state);
 void get_memory_address_from_postbyte_indexed_extended_indirect_test(void **state);
+void decode_indexed_addressing_postbyte_rom_test(void **state);
 void run_cycles_test(void **state);
 void run_cycles_multiple_test(void **state);
 void run_cycles_notimpl_test(void **state);

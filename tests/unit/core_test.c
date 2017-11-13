@@ -1139,6 +1139,17 @@ void get_memory_address_from_postbyte_indexed_extended_indirect_test(void **stat
   assert_int_equal(get_reg_value_16(REG_PC), USER_SPACE_ROOT + 3);
 }
 
+void decode_indexed_addressing_postbyte_rom_test(void **state) {
+    /* Checks that an indexed addressing instruction sitting in the rom space
+       gets decoded properly */
+    core_reset();
+
+    run_cycles(1);
+
+    /* Assumes a LEAY -28,PC operation at the reset vector position in basic ROM */
+    assert_int_equal(get_reg_value_16(REG_Y), 0xA00E);
+}
+
 /* Run a single NOP instruction which should yield 2 cycles */
 void run_cycles_test(void **state) {
     (void) state; /* unused */

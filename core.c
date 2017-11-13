@@ -627,7 +627,7 @@ uint8 pull_registers_from_stack(uint8 reg_field, enum target_register reg_stack)
 }
 
 uint16 decode_indexed_addressing_postbyte(uint8* out_extra_cycles) {
-    uint8 postbyte = e_cpu_context.memory[e_cpu_context.pc];
+    uint8 postbyte = read_byte_from_memory(e_cpu_context.pc);
     uint16 return_address = 0;
     *out_extra_cycles = 0;
 
@@ -890,7 +890,7 @@ uint32 run_cycles(uint32 wanted_cycles) {
             break;
         }
 
-        uint8 opcode = e_cpu_context.memory[e_cpu_context.pc];
+        uint8 opcode = read_byte_from_memory(e_cpu_context.pc);
         struct opcode_def this_opcode = opcode_table[opcode];
         assert(strncmp("NOTIMPL", this_opcode.instruction, 7) != 0);
 
@@ -1057,7 +1057,7 @@ int extended(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
     (void) t_r; /* unused */
     e_cpu_context.pc++;
 
-    uint8 cur_opcode = e_cpu_context.memory[e_cpu_context.pc];
+    uint8 cur_opcode = read_byte_from_memory(e_cpu_context.pc);
     struct opcode_def this_opcode;
     switch (opcode) {
     case OP_EXTENDED_X10:
