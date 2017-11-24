@@ -50,6 +50,7 @@ void get_memory_address_from_postbyte_indexed_inc_1_test(void **state);
 void get_memory_address_from_postbyte_indexed_inc_2_test(void **state);
 void get_memory_address_from_postbyte_indexed_dec_1_test(void **state);
 void get_memory_address_from_postbyte_indexed_dec_2_test(void **state);
+void get_memory_address_from_postbyte_indexed_dec_2_overflow_test(void **state);
 void get_memory_address_from_postbyte_indexed_inc_2_indirect_test(void **state);
 void get_memory_address_from_postbyte_indexed_dec_2_indirect_test(void **state);
 void get_memory_address_from_postbyte_indexed_pc_offset_8_test(void **state);

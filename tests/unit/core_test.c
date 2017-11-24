@@ -981,6 +981,25 @@ void get_memory_address_from_postbyte_indexed_dec_2_test(void **state) {
     assert_int_equal(get_reg_value_16(REG_PC), USER_SPACE_ROOT + 1);
 }
 
+void get_memory_address_from_postbyte_indexed_dec_2_overflow_test(void **state) {
+    uint8 extra_cycles = 0;
+    uint8 code_bytes[] = {
+        0xE3 /* Pre-decrement by 2 based on S */
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 1 }
+    };
+    load_memory(test_memory, 1);
+    set_reg_value_16(REG_S, 0x1);
+
+    uint16 read_value = get_memory_address_from_postbyte(INDEXED, &extra_cycles);
+
+    assert_int_equal(read_value, 0xFFFF);
+    assert_int_equal(get_reg_value_16(REG_S), 0xFFFF);
+    assert_int_equal(extra_cycles, 3);
+    assert_int_equal(get_reg_value_16(REG_PC), USER_SPACE_ROOT + 1);
+}
+
 void get_memory_address_from_postbyte_indexed_inc_2_indirect_test(void **state) {
     uint8 extra_cycles = 0;
     uint8 code_bytes[] = {

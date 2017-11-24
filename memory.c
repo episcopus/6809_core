@@ -324,7 +324,8 @@ void basic_write_byte_to_memory(uint16 address, uint8 byte) {
     if (!e_cpu_context.sam_state.ty_control_bit &&
         address >= 0x8000) {
         /* Do not allow writing to ROM address space */
-        assert(FALSE);
+        /* assert(FALSE); */
+        printf("Invalid ROM write. Address: $%.4X Byte: $%.2X\n", address, byte);
         return;
     }
 

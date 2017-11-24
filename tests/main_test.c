@@ -73,6 +73,7 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(get_memory_address_from_postbyte_indexed_inc_2_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(get_memory_address_from_postbyte_indexed_dec_1_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(get_memory_address_from_postbyte_indexed_dec_2_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(get_memory_address_from_postbyte_indexed_dec_2_overflow_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(get_memory_address_from_postbyte_indexed_inc_2_indirect_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(get_memory_address_from_postbyte_indexed_dec_2_indirect_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(get_memory_address_from_postbyte_indexed_pc_offset_8_test, test_setup, test_teardown),
