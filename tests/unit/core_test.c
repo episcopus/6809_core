@@ -2195,6 +2195,42 @@ void disassemble_instruction_immediate_pull_2_test(void **state) {
     assert_string_equal(decoded, "PULU PC");
 }
 
+void disassemble_instruction_immediate_tfr_test(void **state) {
+    uint8 code_bytes[] = {
+        OP_TFR,
+        0x89 /* transfer of A to B */
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 },
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.pc = USER_SPACE_ROOT;
+
+    char decoded[100] = { 0 };
+    uint8 num_bytes = disassemble_instruction(e_cpu_context.pc, decoded);
+
+    assert_int_equal(num_bytes, 2);
+    assert_string_equal(decoded, "TFR A,B");
+}
+
+void disassemble_instruction_immediate_tfr_invalid_test(void **state) {
+    uint8 code_bytes[] = {
+        OP_TFR,
+        0xFB /* transfer of invalid register to DP */
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 2 },
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.pc = USER_SPACE_ROOT;
+
+    char decoded[100] = { 0 };
+    uint8 num_bytes = disassemble_instruction(e_cpu_context.pc, decoded);
+
+    assert_int_equal(num_bytes, 2);
+    assert_string_equal(decoded, "TFR $FF,DP");
+}
+
 void disassemble_instruction_basic_rom_test(void **state) {
     /* The purpose of this test is to ensure that disassembly functions go through the memory
        accessors which will do the right thing with ROM address space */

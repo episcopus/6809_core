@@ -111,6 +111,7 @@ uint8 disassemble_inc_dec_offset_postbyte(uint16 pc, char* decoded);
 uint8 disassemble_constant_offset_from_pc(uint16 pc, char* decoded);
 uint8 disassemble_immediate_push(uint16 pc, enum target_register reg_stack, char* decoded);
 uint8 disassemble_immediate_pull(uint16 pc, enum target_register reg_stack, char* decoded);
+uint8 disassemble_immediate_tfr(uint16 pc, enum target_register reg_stack, char* decoded);
 
 uint16 init_from_decb_memory(const uint8* buffer, uint16 buffer_size);
 uint16 init_from_decb_file(const char* filename);

@@ -33,10 +33,11 @@ enum addressing_mode {
     INDEXED,
     EXTENDED,
     INHERENT,
-    SHORT_BRANCH,
-    LONG_BRANCH,
-    IMMEDIATE_PUSH,
-    IMMEDIATE_PULL
+    SHORT_BRANCH,   /* Added in as a disassembly convenience */
+    LONG_BRANCH,    /* Added in as a disassembly convenience */
+    IMMEDIATE_PUSH, /* Added in as a disassembly convenience */
+    IMMEDIATE_PULL, /* Added in as a disassembly convenience */
+    IMMEDIATE_TFR   /* Added in as a disassembly convenience */
 };
 
 enum target_register {

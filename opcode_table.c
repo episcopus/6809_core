@@ -36,7 +36,7 @@ const struct opcode_def opcode_table[] = {
     /* 0x1C */ { "ANDCC",        OP_ANDCC,        3,  REG_NONE, IMMEDIATE, andcc    },
     /* 0x1D */ { "SEX",          OP_SEX,          2,  REG_NONE, INHERENT,  sex      },
     /* 0x1E */ { "EXG",          OP_EXG,          8,  REG_NONE, IMMEDIATE, exg      },
-    /* 0x1F */ { "TFR",          OP_TFR,          6,  REG_NONE, IMMEDIATE, tfr      },
+    /* 0x1F */ { "TFR",          OP_TFR,          6,  REG_NONE, IMMEDIATE_TFR, tfr      },
     /* 0x20 */ { "BRA",          OP_BRA,          3,  REG_NONE, SHORT_BRANCH,  branch   },
     /* 0x21 */ { "BRN",          OP_BRN,          3,  REG_NONE, SHORT_BRANCH,  branch   },
     /* 0x22 */ { "BHI",          OP_BHI,          3,  REG_NONE, SHORT_BRANCH,  branch   },

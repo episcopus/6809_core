@@ -102,6 +102,8 @@ void disassemble_instruction_immediate_push_2_test(void **state);
 void disassemble_instruction_immediate_push_3_test(void **state);
 void disassemble_instruction_immediate_pull_test(void **state);
 void disassemble_instruction_immediate_pull_2_test(void **state);
+void disassemble_instruction_immediate_tfr_test(void **state);
+void disassemble_instruction_immediate_tfr_invalid_test(void **state);
 void disassemble_instruction_basic_rom_test(void **state);
 void get_reg_value_8_test(void **state);
 void get_reg_value_8_invalid_test(void **state);

@@ -1203,6 +1203,13 @@ uint8 disassemble_instruction(uint16 pc, char* decoded) {
                                                     this_opcode.opcode == OP_PULS ? REG_S : REG_U,
                                                     decoded + offset);
             break;
+        case IMMEDIATE_TFR:
+            sprintf(decoded, "%s ", this_opcode.instruction);
+            offset = strlen(decoded);
+            num_bytes += disassemble_immediate_tfr(pc,
+                                                   this_opcode.opcode,
+                                                   decoded + offset);
+            break;
         }
     }
 
@@ -1481,6 +1488,22 @@ uint8 disassemble_immediate_pull(uint16 pc, enum target_register reg_stack, char
         }
     }
 
+    return return_bytes;
+}
+
+uint8 disassemble_immediate_tfr(uint16 pc, enum target_register reg_stack, char* decoded) {
+    (void) reg_stack; /* unused */
+
+    uint8 post_byte = read_byte_from_memory(pc++);
+    uint8 return_bytes = 1;
+
+    enum target_register src;
+    enum target_register trg;
+    decode_source_target_postbyte(post_byte, &src, &trg);
+    char* src_reg_string = src != REG_NONE ? register_names[src] : "$FF";
+    char* trg_reg_string = trg != REG_NONE ? register_names[trg] : "$FF";
+
+    sprintf(decoded, "%s,%s", src_reg_string, trg_reg_string);
     return return_bytes;
 }
 
