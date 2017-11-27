@@ -2,6 +2,7 @@ build/
 scripts/opcode_table.c
 picture*.png
 picture.bin
+*.mov
 GPATH
 GRTAGS
 GTAGS

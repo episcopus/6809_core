@@ -148,6 +148,7 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(pia_basic_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(pia_update_keyboard_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(pia_update_keyboard_no_key_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(pia_update_keyboard_no_strobe_or_key_test, test_setup, test_teardown),
 
     cmocka_unit_test_setup_teardown(get_vdg_mode_from_sam_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(get_vdg_mode_from_sam_2_test, test_setup, test_teardown),

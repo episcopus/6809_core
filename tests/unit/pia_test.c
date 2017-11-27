@@ -101,3 +101,29 @@ void pia_update_keyboard_no_key_test(void **state) {
     /* No bits are low meaning no keys pushed in that column */
     assert_int_equal(pia_byte, 0x7F);
 }
+
+void pia_update_keyboard_no_strobe_or_key_test(void **state) {
+    (void) state; /* unused */
+
+    /* Initialize PIA1B to output, and PIA1A to input,
+       in order to simulate keyboard strobing */
+    pia_write_byte_to_memory(0xFF01, 0);
+    pia_write_byte_to_memory(0xFF00, 0);
+    pia_write_byte_to_memory(0xFF03, 0);
+    pia_write_byte_to_memory(0xFF02, 0xFF);
+
+    /* Put both PIA1 sides back in DDR mode */
+    pia_write_byte_to_memory(0xFF01, 0x4);
+    pia_write_byte_to_memory(0xFF03, 0x4);
+
+    /* Have the update_keyboard do its thing */
+    pia_update_keyboard();
+
+    /* Read active rows */
+    uint8 pia_byte = coco_read_byte_from_memory(0xFF00);
+    /* strip joystick bit */
+    pia_byte &= 0x7F;
+
+    /* No bits are low meaning no keys pushed in that column */
+    assert_int_equal(pia_byte, 0x7F);
+}

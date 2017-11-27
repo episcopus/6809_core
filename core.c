@@ -933,6 +933,8 @@ void perform_hsync_housekeeping(uint32 cycles) {
         }
         /* Set the interrupt flag in the PIA regardless */
         pia_write_byte_to_memory(0xFF01, pia1_cra | 0x8);
+
+        pia_update_keyboard();
     }
 }
 
@@ -966,6 +968,7 @@ uint32 process_interrupts() {
     }
 
     if (e_cpu_context.nmi) {
+        /* printf("process_interrupts() NMI being processed.\n"); */
         if (e_cpu_context.halted_state != HS_CWAI) {
             /* Push all registers, inhibit FIRQ and IRQ and set up interrupt
                vector, but not in the CWAI case which did the pushing already */
@@ -982,6 +985,7 @@ uint32 process_interrupts() {
         e_cpu_context.nmi = 0;
     }
     else if (e_cpu_context.firq && !e_cpu_context.cc.f) {
+        /* printf("process_interrupts() FIRQ being processed.\n"); */
         if (e_cpu_context.halted_state != HS_CWAI) {
             /* Fast interrupt only pushes PC and CC and inhibits further
                IRQ and FIRQ to occur, however the CWAI instruction will have
@@ -997,6 +1001,7 @@ uint32 process_interrupts() {
         e_cpu_context.firq = 0;
     }
     else if (e_cpu_context.irq && !e_cpu_context.cc.i) {
+        /* printf("process_interrupts() IRQ being processed.\n"); */
         if (e_cpu_context.halted_state != HS_CWAI) {
             /* IRQ pushes all the registers, inhibits further IRQ's,
                but not if CWAI already did this */

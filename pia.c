@@ -121,7 +121,7 @@ void pia_update_keyboard() {
     uint8 input_value = 0xFF;
     uint8 output_value = ~*output_ddr;
 
-    for (uint8 iter_value = 0x1, less_sig_nibble = 0; iter_value <= 0xFF;
+    for (uint8 iter_value = 0x1, less_sig_nibble = 0; iter_value != 0;
          iter_value <<= 1, less_sig_nibble++) {
         /* The iter_value column is being strobed (low), assess any keys within
            it */
@@ -130,10 +130,10 @@ void pia_update_keyboard() {
             continue;
         }
 
-        for (uint8 most_sig_nibble = 0, inner_mask = 0x1; most_sig_nibble < 57;
+        for (uint8 most_sig_nibble = 0, inner_mask = 0x1; most_sig_nibble +
+                 less_sig_nibble < PIA_KEYBOARD_SIZE;
              most_sig_nibble += 8, inner_mask <<= 1) {
             uint8 table_lookup = most_sig_nibble + less_sig_nibble;
-            /* uint8 host_table_index = 1; /\* TODO implement PIA - HOST mapping table *\/ */
 
             /* look up in host's key state */
             if (e_cpu_context.pia_state.host_keys[table_lookup]) {
