@@ -913,6 +913,9 @@ uint32 run_hsync_interval() {
 
 void perform_tick_housekeeping(uint32 cycles) {
     e_cpu_context.cycle_count += cycles;
+
+    pia_update_keyboard();
+
     perform_hsync_housekeeping(cycles);
     perform_vsync_housekeeping(cycles);
 }
@@ -933,8 +936,6 @@ void perform_hsync_housekeeping(uint32 cycles) {
         }
         /* Set the interrupt flag in the PIA regardless */
         pia_write_byte_to_memory(0xFF01, pia1_cra | 0x8);
-
-        pia_update_keyboard();
     }
 }
 
