@@ -96,6 +96,7 @@ void core_init_test(void **state) {
     for (int i = 0; i < MEMORY_SIZE; i++) {
         assert_int_equal(e_cpu_context.breakpoints[i], 0);
     }
+    assert_int_equal(e_cpu_context.breakpoint_hit, 0);
 }
 
 void basic_rom_test(void **state) {
@@ -2635,6 +2636,7 @@ void run_cycles_breakpoints_test(void **state) {
     set_reg_value_16(REG_PC, 0x100);
 
     assert_int_equal(get_reg_value_8(REG_A), 0);
+    assert_int_equal(e_cpu_context.breakpoint_hit, 0);
 
     /* Enable test breakpoint at PC + 1 */
     e_cpu_context.breakpoints[get_reg_value_16(REG_PC) + 2] = 1;
@@ -2643,9 +2645,12 @@ void run_cycles_breakpoints_test(void **state) {
     uint32 this_cycles = run_hsync_interval();
     assert_int_equal(get_reg_value_8(REG_A), 2);
     assert_int_equal(this_cycles, 4);
+    assert_int_equal(e_cpu_context.breakpoint_hit, 1);
 
     /* Now resume execution */
     this_cycles = run_hsync_interval();
     assert_int_equal(this_cycles, 6);
     assert_int_equal(get_reg_value_8(REG_A), 5);
+    assert_int_equal(e_cpu_context.breakpoint_hit, 0);
+    assert_int_equal(e_cpu_context.swi_hook_set, 1);
 }

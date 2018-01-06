@@ -163,6 +163,7 @@ void core_init() {
             e_cpu_context.breakpoints[i] = 0;
         }
     }
+    e_cpu_context.breakpoint_hit = 0;
 
     return;
 }
@@ -909,7 +910,11 @@ uint32 run_cycles(uint32 wanted_cycles) {
         if (completed_cycles > 0 && e_cpu_context.breakpoints[e_cpu_context.pc]) {
             /* Don't break if this is the first instruction being run, enables
                resume */
+            e_cpu_context.breakpoint_hit = 1;
             break;
+        }
+        else {
+            e_cpu_context.breakpoint_hit = 0;
         }
 
         uint8 opcode = read_byte_from_memory(e_cpu_context.pc);

@@ -65,6 +65,7 @@ struct cpu_state {
     /* Array of 65536 boolean values, mapping to the address space,
        enables breaking in the monitor when the PC gets to a slot marked true */
     uint8* breakpoints;
+    uint8 breakpoint_hit;
 };
 
 void core_init(void);
