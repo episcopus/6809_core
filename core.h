@@ -61,6 +61,10 @@ struct cpu_state {
     /* Set this to true to break in the monitor during the SWI instruction */
     uint8 swi_hook;
     uint8 swi_hook_set;
+
+    /* Array of 65536 boolean values, mapping to the address space,
+       enables breaking in the monitor when the PC gets to a slot marked true */
+    uint8* breakpoints;
 };
 
 void core_init(void);

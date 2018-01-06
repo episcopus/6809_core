@@ -92,6 +92,10 @@ void core_init_test(void **state) {
     for (int i = 0; i < PIA_KEYBOARD_SIZE; i++) {
         assert_int_equal(e_cpu_context.pia_state.host_keys[i], 0);
     }
+
+    for (int i = 0; i < MEMORY_SIZE; i++) {
+        assert_int_equal(e_cpu_context.breakpoints[i], 0);
+    }
 }
 
 void basic_rom_test(void **state) {
@@ -2613,4 +2617,35 @@ void init_from_decb_file_error_test(void **state) {
                               "/this/file/doesnt/exist"));
 
     assert_int_equal(num_preambles, 0);
+}
+
+void run_cycles_breakpoints_test(void **state) {
+    uint8 code_bytes[] = {
+        OP_INCA,
+        OP_INCA,
+        OP_INCA,
+        OP_INCA,
+        OP_INCA,
+        OP_SWI
+    };
+    struct mem_loader_def test_memory[] = {
+        { 0x100, code_bytes, 6 },
+    };
+    load_memory(test_memory, 1);
+    set_reg_value_16(REG_PC, 0x100);
+
+    assert_int_equal(get_reg_value_8(REG_A), 0);
+
+    /* Enable test breakpoint at PC + 1 */
+    e_cpu_context.breakpoints[get_reg_value_16(REG_PC) + 2] = 1;
+    e_cpu_context.swi_hook = 1;
+
+    uint32 this_cycles = run_hsync_interval();
+    assert_int_equal(get_reg_value_8(REG_A), 2);
+    assert_int_equal(this_cycles, 4);
+
+    /* Now resume execution */
+    this_cycles = run_hsync_interval();
+    assert_int_equal(this_cycles, 6);
+    assert_int_equal(get_reg_value_8(REG_A), 5);
 }

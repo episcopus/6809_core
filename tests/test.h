@@ -620,6 +620,7 @@ void init_from_decb_memory_invalid_postamble_byte_wrong_test(void **state);
 void init_from_decb_file_basic_test(void **state);
 void init_from_decb_file_basic_run_cycles_test(void **state);
 void init_from_decb_file_error_test(void **state);
+void run_cycles_breakpoints_test(void **state);
 
 /* Program tests */
 void program_8_bit_addition_test(void **state);

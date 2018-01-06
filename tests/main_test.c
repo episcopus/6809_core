@@ -615,6 +615,7 @@ const struct CMUnitTest tests[] = {
     cmocka_unit_test_setup_teardown(init_from_decb_file_basic_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(init_from_decb_file_basic_run_cycles_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(init_from_decb_file_error_test, test_setup, test_teardown),
+    cmocka_unit_test_setup_teardown(run_cycles_breakpoints_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(program_8_bit_addition_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(program_shift_left_1_bit_test, test_setup, test_teardown),
     cmocka_unit_test_setup_teardown(program_mask_off_most_significant_four_bits_test, test_setup, test_teardown),

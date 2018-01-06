@@ -152,6 +152,18 @@ void core_init() {
     setup_default_vector(SWI2_VECTOR, DEFAULT_SWI2_VECTOR);
     setup_default_vector(SWI3_VECTOR, DEFAULT_SWI3_VECTOR);
 
+    /* Init breakpoint map */
+    e_cpu_context.breakpoints = NULL;
+    e_cpu_context.breakpoints = (uint8*) malloc(MEMORY_SIZE);
+    if (e_cpu_context.breakpoints == NULL) {
+        assert(FALSE);
+    }
+    else {
+        for (int i = 0; i < MEMORY_SIZE; i++) {
+            e_cpu_context.breakpoints[i] = 0;
+        }
+    }
+
     return;
 }
 
@@ -169,6 +181,10 @@ void core_destroy() {
     e_cpu_context.memory = NULL;
     e_cpu_context.color_basic = NULL;
     e_cpu_context.extended_basic = NULL;
+
+    if (e_cpu_context.memory) {
+        free(e_cpu_context.breakpoints);
+    }
 
     vdg_destroy();
 }
@@ -887,6 +903,12 @@ uint32 run_cycles(uint32 wanted_cycles) {
         if (e_cpu_context.halted_state) {
             /* Execution is halted pending an interrupt. See sync() or
                cwai(). */
+            break;
+        }
+
+        if (completed_cycles > 0 && e_cpu_context.breakpoints[e_cpu_context.pc]) {
+            /* Don't break if this is the first instruction being run, enables
+               resume */
             break;
         }
 
