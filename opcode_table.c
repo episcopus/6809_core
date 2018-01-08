@@ -228,7 +228,7 @@ const struct opcode_def opcode_table[] = {
     /* 0xDC */ { "LDD",          OP_LDD_D,        5,  REG_D,    DIRECT,    ld16     },
     /* 0xDD */ { "STD",          OP_STD_D,        5,  REG_D,    DIRECT,    st16     },
     /* 0xDE */ { "LDU",          OP_LDU_D,        5,  REG_U,    DIRECT,    ld16     },
-    /* 0xDF */ { "STUD",         OP_STU_D,        5,  REG_U,    DIRECT,    st16     },
+    /* 0xDF */ { "STU",          OP_STU_D,        5,  REG_U,    DIRECT,    st16     },
     /* 0xE0 */ { "SUBB",         OP_SUBB_I,       4,  REG_B,    INDEXED,   sub      },
     /* 0xE1 */ { "CMPB",         OP_CMPB_I,       4,  REG_B,    INDEXED,   cmp      },
     /* 0xE2 */ { "SBCB",         OP_SBCB_I,       4,  REG_B,    INDEXED,   sbc      },
