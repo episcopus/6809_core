@@ -1,3 +1,4 @@
+.DS_Store
 build/
 scripts/opcode_table.c
 picture*.png
