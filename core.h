@@ -45,6 +45,7 @@ struct cpu_state {
     uint8* memory; /* Memory map */
     uint8* color_basic;
     uint8* extended_basic;
+    uint8* disk_basic;
 
     uint32 cycle_count;
     /* Global counters tracking remaining amount of cycles until respective

@@ -75,6 +75,7 @@ void core_init() {
 
     e_cpu_context.color_basic = NULL;
     e_cpu_context.extended_basic = NULL;
+    e_cpu_context.disk_basic = NULL;
 
     e_cpu_context.cycle_count = 0;
     e_cpu_context.hsync_cycles = HSYNC_CYCLES_TOTAL;
@@ -178,10 +179,14 @@ void core_destroy() {
     if (e_cpu_context.extended_basic) {
         free(e_cpu_context.extended_basic);
     }
+    if (e_cpu_context.disk_basic) {
+        free(e_cpu_context.disk_basic);
+    }
 
     e_cpu_context.memory = NULL;
     e_cpu_context.color_basic = NULL;
     e_cpu_context.extended_basic = NULL;
+    e_cpu_context.disk_basic = NULL;
 
     if (e_cpu_context.memory) {
         free(e_cpu_context.breakpoints);
@@ -236,9 +241,11 @@ void load_rom_to_address(const char* rom_path, uint8* target) {
 void load_roms() {
     assert(!e_cpu_context.color_basic);
     assert(!e_cpu_context.extended_basic);
+    assert(!e_cpu_context.disk_basic);
 
-    const char* basic_rom = "/Users/simon/Dropbox/Programming/c/6809_core/roms/BASIC.ROM";
-    const char* ext_rom = "/Users/simon/Dropbox/Programming/c/6809_core/roms/EXTBASIC.ROM";
+    const char* basic_rom = "/Users/simon/Dropbox/Programming/c/6809_core/roms/bas12.rom";
+    const char* ext_rom = "/Users/simon/Dropbox/Programming/c/6809_core/roms/extbas11.rom";
+    const char* disk_rom = "/Users/simon/Dropbox/Programming/c/6809_core/roms/disk11.rom";
 
     e_cpu_context.color_basic = (uint8*) malloc(ROM_SIZE);
     if (e_cpu_context.color_basic == NULL) {
@@ -252,8 +259,15 @@ void load_roms() {
         return;
     }
 
+    e_cpu_context.disk_basic = (uint8*) malloc(ROM_SIZE);
+    if (e_cpu_context.disk_basic == NULL) {
+        assert(FALSE);
+        return;
+    }
+
     load_rom_to_address(basic_rom, e_cpu_context.color_basic);
     load_rom_to_address(ext_rom, e_cpu_context.extended_basic);
+    load_rom_to_address(disk_rom, e_cpu_context.disk_basic);
 }
 
 enum reg_size get_reg_size(enum target_register reg) {

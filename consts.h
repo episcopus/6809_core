@@ -17,6 +17,7 @@
 #define EXT_BASIC_ROM   0x8000
 #define COL_BASIC_ROM   0xA000
 #define CARTRIDGE_ROM   0xC000
+#define DISK_BASIC_ROM   0xC000
 
 /* Interrupt vector / word pointer addresses */
 #define RESET_VECTOR 0xFFFE

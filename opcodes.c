@@ -705,15 +705,13 @@ int cmp(uint8 opcode, enum target_register t_r, enum addressing_mode a_m) {
        otherwise. */
     e_cpu_context.cc.c = reg_val < memory_val;
     /* The Overflow flag is set if an overflow occurred; cleared otherwise. */
-    /* If the sum of two positive numbers yields a negative result, the sum
-       has overflowed. */
-    uint8 pos_overflow = (reg_val & 0x80) == 0 &&
-        (memory_val & 0x80) == 0 &&
+    /* If the difference of a positive and a negative number yields a negative
+       result, the difference has overflowed. */
+    uint8 pos_overflow = (reg_val & 0x80) == 0 && (memory_val & 0x80) > 0 &&
         e_cpu_context.cc.n;
-    /* If the sum of two negative numbers yields a positive result, the sum
-       has overflowed. */
-    uint8 neg_overflow = (reg_val & 0x80) > 0 &&
-        (memory_val & 0x80) > 0 &&
+    /* If the difference of a negative and a positive number yields a negative
+       result, the difference has overflowed. */
+    uint8 neg_overflow = (reg_val & 0x80) > 0 && (memory_val & 0x80) == 0 &&
         (output_val & 0x80) == 0;
     e_cpu_context.cc.v = pos_overflow || neg_overflow;
 

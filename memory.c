@@ -307,6 +307,12 @@ uint8 basic_read_byte_from_memory(uint16 address) {
         uint16 effective_address = address - COL_BASIC_ROM;
         return_byte = e_cpu_context.color_basic[effective_address];
     }
+    else if (!e_cpu_context.sam_state.ty_control_bit &&
+             address >= DISK_BASIC_ROM && address < DISK_BASIC_ROM + ROM_SIZE &&
+             e_cpu_context.disk_basic) {
+        uint16 effective_address = address - DISK_BASIC_ROM;
+        return_byte = e_cpu_context.disk_basic[effective_address];
+    }
     else {
         uint16 effective_address = p1_and_ty_address_adjust(address);
         return_byte = e_cpu_context.memory[effective_address];
