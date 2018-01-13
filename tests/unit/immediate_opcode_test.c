@@ -1544,12 +1544,68 @@ void cmpd_immediate_carry(void **state) {
     assert_int_equal(e_cpu_context.cc.n, 1);
     assert_int_equal(e_cpu_context.cc.c, 1);
     assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 0);
+    assert_int_equal(cycles, opcode_ext_x10_table[OP_CMPD].cycle_count);
+    assert_true(post_pc == pre_pc + 4);
+}
+
+void cmpd_immediate_positive_overflow(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+
+    uint8 code_bytes[] = {
+        OP_EXTENDED_X10,
+        OP_CMPD,
+        0x80,
+        0x00
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 4 }
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.d.d = 0x7FFF;
+
+    int cycles = run_cycles(opcode_table[OP_CMPD].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.d.d, 0x7FFF);
+    assert_int_equal(e_cpu_context.cc.n, 1);
+    assert_int_equal(e_cpu_context.cc.c, 1);
+    assert_int_equal(e_cpu_context.cc.z, 0);
     assert_int_equal(e_cpu_context.cc.v, 1);
     assert_int_equal(cycles, opcode_ext_x10_table[OP_CMPD].cycle_count);
     assert_true(post_pc == pre_pc + 4);
 }
 
-void cmpd_immediate_overflow(void **state) {
+void cmpd_immediate_negative_overflow(void **state) {
+    (void) state; /* unused */
+
+    int pre_pc = e_cpu_context.pc;
+
+    uint8 code_bytes[] = {
+        OP_EXTENDED_X10,
+        OP_CMPD,
+        0x7F,
+        0xFF
+    };
+    struct mem_loader_def test_memory[] = {
+        { USER_SPACE_ROOT, code_bytes, 4 }
+    };
+    load_memory(test_memory, 1);
+    e_cpu_context.d.d = 0x8000;
+
+    int cycles = run_cycles(opcode_table[OP_CMPD].cycle_count);
+    int post_pc = e_cpu_context.pc;
+    assert_int_equal(e_cpu_context.d.d, 0x8000);
+    assert_int_equal(e_cpu_context.cc.n, 0);
+    assert_int_equal(e_cpu_context.cc.c, 0);
+    assert_int_equal(e_cpu_context.cc.z, 0);
+    assert_int_equal(e_cpu_context.cc.v, 1);
+    assert_int_equal(cycles, opcode_ext_x10_table[OP_CMPD].cycle_count);
+    assert_true(post_pc == pre_pc + 4);
+}
+
+void cmpd_immediate_no_overflow(void **state) {
     (void) state; /* unused */
 
     int pre_pc = e_cpu_context.pc;
@@ -1572,7 +1628,7 @@ void cmpd_immediate_overflow(void **state) {
     assert_int_equal(e_cpu_context.cc.n, 0);
     assert_int_equal(e_cpu_context.cc.c, 0);
     assert_int_equal(e_cpu_context.cc.z, 0);
-    assert_int_equal(e_cpu_context.cc.v, 1);
+    assert_int_equal(e_cpu_context.cc.v, 0);
     assert_int_equal(cycles, opcode_ext_x10_table[OP_CMPD].cycle_count);
     assert_true(post_pc == pre_pc + 4);
 }
@@ -1656,12 +1712,12 @@ void cmps_immediate_carry(void **state) {
     assert_int_equal(e_cpu_context.cc.n, 1);
     assert_int_equal(e_cpu_context.cc.c, 1);
     assert_int_equal(e_cpu_context.cc.z, 0);
-    assert_int_equal(e_cpu_context.cc.v, 1);
+    assert_int_equal(e_cpu_context.cc.v, 0);
     assert_int_equal(cycles, opcode_ext_x11_table[OP_CMPS].cycle_count);
     assert_true(post_pc == pre_pc + 4);
 }
 
-void cmps_immediate_overflow(void **state) {
+void cmps_immediate_no_overflow(void **state) {
     (void) state; /* unused */
 
     int pre_pc = e_cpu_context.pc;
@@ -1684,7 +1740,7 @@ void cmps_immediate_overflow(void **state) {
     assert_int_equal(e_cpu_context.cc.n, 0);
     assert_int_equal(e_cpu_context.cc.c, 0);
     assert_int_equal(e_cpu_context.cc.z, 0);
-    assert_int_equal(e_cpu_context.cc.v, 1);
+    assert_int_equal(e_cpu_context.cc.v, 0);
     assert_int_equal(cycles, opcode_ext_x11_table[OP_CMPS].cycle_count);
     assert_true(post_pc == pre_pc + 4);
 }
@@ -1768,12 +1824,12 @@ void cmpu_immediate_carry(void **state) {
     assert_int_equal(e_cpu_context.cc.n, 1);
     assert_int_equal(e_cpu_context.cc.c, 1);
     assert_int_equal(e_cpu_context.cc.z, 0);
-    assert_int_equal(e_cpu_context.cc.v, 1);
+    assert_int_equal(e_cpu_context.cc.v, 0);
     assert_int_equal(cycles, opcode_ext_x11_table[OP_CMPU].cycle_count);
     assert_true(post_pc == pre_pc + 4);
 }
 
-void cmpu_immediate_overflow(void **state) {
+void cmpu_immediate_no_overflow(void **state) {
     (void) state; /* unused */
 
     int pre_pc = e_cpu_context.pc;
@@ -1796,7 +1852,7 @@ void cmpu_immediate_overflow(void **state) {
     assert_int_equal(e_cpu_context.cc.n, 0);
     assert_int_equal(e_cpu_context.cc.c, 0);
     assert_int_equal(e_cpu_context.cc.z, 0);
-    assert_int_equal(e_cpu_context.cc.v, 1);
+    assert_int_equal(e_cpu_context.cc.v, 0);
     assert_int_equal(cycles, opcode_ext_x11_table[OP_CMPU].cycle_count);
     assert_true(post_pc == pre_pc + 4);
 }
@@ -1878,12 +1934,12 @@ void cmpx_immediate_carry(void **state) {
     assert_int_equal(e_cpu_context.cc.n, 1);
     assert_int_equal(e_cpu_context.cc.c, 1);
     assert_int_equal(e_cpu_context.cc.z, 0);
-    assert_int_equal(e_cpu_context.cc.v, 1);
+    assert_int_equal(e_cpu_context.cc.v, 0);
     assert_int_equal(cycles, opcode_table[OP_CMPX].cycle_count);
     assert_true(post_pc == pre_pc + 3);
 }
 
-void cmpx_immediate_overflow(void **state) {
+void cmpx_immediate_no_overflow(void **state) {
     (void) state; /* unused */
 
     int pre_pc = e_cpu_context.pc;
@@ -1905,7 +1961,7 @@ void cmpx_immediate_overflow(void **state) {
     assert_int_equal(e_cpu_context.cc.n, 0);
     assert_int_equal(e_cpu_context.cc.c, 0);
     assert_int_equal(e_cpu_context.cc.z, 0);
-    assert_int_equal(e_cpu_context.cc.v, 1);
+    assert_int_equal(e_cpu_context.cc.v, 0);
     assert_int_equal(cycles, opcode_table[OP_CMPX].cycle_count);
     assert_true(post_pc == pre_pc + 3);
 }
@@ -1988,12 +2044,12 @@ void cmpy_immediate_carry(void **state) {
     assert_int_equal(e_cpu_context.cc.n, 1);
     assert_int_equal(e_cpu_context.cc.c, 1);
     assert_int_equal(e_cpu_context.cc.z, 0);
-    assert_int_equal(e_cpu_context.cc.v, 1);
+    assert_int_equal(e_cpu_context.cc.v, 0);
     assert_int_equal(cycles, opcode_ext_x10_table[OP_CMPY].cycle_count);
     assert_true(post_pc == pre_pc + 4);
 }
 
-void cmpy_immediate_overflow(void **state) {
+void cmpy_immediate_no_overflow(void **state) {
     (void) state; /* unused */
 
     int pre_pc = e_cpu_context.pc;
@@ -2016,7 +2072,7 @@ void cmpy_immediate_overflow(void **state) {
     assert_int_equal(e_cpu_context.cc.n, 0);
     assert_int_equal(e_cpu_context.cc.c, 0);
     assert_int_equal(e_cpu_context.cc.z, 0);
-    assert_int_equal(e_cpu_context.cc.v, 1);
+    assert_int_equal(e_cpu_context.cc.v, 0);
     assert_int_equal(cycles, opcode_ext_x10_table[OP_CMPY].cycle_count);
     assert_true(post_pc == pre_pc + 4);
 }

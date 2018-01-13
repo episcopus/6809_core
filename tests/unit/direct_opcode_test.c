@@ -611,12 +611,12 @@ void cmpu_direct_nocarry_test(void **state) {
     assert_int_equal(e_cpu_context.cc.n, 1);
     assert_int_equal(e_cpu_context.cc.c, 1);
     assert_int_equal(e_cpu_context.cc.z, 0);
-    assert_int_equal(e_cpu_context.cc.v, 1);
+    assert_int_equal(e_cpu_context.cc.v, 0);
     assert_int_equal(cycles, opcode_ext_x11_table[OP_CMPU_D].cycle_count);
     assert_true(post_pc == pre_pc + 3);
 }
 
-void cmpx_direct_overflow_test(void **state) {
+void cmpx_direct_no_overflow_test(void **state) {
     (void) state; /* unused */
     int pre_pc = e_cpu_context.pc;
 
@@ -644,7 +644,7 @@ void cmpx_direct_overflow_test(void **state) {
     assert_int_equal(e_cpu_context.cc.n, 0);
     assert_int_equal(e_cpu_context.cc.c, 0);
     assert_int_equal(e_cpu_context.cc.z, 0);
-    assert_int_equal(e_cpu_context.cc.v, 1);
+    assert_int_equal(e_cpu_context.cc.v, 0);
     assert_int_equal(cycles, opcode_table[OP_CMPX_D].cycle_count);
     assert_true(post_pc == pre_pc + 2);
 }
