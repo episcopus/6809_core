@@ -67,6 +67,7 @@ struct cpu_state {
        enables breaking in the monitor when the PC gets to a slot marked true */
     uint8* breakpoints;
     uint8 breakpoint_hit;
+    uint8 special_keyboard_trace;
 };
 
 void core_init(void);

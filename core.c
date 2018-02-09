@@ -165,6 +165,7 @@ void core_init() {
         }
     }
     e_cpu_context.breakpoint_hit = 0;
+    e_cpu_context.special_keyboard_trace = 0;
 
     return;
 }
@@ -930,6 +931,23 @@ uint32 run_cycles(uint32 wanted_cycles) {
         else {
             e_cpu_context.breakpoint_hit = 0;
         }
+
+//        if (e_cpu_context.pc == 0xADEB) {
+//            printf("executing: $%.4X, PIA0A: $%.2X, PIA0B: $%.2X, cycles: %d\n",
+//                   get_reg_value_16(REG_PC),
+//                   read_byte_from_memory(0xFF00),
+//                   read_byte_from_memory(0xFF02),
+//                   e_cpu_context.cycle_count);
+//            if (e_cpu_context.pia_state.host_keys[PIA_KEY_BREAK]) {
+//                printf("run_cycles() on 0xADEB, BREAK key appears to be on.\n");
+//                /* e_cpu_context.breakpoint_hit = 1; */
+//                e_cpu_context.special_keyboard_trace = 1;
+//                /* break; */
+//            }
+//            else {
+//                e_cpu_context.special_keyboard_trace = 0;
+//            }
+//        }
 
         uint8 opcode = read_byte_from_memory(e_cpu_context.pc);
         struct opcode_def this_opcode = opcode_table[opcode];

@@ -114,12 +114,22 @@ void pia_update_keyboard() {
        Update input data register. */
 
     /* TODO flip based on actual control register direction */
-    uint8* output_ddr = &e_cpu_context.pia_state.ddr_1_b;
-    uint8* input_ddr = &e_cpu_context.pia_state.ddr_1_a;
+    uint8 output_ddr = pia_read_byte_from_memory(0xFF02);
 
     /* 0 is set for down key, by default nothing will be down. */
     uint8 input_value = 0xFF;
-    uint8 output_value = ~*output_ddr;
+    uint8 output_value = ~output_ddr;
+
+//    if (e_cpu_context.special_keyboard_trace && get_reg_value_16(REG_PC) == 0xA1C4) {
+//        printf("entering pia_update_keyboard: PC: $%.4X, input: %.2X, output: %.2X, pia1a: $%.2X, pia1b: $%.2X, cycles: %d, break: %d\n",
+//               get_reg_value_16(REG_PC),
+//               input_value,
+//               output_value,
+//               pia_read_byte_from_memory(0xff00),
+//               pia_read_byte_from_memory(0xff02),
+//               e_cpu_context.cycle_count,
+//               e_cpu_context.pia_state.host_keys[PIA_KEY_BREAK]);
+//    }
 
     for (uint8 iter_value = 0x1, less_sig_nibble = 0; iter_value != 0;
          iter_value <<= 1, less_sig_nibble++) {
@@ -130,21 +140,55 @@ void pia_update_keyboard() {
             continue;
         }
 
+//        if (e_cpu_context.special_keyboard_trace && get_reg_value_16(REG_PC) == 0xA1C4) {
+//            printf("pia_update_keyboard: iter_value: $%.2X, less_sig_nibble: $%.2X\n", iter_value, less_sig_nibble);
+//        }
+
         for (uint8 most_sig_nibble = 0, inner_mask = 0x1; most_sig_nibble +
                  less_sig_nibble < PIA_KEYBOARD_SIZE;
              most_sig_nibble += 8, inner_mask <<= 1) {
             uint8 table_lookup = most_sig_nibble + less_sig_nibble;
 
+//            if (e_cpu_context.special_keyboard_trace && get_reg_value_16(REG_PC) == 0xA1C4) {
+//                printf("pia_update_keyboard: most_sig_nibble: $%.2X, table_lookup: $%.2X, key_state: %d\n",
+//                       most_sig_nibble, table_lookup, e_cpu_context.pia_state.host_keys[table_lookup]);
+//            }
+
             /* look up in host's key state */
             if (e_cpu_context.pia_state.host_keys[table_lookup]) {
+
+//                if (e_cpu_context.special_keyboard_trace && get_reg_value_16(REG_PC) == 0xA1C4) {
+//                    printf("pia_update_keyboard (1): input_value: $%.2X, inner_mask: $%.2X\n",
+//                           input_value, inner_mask);
+//                }
+
                 /* Clear corresponding PIA input bit */
                 input_value ^= inner_mask;
+
+//                if (e_cpu_context.special_keyboard_trace && get_reg_value_16(REG_PC) == 0xA1C4) {
+//                    printf("pia_update_keyboard (2): input_value: $%.2X, inner_mask: $%.2X\n",
+//                           input_value, inner_mask);
+//                }
             }
         }
 
-        break;
+        /* Do not break out yet since there may be multiple lines strobed concurrently.
+           I.e. by Basic ROM's BREAK handling code at $A1C1. */
+        /* break; */
     }
 
+//    if (e_cpu_context.special_keyboard_trace) {
+//        printf("exit pia_update_keyboard: PC: $%.4X, input: %.2X, output: %.2X, pia1a: $%.2X, pia1b: $%.2X, cycles: %d, break: %d\n",
+//               get_reg_value_16(REG_PC),
+//               input_value,
+//               output_value,
+//               pia_read_byte_from_memory(0xff00),
+//               pia_read_byte_from_memory(0xff02),
+//               e_cpu_context.cycle_count,
+//               e_cpu_context.pia_state.host_keys[PIA_KEY_BREAK]);
+//    }
+
     /* Update input data register. */
-    *input_ddr = input_value;
+    /* *input_ddr = input_value; */
+    pia_write_byte_to_memory(0xFF00, input_value);
 }

@@ -74,6 +74,40 @@ void pia_update_keyboard_test(void **state) {
     assert_int_equal(pia_byte, 0x7B);
 }
 
+void pia_update_keyboard_test_two_keys(void **state) {
+    (void) state; /* unused */
+
+    /* Initialize PIA1B to output, and PIA1A to input,
+       in order to simulate keyboard strobing */
+    pia_write_byte_to_memory(0xFF01, 0);
+    pia_write_byte_to_memory(0xFF00, 0);
+    pia_write_byte_to_memory(0xFF03, 0);
+    pia_write_byte_to_memory(0xFF02, 0xFF);
+
+    /* Put both PIA1 sides back in DDR mode */
+    pia_write_byte_to_memory(0xFF01, 0x4);
+    pia_write_byte_to_memory(0xFF03, 0x4);
+
+    /* Strobe column 4 and 8 */
+    pia_write_byte_to_memory(0xFF02, 0xEE);
+    /* Have host 'T' and 'X' pushed down, which should result in
+       two different bits low on input since they are separate
+       lines. */
+    e_cpu_context.pia_state.host_keys[PIA_KEY_T] = 1;
+    e_cpu_context.pia_state.host_keys[PIA_KEY_X] = 1;
+    /* Have the update_keyboard do its thing */
+    pia_update_keyboard();
+
+    /* Read active rows */
+    uint8 pia_byte = coco_read_byte_from_memory(0xFF00);
+    /* strip joystick bit */
+    pia_byte &= 0x7F;
+
+    /* This is bit 2 and 3 low, which is 'T' and 'X' in keyboard
+       matrix */
+    assert_int_equal(pia_byte, 0x73);
+}
+
 void pia_update_keyboard_no_key_test(void **state) {
     (void) state; /* unused */
 
